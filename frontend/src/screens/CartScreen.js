@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import Message from '../components/Message'
-import { addToCart  } from '../actions/cartActions'
+import { addToCart, removeFromCart  } from '../actions/cartActions'
 
 function CartScreen({ match, location, history }) {
     const productId = match.params.pk
@@ -20,7 +20,7 @@ function CartScreen({ match, location, history }) {
     }, [dispatch, productId, qty])
 
     const removeFromCartHandler = (pk) =>{
-        console.log('remove', pk)
+        dispatch(removeFromCart(pk))
     }
 
     const checkoutHandler = ( ) =>{
@@ -28,9 +28,9 @@ function CartScreen({ match, location, history }) {
     }
 
 
-    return (
+    return ( 
         <Row>
-            <Col md={8}>
+            <Col md={9}>
                 <h1>Shopping Cart</h1>
                 {cartItems.length !== 0  &&
                      <Message><Link to='/'>Continue shopping</Link></Message>
@@ -75,6 +75,10 @@ function CartScreen({ match, location, history }) {
                                             </Form.Control>
                                         </Col>
                                         <Col md={1} >
+                                            Ksh {item.qty * item.price}
+                                        
+                                        </Col>
+                                        <Col md={1} >
                                             <Button
                                                 type= 'button'
                                                 variant= 'light'
@@ -85,6 +89,7 @@ function CartScreen({ match, location, history }) {
                                             </Button>
                                         
                                         </Col>
+                                        
 
                                        
                                     </Row>
@@ -94,7 +99,7 @@ function CartScreen({ match, location, history }) {
                     )}
             </Col>
 
-            <Col md={4}>
+            <Col md={3}>
                 <Card className="subtotal-card">
                     <ListGroup variant='flush'>
                              <ListGroup.Item>

@@ -14,6 +14,7 @@ class ProductList(ListAPIView):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
 
+    
 class ProductDetail(ListAPIView):
     permission_classes = [AllowAny,]
     lookup_field = 'pk'

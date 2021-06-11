@@ -6,24 +6,35 @@ export const cartReducer = (state = {cartItems:[]}, action) => {
             const item =  action.payload 
             const  existitem =  state.cartItems.find(x => x.product === item.product)
 
+            
             if(existitem){
+            // check if an item already exist in the cart
                 return{
                     ...state,
                     cartItems: state.cartItems.map(x => x.product === existitem.product ? item : x )
                 }
 
             }else{
+            //add pproduct to cart
                 return{
                     ...state, 
                     cartItems:[...state.cartItems, item]
                 }
             }
 
-            return { loading : true, products:[] }     
+        case CART_REMOVE_ITEM :
+            //remove item
+             return {
+                 ...state, cartItems: state.cartItems.filter(x => x.product !== action.payload )
+             }
 
-        
         default:
-            return state
+        return state
+
+          
     }
+   
+        
+  
       
 }
