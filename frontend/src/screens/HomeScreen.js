@@ -27,7 +27,7 @@ function HomeScreen() {
                     :
                     <Row>
                     {products.map(product=>(
-                        <Col key={product.pk} sm={12} md={6} lg={4} xg={3} >
+                        <Col key={product.pk} sm={6} md={3} lg={2} xg={2} >
                         <Product product={product} />         
                         </Col>
 
