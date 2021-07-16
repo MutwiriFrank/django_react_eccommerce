@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 class CustomAccountManager(BaseUserManager):
 
-    def create_superuser(self, email,  user_name, first_name, phone_number, password, **other_fields):
+    def create_superuser(self, email,  user_name, name, phone_number, password, **other_fields):
 
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
@@ -18,9 +18,9 @@ class CustomAccountManager(BaseUserManager):
             raise ValueError(
                 'Superuser must be assigned to is_superuser=True.')
 
-        return self.create_user(email, user_name, first_name,phone_number, password, **other_fields)
+        return self.create_user(email, user_name, name, phone_number, password, **other_fields)
 
-    def create_user(self, email, user_name, first_name, phone_number, password, **other_fields):
+    def create_user(self, email, user_name, name, phone_number, password, **other_fields):
 
         if not email:
             raise ValueError(_('You must provide an email address'))
@@ -29,7 +29,7 @@ class CustomAccountManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(email=email, user_name=user_name, phone_number=phone_number,
-                          first_name=first_name, **other_fields)
+                          name=name, **other_fields)
         user.set_password(password)
         user.save()
         return user
@@ -49,7 +49,7 @@ class NewUser( AbstractBaseUser, PermissionsMixin ):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['user_name', 'name','phone_number',]
+    REQUIRED_FIELDS = ['user_name','name', 'phone_number',]
 
     def __str__(self):
         return self.user_name
@@ -65,7 +65,7 @@ class NewUser( AbstractBaseUser, PermissionsMixin ):
 
 class Stylist(NewUser):
     is_stylist = models.BooleanField(default=True)
-    # location
+    location = models.CharField(max_length=100, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null = True )
 

@@ -10,8 +10,7 @@ from rest_framework.documentation import include_docs_urls
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('blog/', include('blog.urls', namespace='blog')),
-    path('api/blog/', include('blog_api.urls', namespace='blog_api')),
+ 
 
     # users
     path('api/users/', include('users.urls', namespace='users' )),

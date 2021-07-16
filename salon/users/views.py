@@ -108,12 +108,6 @@ class UpdateUserProfile(APIView):
         return Response(serializer.data)
         
 
-
-            
-     
-
-        
- 
 class GetUsers(APIView):
     permission_classes = [IsAdminUser] 
     serializer_class = UserSerializer
