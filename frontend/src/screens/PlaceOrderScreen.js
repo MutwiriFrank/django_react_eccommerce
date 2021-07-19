@@ -65,7 +65,7 @@ function PlaceOrderScreen() {
                             </thead>
                             <tbody>
                                 {cart.cartItems.map((item, index) => (
-                                    <tr>
+                                    <tr key={index}>
                                         <td>{index+1}</td>
                                         <td>
                                         <Col >
@@ -82,7 +82,7 @@ function PlaceOrderScreen() {
                                     
                                 ))}
                                 <tr >
-                                    <td colspan="5"><strong>Total</strong>  </td>
+                                    <td colSpan="5"><strong>Total</strong>  </td>
                                     <td>{ cart.ItemsPrice}</td>
                                 </tr>
                             
