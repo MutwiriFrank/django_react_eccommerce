@@ -132,7 +132,8 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True )
     quantity = models.PositiveIntegerField(null=True, blank=True, default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2,  null=True, blank=True)
-    Image = models.CharField(max_length=100, null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
     order_code = models.UUIDField( default=uuid.uuid4, unique=True,  editable=False)
     
     def __str__(self):
@@ -141,6 +142,10 @@ class OrderItem(models.Model):
 
 class ShippingAddress(models.Model):
     order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
-    town = models.CharField(max_length=100, blank=True, null=True)
-    location = models.CharField(max_length=200, blank=True, null=True)
-    shipping_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    estate = models.CharField(max_length=100, blank=True, null=True)
+    road = models.CharField(max_length=100, blank=True, null=True)
+    landmark = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=100, blank=True, null=True)
+    alternative_phone = models.CharField(max_length=200, blank=True, null=True)
+    shipping_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

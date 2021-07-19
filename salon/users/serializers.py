@@ -70,7 +70,7 @@ class RegisterStylistSerializer(ModelSerializer):
 
     class Meta:
         model= Stylist
-        fields = ('email', 'user_name', 'name', 'phone_number', 'password',)
+        fields = ('email', 'user_name', 'name', 'phone_number', 'password', 'location')
         extra_kwargs = {'password': {'write_only': True}}
 
     

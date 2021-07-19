@@ -4,11 +4,13 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { register } from '../actions/userActions'
 import FormContainer from '../components/FormContainer'
+import { getUserDetails, updateUserProfile } from '../actions/userActions'
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 
 
-function RegisterScreen({location, history}) {
+
+function ProfileScreen({history}) {
     const [name, setName] = useState('')
     const [user_name, setUsername] = useState('')
     const [phone_number, setPhone] = useState('')
@@ -19,45 +21,85 @@ function RegisterScreen({location, history}) {
 
     const dispatch = useDispatch()
 
-    const redirect = location.search ? location.search.split('=')[1] : '/'
+    const userDetails = useSelector(state => state.userDetails)
+    const { error, loading, user } = userDetails
+ 
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
 
-    const userRegister = useSelector(state => state.userRegister)
-
-    const { error, loading, userInfo } = userRegister
+    const userUpdateProfile = useSelector(state => state.userUpdateProfile)
+    const { success } = userUpdateProfile
 
     useEffect(() => {
-        if (userInfo) {
-            history.push(redirect)
+        if (!userInfo){
+            console.log("not")
+            history.push('/login')
+        }else{
+            
+            if(!user || !user.name || success){
+                dispatch({ type: USER_UPDATE_PROFILE_RESET })
+                 dispatch(getUserDetails('profile'))  
+
+            }else{
+                setName(user.name)
+                setUsername(user.user_name) 
+                setEmail(user.email)
+                setPhone(user.phone_number)
+              
+            }
         }
-    }, [history, userInfo, redirect])
+        
+    }, [dispatch, history, userInfo, user])
 
     const submitHandler = (e) =>{
         e.preventDefault()
-        console.log("Clicked")
-        if (password !==  confirmPassword ){
-            setMessage("passwords do not match")
-            
-        } else if(password == '' ) {
-            setMessage("please enter a password")
 
-        }else{
-            dispatch(register(email, name, user_name, phone_number, password))
+        if (phone_number.charAt(0) != 0){
+            setMessage("Your phone number must start with a zero")
         }
-    
-       
+
+        if (password.length < 8){
+            setMessage("password is too short")}
+
+        if (password != confirmPassword){
+            setMessage("password do not match")
+
+        
+        
+        } else {
+
+            if (password.length < 8){
+                setMessage("Details submitted")}
+          
+
+            dispatch(updateUserProfile({
+                
+                'pk' : user.pk,
+                'name' : name,
+                'user_name' : user_name,
+                'email' : email,
+                'phone_number' : phone_number,
+                'password' : password,
+ 
+
+            }
+            ))            
+        }
+        
     }
-
-
+   
 
     return (
-        <FormContainer>
-            <h1>Sign Up</h1>
-            {error && <Message variant='danger'>{error}</Message>}
-            {message && <Message variant='danger'>{message}</Message>}
+        <Row>
+            <Col md={3}> 
+                <h2>User Profile</h2>
+                {error && <Message variant='danger'>{error}</Message>}
+               
+                {message && <Message variant='danger'>{message}</Message>}
             <Form onSubmit={ submitHandler }>
                 <Form.Group controlId='name'>
                     <Form.Label>Name </Form.Label>
-                        <Form.Control type='text' placeholder='Enter your name' value={name}  onChange={(e) => setName(e.target.value) } >
+                        <Form.Control type='text' value={name}  onChange={(e) => setName(e.target.value) } >
 
                         </Form.Control>
                 </Form.Group >
@@ -97,20 +139,20 @@ function RegisterScreen({location, history}) {
                     </Form.Control>
                 </Form.Group >
 
-                <Button type='submit' style={{marginTop : "10px"}} variant='primary'>Sign In</Button>
+                <Button type='submit' style={{marginTop : "10px"}} variant='primary'>Submit</Button>
 
             </Form>
 
-            <Row className = 'py-3'>
-                <Col>
-                    Have an account ? <Link to={'/register'} >Login</Link>
-                
-                </Col>
+        
 
-            </Row>
             
-        </FormContainer>
+            </Col>
+            <Col md={9}>
+                <h2>My Orders</h2>
+            </Col>
+            
+        </Row>
     )
 }
 
-export default RegisterScreen
+export default ProfileScreen

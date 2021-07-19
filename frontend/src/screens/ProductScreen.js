@@ -35,10 +35,10 @@ function ProductScreen({match, history}) {
                 : error ? <Message variant="danger">{error}</Message>
                   :(
                     <Row>
-                        <Col md={6}>
+                        <Col xs={12}  md={4}>
                             <Image src={product.image} alt={product.name} fluid/>
                         </Col>
-                        <Col md={3}>
+                        <Col md={4}>
                             <ListGroup variant="flush">
                                 <ListGroup.Item>
                                     <h4>{product.name}</h4>
@@ -57,6 +57,9 @@ function ProductScreen({match, history}) {
 
                             </ListGroup>
                             
+                        </Col>
+                        <Col md={1}>
+
                         </Col>
                         <Col md={3}>
                             <Card>

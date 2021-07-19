@@ -16,7 +16,7 @@ urlpatterns = [
     path('stylist_register/', StylistCreateView.as_view(), name="create_user"),
     path('profile/', GetUserProfile.as_view(), name="user_profile"),
     path('profile/update/', UpdateUserProfile.as_view(), name="update_profile"),
-    path('', GetUsers.as_view(), name="users"),
+    path('all/users', GetUsers.as_view(), name="users"),
     
     
 ]

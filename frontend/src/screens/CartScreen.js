@@ -24,7 +24,7 @@ function CartScreen({ match, location, history }) {
     }
 
     const checkoutHandler = ( ) =>{
-        history.push('/login?redirect=shipping')
+        history.push('/login?redirect=delivery')
     }
 
 
@@ -84,7 +84,7 @@ function CartScreen({ match, location, history }) {
                                                 variant= 'light'
                                                 onClick = {()=>removeFromCartHandler(item.product)}
                                             >
-                                                <i className='fa fa-trash'></i>
+                                             <i className='fa fa-trash' style={{color:"red", fontSize:"19px" }}></i>
 
                                             </Button>
                                         
