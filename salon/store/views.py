@@ -41,16 +41,17 @@ class ProductChange(RetrieveUpdateDestroyAPIView):
     
     
 class AddOrderItem(APIView):
+    print('am here')
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated, ]
+
     
     def post(self, request):
         data = request.data
         orderItems = data['orderItems']
         
-        if orderItems and len(orderItems) > 0:
+        if orderItems :
             # 1. create order
-            order = Order.objects.create(user= request.user, payment_method = data['paymentMethod'], shipping_method = data['shippingMethod'], 
+            order = Order.objects.create(user= request.user, shipping_price = data['shippingFee'], 
                                          total_price=data['totalPrice']
                                          )
             
@@ -62,27 +63,28 @@ class AddOrderItem(APIView):
                                                               alternative_phone=data['shippingAddress']['alternative_phone'], 
                                                               shipping_fee=data['shippingFee']
                                                               )
-            
+            print("ssysyysysysy")
             # 3. Create order Items and set rlship btn order and orderItem and product
             for i in orderItems:
-                try:
-                    product = product.objects.get(pk=i['product'])
-                except:
-                    return Response("wrong id when hetting asscociating orderproduct and actual product ")
+               
+                product = Product.objects.get(pk = i['product'])
                 
-                order_item = OrderItem.objects.create(product=product, order=order, name=product.name, quantity=í['qty'], 
-                                                      price=product.price, image=product.image.url)
                 
-            
+                order_item = OrderItem.objects.create(product=product, order=order, name=product.name, quantity = i['qty'], price=product.price, image=product.image.url)
+                
+                print("ssysyysysysy")
             
                 # 4. Update stock
-                product.countInStock -= order_item.qty
+                product.countInStock -= order_item.quantity
                 product.save()
                 
             serializer = OrderSerializer(order, many=False)
+            print("ssysyysysysy")
+            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
             
-                  
+            
+      
         else:
             
             return Response({'detail': 'No order items'}, status=status.HTTP_400_BAD_REQUEST)

@@ -4,17 +4,50 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
+import {createOrder} from '../actions/orderActions'
+import { ORDER_CREATE_RESET } from '../constants/orderConstants'
 
 
-function PlaceOrderScreen() {
+function PlaceOrderScreen({history}) {
+    const orderCreate = useSelector(state => state.orderCreate)
+    const {order , error, success} = orderCreate
+ 
+    const payment = localStorage.getItem('paymentMethod') 
+    ? JSON.parse(localStorage.getItem('paymentMethod')) 
+    : {}
+    
+    const dispatch = useDispatch()
     const cart = useSelector(state=>state.cart)
     const { cartItems } = cart
     cart.ItemsPrice =  cartItems.reduce((acc, item ) => acc + item.qty * item.price, 0 )
-   
     cart.shippingFee = 200
+    cart.totalPrice = (Number(cart.ItemsPrice) + Number(cart.shippingFee))
+  
+    if(!payment){
+        history.push('/payment')
+
+    }
+
+   
+    useEffect (() =>{
+        if(success){
+            history.push(`/order/${order.id}`)
+            dispatch({ type:ORDER_CREATE_RESET })
+        }
+    },[success, history])
+    
 
     const  placeOrder = () => {
-        console.log('place order')
+        dispatch( createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: payment,
+            ItemsPrice: cart.ItemsPrice,
+            shippingFee: cart.shippingFee,
+            totalPrice: cart.totalPrice
+
+        }) )
+        console.log(4)
     }
 
     return ( 
@@ -42,7 +75,7 @@ function PlaceOrderScreen() {
                             <h2>Payment Method</h2>
                             <p>
                                 <strong>Method:   </strong>
-                                {cart.paymentMethod } 
+                                {payment} 
                             </p>
 
                         </ListGroup.Item>
@@ -112,6 +145,10 @@ function PlaceOrderScreen() {
                                         <Col>Delivery fee</Col>
                                         <Col>Ksh {cart.shippingFee}</Col>
                                     </Row>
+
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                    {error && <Message vvariant='danger' >{error}</Message>}
 
                             </ListGroup.Item>
                             <ListGroup.Item>
