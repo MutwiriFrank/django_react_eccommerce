@@ -43,10 +43,14 @@ class OrderSerializer(serializers.ModelSerializer):
     
     def get_shippingAddress(self, obj):
         try:
-            address = obj.shipping_address
+            address = obj.shippingaddress #can acccess using . and lowercase because its onetoone rlship
+             
         except:
-            address = 'pick up'
+            address = False
+     
+            
         serializer = ShippingAddressSerializer(address, many=False)
+        
         return serializer.data
             
     def get_user(self, obj):
