@@ -159,14 +159,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/images/'  # this one will assist the browser to see the image once url for the image is entered
+MEDIA_ROOT = os.path.join(BASE_DIR, 'images/')  
+STATIC_ROOT = BASE_DIR / 'static/images'
+
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-
-MEDIA_URL = '/images/'  # this one will assist the browser to see the image once url for the image is entered
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')  # our images will come here once we upload them
 
 
 REST_FRAMEWORK = {

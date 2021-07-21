@@ -30,14 +30,9 @@ function HomeScreen() {
                         <Col key={product.pk} sm={6} md={3} lg={2} xg={2} >
                         <Product product={product} />         
                         </Col>
-
-                    ))}
-                    
+                    ))}                    
                 </Row> 
-
-            }
-
-            
+            }      
         </div>
     )
 }

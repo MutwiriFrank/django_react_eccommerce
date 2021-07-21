@@ -4,6 +4,7 @@ import React from 'react'
 function Rating({ value, text, color }) {
     return (
         <div className="rating">
+         
             <span>
                 <i style={{ color }} className={
                     value >= 1
@@ -22,7 +23,7 @@ function Rating({ value, text, color }) {
                         ? 'fa fa-star'
                         : value >= 1.5
                             ? 'fa fa-star-half-o'
-                            : 'fal fa-star'
+                            : 'far fa-star'
                 }>
 
                 </i>

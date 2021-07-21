@@ -7,7 +7,7 @@ import { addToCart, removeFromCart  } from '../actions/cartActions'
 
 function CartScreen({ match, location, history }) {
     const productId = match.params.pk
-    const qty = location.search ? Number(location.search.split('=')[1]) : 1
+    const qty = location.search ? Number(location.search.split('=')[1]) : 1 // spliting url at = and chosing the second index and assign it to qty else qty is assigned to 1
     const dispatch = useDispatch()
 
     const cart = useSelector(state => state.cart)
@@ -19,14 +19,13 @@ function CartScreen({ match, location, history }) {
         }
     }, [dispatch, productId, qty])
 
-    const removeFromCartHandler = (pk) =>{
+    const removeFromCartHandler = (pk) =>{  
         dispatch(removeFromCart(pk))
     }
 
     const checkoutHandler = ( ) =>{
         history.push('/login?redirect=delivery')
     }
-
 
     return ( 
         <Row>

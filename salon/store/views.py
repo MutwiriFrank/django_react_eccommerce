@@ -48,11 +48,13 @@ class AddOrderItem(APIView):
     def post(self, request):
         data = request.data
         orderItems = data['orderItems']
-        
+        print(data)
         if orderItems :
             # 1. create order
-            order = Order.objects.create(user= request.user, shipping_price = data['shippingFee'], 
-                                         total_price=data['totalPrice']
+            order = Order.objects.create(user= request.user, 
+                                         shipping_price = data['shippingFee'], 
+                                         total_price=data['totalPrice'],
+                                         payment_method=data["paymentMethod"]
                                          )
             
             # 2. Create shipping address
@@ -62,7 +64,8 @@ class AddOrderItem(APIView):
                                                               landmark=data['shippingAddress']['landmark'], 
                                                               phone=data['shippingAddress']['phone'], 
                                                               alternative_phone=data['shippingAddress']['alternative_phone'], 
-                                                              shipping_fee=data['shippingFee']
+                                                              shipping_fee=data['shippingFee'],
+                                                              
                                                               )
             # 3. Create order Items and set rlship btn order and orderItem and product
             for i in orderItems:          
@@ -74,7 +77,6 @@ class AddOrderItem(APIView):
                 product.save()
                 
             serializer = OrderSerializer(order, many=False)
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
             
         else: 
