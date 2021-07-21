@@ -54,7 +54,7 @@ function ProfileScreen({history}) {
     const submitHandler = (e) =>{
         e.preventDefault()
 
-        if (phone_number.charAt(0) != 0){
+        if (phone_number.charAt(0) !== 0){
             setMessage("Your phone number must start with a zero")
         }
 

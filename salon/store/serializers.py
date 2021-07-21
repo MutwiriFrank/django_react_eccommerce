@@ -29,27 +29,31 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
         
 class OrderSerializer(serializers.ModelSerializer):
-    orders = serializers.SerializerMethodField(read_only=True)
+    order_items = serializers.SerializerMethodField(read_only=True)
     shippingAddress = serializers.SerializerMethodField(read_only=True)
     user  = serializers.SerializerMethodField(read_only=True)
     class Meta:
             model = Order
             fields = "__all__"
             
-    def get_orders(self, obj):
-        items = obj.orderItem_set.all()
+    def get_order_items(self, obj):
+        items = obj.orderitem_set.all()
         serializer = OrderItemSerializer(items, many=True)
         return serializer.data
     
     def get_shippingAddress(self, obj):
         try:
-            address = obj.shipping_address
+            address = obj.shippingaddress #can acccess using . and lowercase because its onetoone rlship
+             
         except:
-            address = 'pick up'
+            address = False
+     
+            
         serializer = ShippingAddressSerializer(address, many=False)
+        
         return serializer.data
             
-    def get_users(self, obj):
+    def get_user(self, obj):
         user = obj.user
         serializer = UserSerializer(user, many=False)
         return serializer.data

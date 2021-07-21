@@ -41,48 +41,61 @@ class ProductChange(RetrieveUpdateDestroyAPIView):
     
     
 class AddOrderItem(APIView):
+    print('am here')
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated, ]
+
     
     def post(self, request):
         data = request.data
         orderItems = data['orderItems']
         
-        if orderItems and len(orderItems) > 0:
+        if orderItems :
             # 1. create order
-            order = Order.objects.create(user= request.user, payment_method = data['paymentMethod'], shipping_method = data['shippingMethod'], 
+            order = Order.objects.create(user= request.user, shipping_price = data['shippingFee'], 
                                          total_price=data['totalPrice']
                                          )
             
             # 2. Create shipping address
             shipping_address = ShippingAddress.objects.create(order=order, city=data['shippingAddress']['city'], 
+                                                              road=data['shippingAddress']['road'], 
                                                               estate=data['shippingAddress']['estate'], 
                                                               landmark=data['shippingAddress']['landmark'], 
                                                               phone=data['shippingAddress']['phone'], 
                                                               alternative_phone=data['shippingAddress']['alternative_phone'], 
                                                               shipping_fee=data['shippingFee']
                                                               )
-            
             # 3. Create order Items and set rlship btn order and orderItem and product
-            for i in orderItems:
-                try:
-                    product = product.objects.get(pk=i['product'])
-                except:
-                    return Response("wrong id when hetting asscociating orderproduct and actual product ")
+            for i in orderItems:          
+                product = Product.objects.get(pk = i['product'])             
+                order_item = OrderItem.objects.create(product=product, order=order, name=product.name, quantity = i['qty'], price=product.price, image=product.image.url)
                 
-                order_item = OrderItem.objects.create(product=product, order=order, name=product.name, quantity=í['qty'], 
-                                                      price=product.price, image=product.image.url)
-                
-            
-            
                 # 4. Update stock
-                product.countInStock -= order_item.qty
+                product.countInStock -= order_item.quantity
                 product.save()
                 
             serializer = OrderSerializer(order, many=False)
+            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
             
-                  
-        else:
-            
+        else: 
             return Response({'detail': 'No order items'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+class GetOrderById(APIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = [OrderSerializer, ]
+    
+    def get(self, request, id, *args, **kwargs):
+        user = request.user
+        try:
+            order = Order.objects.get(id=id)
+        except:
+            return Response({"detail":"does not exist"}, status=status.HTTP_400_BAD_REQUEST )
+        
+        if user.is_staff or order.user:
+            serializer = OrderSerializer(order, many=False)
+            return Response(serializer.data)
+        return Response({"detail":"You cant view another users order"}, status=status.HTTP_400_BAD_REQUEST )       
+        
+        
+        
