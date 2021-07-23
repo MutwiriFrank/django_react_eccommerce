@@ -2,47 +2,141 @@ import React, { useState, useEffect } from 'react'
 import { ListGroup,Table, Button, Row, Col, Image, Card} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { PayPalButton } from 'react-paypal-button-v2'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { getOrderDetails } from '../actions/orderActions'
+import { getOrderDetails, payOrder } from '../actions/orderActions'
 
 
+// function OrderScreen({ match  }) {
+//     const orderId = match.params.id
+//     const dispatch = useDispatch()
+
+//     const [sdkReady, setSdkReady] = useState(false)
+
+//     const orderDetails = useSelector(state => state.orderDetails)
+//     const { order, error, loading } = orderDetails
+
+//     const orderPay = useSelector(state => state.orderPay)
+//     const { loading: loadingPay, success: successPay } = orderPay
+
+//     try{
+//         if(order){
+//             console.log(order)
+//             order.ItemsPrice =  order.order_items.reduce((acc, item ) => acc + item.quantity * item.price, 0 ).toFixed(2)
+//         }
+
+//     }catch{
+//        const error2 = "Order does not exist"
+//     }
+
+//     const addPayPalScript = () =>{
+//         const script = document.createElement('script')
+//         script.type = 'text/javascript'
+//         script.src = "https://www.paypal.com/sdk/js?client-id=AdbuNTQ9aF9RpssvbzWFy_d0w-aon4P67Nss40XTpTKtp-j2_JBEIHEKMYLzekSdZqJeczweMT65zyLc"
+//         script.async = true
+//         script.onload = () => {
+//             setSdkReady(true)
+//         }
+//         document.body.appendChild(script)
+//     }
+
+
+//     useEffect (() =>{
+//         if(!order || successPay || order.id !== Number(orderId)){
+//             console.log("nimefika hapa")
+//             dispatch(getOrderDetails(orderId))
+//         }else if(!order.isPaid){
+//             if(!window.paypal){
+//                 addPayPalScript()
+//             }else{
+//                 setSdkReady(true)
+//             }
+//         }
+       
+//     },[dispatch,order, orderId, successPay  ])
+    
+
+//     const successPaymentHandler = (paymentResult) => {
+//         console.log("nimefika hapa")
+//         dispatch(payOrder(orderId, paymentResult))
+//     }
+   
+
+//     console.log(error)
 function OrderScreen({ match  }) {
     const orderId = match.params.id
     const dispatch = useDispatch()
+
+
+    const [sdkReady, setSdkReady] = useState(false)
+
     const orderDetails = useSelector(state => state.orderDetails)
-    const {order , error, loading} = orderDetails
+    const { order, error, loading } = orderDetails
+
+    const orderPay = useSelector(state => state.orderPay)
+    const { loading: loadingPay, success: successPay } = orderPay
+
+    // const orderDeliver = useSelector(state => state.orderDeliver)
+    // const { loading: loadingDeliver, success: successDeliver } = orderDeliver
+
+    // const userLogin = useSelector(state => state.userLogin)
+    // const { userInfo } = userLogin
 
 
-  
-    
-        if(order){
-            order.ItemsPrice =  order.order_items.reduce((acc, item ) => acc + item.quantity * item.price, 0 )
-
+    try{
+        if (!loading && !error) {
+            order.ItemsPrice = order.order_items.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)
         }
-  
+
+    }catch{
+        const error2 = "Order does not exist"
+    }
+        
+
     
-  
-    useEffect (() =>{
-        if(!order){
+
+
+    const addPayPalScript = () => {
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.src = 'https://www.paypal.com/sdk/js?client-id=AdbuNTQ9aF9RpssvbzWFy_d0w-aon4P67Nss40XTpTKtp-j2_JBEIHEKMYLzekSdZqJeczweMT65zyLc'
+        script.async = true
+        script.onload = () => {
+            setSdkReady(true)
+        }
+        document.body.appendChild(script)
+    }
+
+    useEffect(() => {
+
+      
+        if (!order || successPay || order.id !== Number(orderId) ) {
             dispatch(getOrderDetails(orderId))
+        } else if (!order.isPaid) {
+            if (!window.paypal) {
+                addPayPalScript()
+            } else {
+                setSdkReady(true)
+            } 
         }
-       
-    },[dispatch, orderId ])
-    
+    }, [dispatch, order, orderId, successPay ])
 
 
-   
+    const successPaymentHandler = (paymentResult) => {
+        dispatch(payOrder(orderId, paymentResult))
+    }
 
-    // console.log(order)
+
+
 
     return loading ? (
-            <Loader />
-        ) : error ? (
-            <Message variant='danger'>{error}</Message>
-        ) :
-    ( 
-  
+        <Loader />
+    ) : error ? (
+        <Message variant='danger'>{error}</Message>
+    ) : order == 'does not exist' ? (
+        <Message variant='danger'>Order does not exist </Message>
+    ): (
         <div>
 
              <Row>
@@ -158,10 +252,25 @@ function OrderScreen({ match  }) {
                              <ListGroup.Item>
                                       <Row>
                                          <Col>Total</Col>
-                                         <Col>Ksh  {order.ItemsPrice+ Number(order.shipping_price)} </Col>
+                                         <Col>Ksh  {Number(order.ItemsPrice)+ Number(order.shipping_price)} </Col>
                                      </Row>
 
                              </ListGroup.Item>
+
+                             {!order.isPaid && (
+                                        <ListGroup.Item>
+                                            {loadingPay && <Loader />}
+
+                                            {!sdkReady ? (
+                                                <Loader />
+                                            ) : (
+                                                    <PayPalButton
+                                                        amount={order.totalPrice}
+                                                        onSuccess={successPaymentHandler}
+                                                    />
+                                                )}
+                                        </ListGroup.Item>
+                                    )}
                             
                          </ListGroup>
                         

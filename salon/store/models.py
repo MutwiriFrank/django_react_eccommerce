@@ -93,7 +93,7 @@ class Order(models.Model):
     order_code = models.UUIDField( default=uuid.uuid4, unique=True,  editable=False)
     
     def __str__(self):
-        return  f'{self.user} - {self.order_code}'
+        return  f'{self.user} - {self.id}'
     
     
 class OrderItem(models.Model):

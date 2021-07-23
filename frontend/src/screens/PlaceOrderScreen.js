@@ -27,7 +27,7 @@ function PlaceOrderScreen({history}) {
         history.push('/payment')
 
     }
-
+    console.log(error)
    
     useEffect (() =>{
         if(success){
@@ -51,7 +51,11 @@ function PlaceOrderScreen({history}) {
      
     }
 
-    return ( 
+    return error ? (
+        <Message>{error}</Message>
+    ) :
+    
+     ( 
         <div>
             <CheckoutSteps step1 step2 step3 step4 />
 
