@@ -27,10 +27,11 @@ function PlaceOrderScreen({history}) {
         history.push('/payment')
 
     }
-
+    console.log(error)
    
     useEffect (() =>{
         if(success){
+            console.log(4)
             history.push(`/order/${order.id}`)
             dispatch({ type:ORDER_CREATE_RESET })
         }
@@ -47,10 +48,14 @@ function PlaceOrderScreen({history}) {
             totalPrice: cart.totalPrice
 
         }) )
-        console.log(4)
+     
     }
 
-    return ( 
+    return error ? (
+        <Message>{error}</Message>
+    ) :
+    
+     ( 
         <div>
             <CheckoutSteps step1 step2 step3 step4 />
 

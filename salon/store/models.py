@@ -40,7 +40,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    image = models.ImageField( blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
     countInStock = models.IntegerField(null=True, blank=True, default=0)
     rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
@@ -52,36 +52,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-
-    @property
-    def get_image(self):
-        if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
-        return ''
-
-    def get_thumbnail(self):
-        if self.thumbnail:
-            return 'http://127.0.0.1:8000' + self.thumbnail.url
-        else:
-            if self.image:
-                self.thumbnail = self.make_thumbnail(self.image)
-                self.save()
-
-                return 'http://127.0.0.1:8000' + self.thumbnail.url
-            else:
-                return ''
-
-    def make_thumbnail(self, image, size=(300, 200)):
-        img = Image.open(image)
-        img.convert('RGB')
-        img.thumbnail(size)
-
-        thumb_io = BytesIO()
-        img.save(thumb_io, 'JPEG', quality=85)
-
-        thumbnail = File(thumb_io, name=image.name)
-
-        return thumbnail 
+ 
     
 class Review(models.Model):
     Product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
@@ -98,10 +69,8 @@ class Review(models.Model):
 class Order(models.Model):
     PAYMENTMETHODS = (
         ("mpesa", "mpesa"),
-        ("cash_on_delevery", "cash_on_delevery"),
-        ("equity", "equity"),
-        ("kcb", "kcb"),
-        ("paypal", "paypal"),
+        ("ondelevery", "ondelevery"),
+        
         
     )
     DELIVERYOPTIONS = (
@@ -111,7 +80,7 @@ class Order(models.Model):
     )
     
     user = models.ForeignKey(NewUser, on_delete=models.CASCADE, null=True)
-    # payment_method = models.CharField(max_length=200, choices= PAYMENTMETHODS, null=True, blank=True )
+    payment_method = models.CharField(max_length=200, choices= PAYMENTMETHODS, null=True, blank=True )
     tax_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     shipping_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
@@ -124,7 +93,7 @@ class Order(models.Model):
     order_code = models.UUIDField( default=uuid.uuid4, unique=True,  editable=False)
     
     def __str__(self):
-        return  f'{self.user} - {self.order_code}'
+        return  f'{self.user} - {self.id}'
     
     
 class OrderItem(models.Model):

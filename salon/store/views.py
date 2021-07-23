@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 
 from rest_framework.views import APIView
@@ -48,11 +49,13 @@ class AddOrderItem(APIView):
     def post(self, request):
         data = request.data
         orderItems = data['orderItems']
-        
+        print(data)
         if orderItems :
             # 1. create order
-            order = Order.objects.create(user= request.user, shipping_price = data['shippingFee'], 
-                                         total_price=data['totalPrice']
+            order = Order.objects.create(user= request.user, 
+                                         shipping_price = data['shippingFee'], 
+                                         total_price=data['totalPrice'],
+                                         payment_method=data["paymentMethod"]
                                          )
             
             # 2. Create shipping address
@@ -62,7 +65,8 @@ class AddOrderItem(APIView):
                                                               landmark=data['shippingAddress']['landmark'], 
                                                               phone=data['shippingAddress']['phone'], 
                                                               alternative_phone=data['shippingAddress']['alternative_phone'], 
-                                                              shipping_fee=data['shippingFee']
+                                                              shipping_fee=data['shippingFee'],
+                                                              
                                                               )
             # 3. Create order Items and set rlship btn order and orderItem and product
             for i in orderItems:          
@@ -74,12 +78,19 @@ class AddOrderItem(APIView):
                 product.save()
                 
             serializer = OrderSerializer(order, many=False)
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
             
         else: 
             return Response({'detail': 'No order items'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+class GetMyOrders(APIView):
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        orders = user.order_set.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
         
 class GetOrderById(APIView):
     permission_classes = [IsAuthenticated, ]
@@ -96,6 +107,24 @@ class GetOrderById(APIView):
             serializer = OrderSerializer(order, many=False)
             return Response(serializer.data)
         return Response({"detail":"You cant view another users order"}, status=status.HTTP_400_BAD_REQUEST )       
+    
+    
+class UpdateOrderToPaid(APIView):
+    '''
+    update oder to paid and time
+    '''
+    def put(self, request, id,  *args, **kwargs):
+        try:
+            order = Order.objects.get(id=id)
+            
+        except:
+            return Response({'detail': 'Order does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         
-        
-        
+        order.isPaid =True
+        order.paidAt = datetime.now()
+            
+        order.save()
+        # serializer = OrderSerializer(order, many=False)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'detail': 'Order is paid'}, status=status.HTTP_200_OK)
+            
