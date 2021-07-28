@@ -52,7 +52,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
- 
     
 class Review(models.Model):
     Product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
@@ -69,12 +68,9 @@ class Review(models.Model):
 class Order(models.Model):
     PAYMENTMETHODS = (
         ("mpesa", "mpesa"),
-        ("ondelevery", "ondelevery"),
-        
-        
+        ("ondelevery", "ondelevery"),     
     )
     DELIVERYOPTIONS = (
-      
         ("pick_up", "pick_up"),
         ("delivery_to_home", "delivery_to_home"),
     )
@@ -94,6 +90,9 @@ class Order(models.Model):
     
     def __str__(self):
         return  f'{self.user} - {self.id}'
+
+    class Meta:
+        ordering = ('-created_at',)
     
     
 class OrderItem(models.Model):

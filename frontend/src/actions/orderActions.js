@@ -97,7 +97,6 @@ export const getOrderDetails = (id) => async(dispatch, getState) => {
 }
 
 export const payOrder = (id, paymentResult ) => async(dispatch, getState) =>{
-    console.log("nimefika hapa")
     try{
         dispatch({
             type: ORDER_PAY_REQUEST,
@@ -139,10 +138,10 @@ export const listMyOrders = ( ) => async (dispatch, getState) =>{
         dispatch({
             type: ORDERS_MY_LIST_REQUEST
         })
-        //identify user 
+        // identify user 
 
         const accesstoken = JSON.parse(localStorage.getItem('userInfoAccess'))
-
+        console.log( 'accesstoken', accesstoken)
         const config = {
             headers: {
                 'Content-type': 'application/json',
@@ -150,7 +149,9 @@ export const listMyOrders = ( ) => async (dispatch, getState) =>{
             }
         }
 
-        const { data } = await axios.get('/api/store/order/my-orders/')
+        // make request and get response
+
+        const { data } = await axios.get('/api/store/order/my-orders/', config)
 
         dispatch({
             type: ORDERS_MY_LIST_SUCCESS,
