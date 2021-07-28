@@ -109,8 +109,6 @@ function OrderScreen({ match  }) {
     }
 
     useEffect(() => {
-
-      
         if (!order || successPay || order.id !== Number(orderId) ) {
             dispatch(getOrderDetails(orderId))
         } else if (!order.isPaid) {
@@ -139,53 +137,52 @@ function OrderScreen({ match  }) {
     ): (
         <div>
 
-             <Row>
-                 <Col md={8}>
+            <Row>
+                <Col md={8}>
                     <ListGroup variant='flush'>
-                         <ListGroup.Item >
-                             <h2>Delivery</h2>
-                             <p><strong>Name: </strong>{order.user.name}</p>
-                             <p><strong>Email: </strong>{order.user.email}</p>
-                             <p><strong>Phone Number: </strong>{order.shippingAddress.phone}</p>
-                             <p>
-                                 <strong>Address:   </strong>
-                                 {order.shippingAddress.city }, {order.shippingAddress.estate}, {order.shippingAddress.road}, {order.shippingAddress.landmark} 
+                        <ListGroup.Item >
+                            <h2>Delivery</h2>
+                            <p><strong>Name: </strong>{order.user.name}</p>
+                            <p><strong>Email: </strong>{order.user.email}</p>
+                            <p><strong>Phone Number: </strong>{order.shippingAddress.phone}</p>
+                            <p>
+                                <strong>Address:   </strong>
+                                {order.shippingAddress.city }, {order.shippingAddress.estate}, {order.shippingAddress.road}, {order.shippingAddress.landmark} 
 
-                             </p>
-                             {order.isDelivered ? (
-                                    <Message variant='success' >Delivered on {order.paidAt}</Message>
-                                ) : (
-                                    <Message variant='warning' >Not Delivered</Message>
-                                )                             
-                             }
+                            </p>
+                            {order.isDelivered ? (
+                                <Message variant='success' >Delivered on {order.paidAt}</Message>
+                            ) : (
+                                <Message variant='warning' >Not Delivered</Message>
+                            )                             
+                            }
 
-                         </ListGroup.Item>
+                        </ListGroup.Item>
 
-                     </ListGroup>
+                    </ListGroup>
 
-                     <ListGroup>
-                         <ListGroup.Item >
-                             <h2>Payment Method</h2>
-                             {console.log(order)}
-                             <p>
-                                 <strong>Method:   </strong>
-                                 {order.payment_method} 
-                             </p>
-                             {order.isPaid ? (
-                                    <Message variant='success' >Paid on {order.paidAt}</Message>
-                                ) : (
-                                    <Message variant='warning' >Not paid</Message>
-                                )                             
-                             }
+                    <ListGroup>
+                        <ListGroup.Item >
+                            <h2>Payment Method</h2>
+                            {console.log(order)}
+                            <p>
+                                <strong>Method:   </strong>
+                                {order.payment_method} 
+                            </p>
+                            {order.isPaid ? (
+                                <Message variant='success' >Paid on {order.paidAt}</Message>
+                            ) : (
+                                <Message variant='warning' >Not paid</Message>
+                            )                             
+                            }
 
-                         </ListGroup.Item>
+                        </ListGroup.Item>
 
-                     </ListGroup>
-
-                     <ListGroup>
-                       
-
-                     <Table  bordered hover size="sm">
+                    </ListGroup>
+                    
+                    <ListGroup>
+                    
+                    <Table  bordered hover size="sm">
                             <thead>
                                 <tr>
                                 <th></th>
@@ -208,8 +205,7 @@ function OrderScreen({ match  }) {
                                         <td >{item.quantity}</td>
                                         <td>{item.price}</td>  
                                         <td>{item.price * item.quantity}</td>
-                                    </tr>
-                                  
+                                    </tr>                            
                                     
                                 ))}
                                 <tr >
@@ -219,68 +215,61 @@ function OrderScreen({ match  }) {
                             
                             </tbody>
                         </Table>
-
-                     </ListGroup>
-                   
-                 </Col>
+                    </ListGroup>
                 
-
-                 <Col md={4}>
-                     <Card>
-                         <ListGroup variant='flush'>
-                             <ListGroup.Item>
-                            
-                                     <h2>Order Summary</h2>
-                             </ListGroup.Item>
-                             <ListGroup.Item>
-                                     <Row>
-                                         <Col>Item Total</Col>
-                                         <Col>Ksh {order.ItemsPrice}</Col>
-                                     </Row>
-                             </ListGroup.Item>
-                             <ListGroup.Item>
-                                     <Row>
-                                         <Col>Delivery fee</Col>
-                                         <Col>Ksh {order.shipping_price}</Col>
-                                     </Row>
-
-                             </ListGroup.Item>
-                             <ListGroup.Item>
-                                     {error && <Message vvariant='danger' >{error}</Message>}
-
-                             </ListGroup.Item>
-                             <ListGroup.Item>
-                                      <Row>
-                                         <Col>Total</Col>
-                                         <Col>Ksh  {Number(order.ItemsPrice)+ Number(order.shipping_price)} </Col>
-                                     </Row>
-
-                             </ListGroup.Item>
-
-                             {!order.isPaid && (
-                                        <ListGroup.Item>
-                                            {loadingPay && <Loader />}
-
-                                            {!sdkReady ? (
-                                                <Loader />
-                                            ) : (
-                                                    <PayPalButton
-                                                        amount={order.totalPrice}
-                                                        onSuccess={successPaymentHandler}
-                                                    />
-                                                )}
-                                        </ListGroup.Item>
-                                    )}
-                            
-                         </ListGroup>
-                        
-                     </Card>
-
-                 </Col>
-             </Row>
+                </Col>
             
-        </div>
- )
+                <Col md={4}>
+                    <Card>
+                        <ListGroup variant='flush'>
+                            <ListGroup.Item>
+                        
+                                    <h2>Order Summary</h2>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                    <Row>
+                                        <Col>Item Total</Col>
+                                        <Col>Ksh {order.ItemsPrice}</Col>
+                                    </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                    <Row>
+                                        <Col>Delivery fee</Col>
+                                        <Col>Ksh {order.shipping_price}</Col>
+                                    </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                    {error && <Message vvariant='danger' >{error}</Message>}
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                    <Row>
+                                        <Col>Total</Col>
+                                        <Col>Ksh  {Number(order.ItemsPrice)+ Number(order.shipping_price)} </Col>
+                                    </Row>
+                            </ListGroup.Item>
+                            {!order.isPaid && (
+                                    <ListGroup.Item>
+                                        {loadingPay && <Loader />}
+                                        {!sdkReady ? (
+                                            <Loader />
+                                        ) : (
+                                                <PayPalButton
+                                                    amount={order.totalPrice}
+                                                    onSuccess={successPaymentHandler}
+                                                />
+                                            )}
+                                    </ListGroup.Item>
+                                )}
+                        
+                        </ListGroup>
+                    
+                    </Card>
+
+                </Col>
+            </Row>
+        
+    </div>
+)
 }
 
 export default OrderScreen

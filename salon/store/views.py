@@ -24,7 +24,6 @@ class ProductDetail(ListAPIView):
     permission_classes = [AllowAny,]
     lookup_field = 'pk'
 
- 
     def get(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -87,17 +86,27 @@ class AddOrderItem(APIView):
 class GetMyOrders(APIView):
     
     def get(self, request, *args, **kwargs):
-        user = request.user
+        try:
+            user = request.user
+        except:
+            return Response({"detail": "We could not identify you. Try again, or  logout and login again."}, 
+            status=status.HTTP_400_BAD_REQUEST )
+        print("user", user)
         orders = user.order_set.all()
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
         
 class GetOrderById(APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = [OrderSerializer, ]
     
     def get(self, request, id, *args, **kwargs):
-        user = request.user
+        try:
+            user = request.user
+        except:
+            return Response({"detail": "We could not identify you. Try again, or  logout and login again."}, 
+            status=status.HTTP_400_BAD_REQUEST )
         try:
             order = Order.objects.get(id=id)
         except:
@@ -127,4 +136,3 @@ class UpdateOrderToPaid(APIView):
         # serializer = OrderSerializer(order, many=False)
         # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'detail': 'Order is paid'}, status=status.HTTP_200_OK)
-            
