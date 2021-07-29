@@ -7,7 +7,7 @@ from .views import ( CustomUserCreate,StylistCreateView, BlacklistTokenUpdateVie
 app_name = 'users'
 
 urlpatterns = [
-     # token authentication
+    # token authentication
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'), # login endpoint
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', CustomUserCreate.as_view(), name="create_user"),
@@ -16,7 +16,7 @@ urlpatterns = [
     path('stylist_register/', StylistCreateView.as_view(), name="create_user"),
     path('profile/', GetUserProfile.as_view(), name="user_profile"),
     path('profile/update/', UpdateUserProfile.as_view(), name="update_profile"),
-    path('all/users', GetUsers.as_view(), name="users"),
+    path('all_users/', GetUsers.as_view(), name="users"),
     
     
 ]

@@ -14,7 +14,6 @@ export const createOrder = (order) => async (dispatch, getState) =>{
         dispatch({
             type: ORDER_CREATE_REQUEST
         })
-        const { userLogin: { userInfo },  } = getState()
 
         const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
         
@@ -25,7 +24,7 @@ export const createOrder = (order) => async (dispatch, getState) =>{
                 Authorization : `Bearer ${accessKey}`
             }
         }
-      
+
         const { data } = await axios.post(
             `/api/store/order/add/`, 
             order, config     

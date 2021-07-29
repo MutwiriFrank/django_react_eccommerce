@@ -52,21 +52,21 @@ class AddOrderItem(APIView):
         if orderItems :
             # 1. create order
             order = Order.objects.create(user= request.user, 
-                                         shipping_price = data['shippingFee'], 
-                                         total_price=data['totalPrice'],
-                                         payment_method=data["paymentMethod"]
-                                         )
+                                        shipping_price = data['shippingFee'], 
+                                        total_price=data['totalPrice'],
+                                        payment_method=data["paymentMethod"]
+                                        )
             
             # 2. Create shipping address
             shipping_address = ShippingAddress.objects.create(order=order, city=data['shippingAddress']['city'], 
-                                                              road=data['shippingAddress']['road'], 
-                                                              estate=data['shippingAddress']['estate'], 
-                                                              landmark=data['shippingAddress']['landmark'], 
-                                                              phone=data['shippingAddress']['phone'], 
-                                                              alternative_phone=data['shippingAddress']['alternative_phone'], 
-                                                              shipping_fee=data['shippingFee'],
-                                                              
-                                                              )
+                                                            road=data['shippingAddress']['road'], 
+                                                            estate=data['shippingAddress']['estate'], 
+                                                            landmark=data['shippingAddress']['landmark'], 
+                                                            phone=data['shippingAddress']['phone'], 
+                                                            alternative_phone=data['shippingAddress']['alternative_phone'], 
+                                                            shipping_fee=data['shippingFee'],
+                                                            
+                                                            )
             # 3. Create order Items and set rlship btn order and orderItem and product
             for i in orderItems:          
                 product = Product.objects.get(pk = i['product'])             
