@@ -242,7 +242,7 @@ export const listUsers= () => async(dispatch, getState) => {
 }
 
 
-export const delleteUser= (id) => async(dispatch) => {
+export const deleteUser= (id) => async(dispatch) => {
     try {
         dispatch({
             type: USER_DELETE_REQUEST

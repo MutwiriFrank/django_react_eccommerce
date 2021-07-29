@@ -113,7 +113,7 @@ class GetUsers(APIView):
     serializer_class = UserSerializer
     
     def get(self, request):
-        users = NewUser.objects.all().filter()
+        users = NewUser.objects.all().filter(is_active=True)
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     
@@ -128,4 +128,6 @@ class DeleteUser(APIView):
         except:
             return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
         user.is_active = False
+        user.save()
+        print(user.is_active)
         return Response({"detail":"deactivated successfully"}, status=status.HTTP_200_OK)
