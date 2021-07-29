@@ -90,12 +90,9 @@ class UpdateUserProfile(APIView):
     
     def put(self, request): 
         user = self.request.user
-        serializer = UserSerializerWithToken(user, many=False)
-   
-            
+        
         data = self.request.data
         user.name = data['name']
-        user.user_name = data['user_name']
         user.user_name = data['user_name']
         user.email = data["email"]
         user.phone_number = data["phone_number"]
@@ -103,12 +100,13 @@ class UpdateUserProfile(APIView):
         if data["password"] !=  '':
             user.password = make_password(data["password"])
         
-      
         user.save()
-        return Response(serializer.data)
+        serializer = UserSerializerWithToken(user, many=False)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
         
 
-class GetUsers(APIView):
+class AdminGetUsers(APIView):
     permission_classes = [IsAdminUser] 
     serializer_class = UserSerializer
     
@@ -118,7 +116,7 @@ class GetUsers(APIView):
         return Response(serializer.data)
     
 
-class DeleteUser(APIView):
+class AdminDeleteUser(APIView):
     permission_classes = [IsAdminUser, ]
     serializer_class = [ UserSerializer, ]
 
@@ -131,3 +129,40 @@ class DeleteUser(APIView):
         user.save()
         print(user.is_active)
         return Response({"detail":"deactivated successfully"}, status=status.HTTP_200_OK)
+
+
+class AdminGetPutUserInformation(APIView):
+    permission_classes = [ IsAdminUser ]
+    serializer_class = [ UserSerializer ]
+
+    def get(self, request, user_id):
+        try:
+            user = NewUser.objects.get(id=user_id)
+        except:
+            return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
+
+        serializer = UserSerializer(user, many=False)
+        if serializer:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"detail":"Try again"}, status=status.HTTP_200_OK)
+
+    def put(self, request, user_id):
+        try:
+            user = NewUser.objects.get(id=user_id)
+        except:
+            return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
+
+        data = self.request.data
+        user.name = data['name']
+        user.user_name = data['user_name']
+        user.email = data["email"]
+        user.phone_number = data["phone_number"]
+        
+        if data["password"] !=  '':
+            user.password = make_password(data["password"])
+
+        user.save()
+        serializer = UserSerializer(user, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        
