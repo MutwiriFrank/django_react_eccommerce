@@ -117,5 +117,15 @@ class GetUsers(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
     
-          
-       
+
+class DeleteUser(APIView):
+    permission_classes = [IsAdminUser, ]
+    serializer_class = [ UserSerializer, ]
+
+    def delete(self, request, user_id):
+        try:
+            user = NewUser.objects.get(id=user_id)
+        except:
+            return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
+        user.is_active = False
+        return Response({"detail":"deactivated successfully"}, status=status.HTTP_200_OK)

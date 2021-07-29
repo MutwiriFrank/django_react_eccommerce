@@ -41,7 +41,6 @@ class ProductChange(RetrieveUpdateDestroyAPIView):
     
     
 class AddOrderItem(APIView):
-    print('am here')
     serializer_class = OrderSerializer
 
     
