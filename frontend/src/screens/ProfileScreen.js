@@ -27,6 +27,8 @@ function ProfileScreen({history}) {
     const { error, loading, user } = userDetails
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
+    const userId = Number(userInfo.id)
+    console.log(userId)
 
     const userUpdateProfile = useSelector(state => state.userUpdateProfile)
     const { success } = userUpdateProfile
@@ -37,12 +39,11 @@ function ProfileScreen({history}) {
 
     useEffect(() => {
         if (!userInfo){
-            console.log("not")
             history.push('/login')
         }else{
-            if(!user || !user.name || success){
+            if(!user || !user.name || success || userId !== user.id ){
                 dispatch({ type: USER_UPDATE_PROFILE_RESET })
-                dispatch(getUserDetails('profile')) 
+                dispatch(getUserDetails(userId.toString())) 
                 dispatch(listMyOrders()) 
             }else{
                 setName(user.name)

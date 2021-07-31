@@ -133,8 +133,7 @@ export const getUserDetails = (pk) => async(dispatch, getState) => {
         const { userLogin: { userInfo },  } = getState()
 
         const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
-        console.log(accessKey)
-
+        console.log("PH:", pk)
         const config = {
             headers: {
                 'Content-type': 'application/json',
@@ -143,10 +142,11 @@ export const getUserDetails = (pk) => async(dispatch, getState) => {
         }
 
         const { data } = await axios.get(
-            `api/users/${pk}/`,
+            `/api/users/${pk}/`,
             config           
         )
-        
+        console.log("data", data)
+
         dispatch({
             type: USER_DETAILS_SUCCESS,
             payload: data
@@ -214,16 +214,29 @@ export const listUsers= () => async(dispatch, getState) => {
             type: USER_LIST_REQUEST
         })
         const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+        // const config = {
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         Authorization: `Bearer ${accessKey}`
+        //     }
+        // }
+        // console.log("data,", )
+        // const { data } = await axios.get(
+        //     `/api/users/all_users/`,
+        //     config           
+        // )
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${accessKey}`
+                Authorization : `Bearer ${accessKey}`
             }
         }
+
         const { data } = await axios.get(
             `/api/users/all_users/`,
             config           
         )
+
         dispatch({
             type: USER_LIST_SUCCESS, 
             payload: data

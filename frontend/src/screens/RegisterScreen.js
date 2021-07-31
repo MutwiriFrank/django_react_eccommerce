@@ -33,7 +33,6 @@ function RegisterScreen({location, history}) {
 
     const submitHandler = (e) =>{
         e.preventDefault()
-        console.log("Clicked")
         if (password !==  confirmPassword ){
             setMessage("passwords do not match")
             
@@ -44,7 +43,6 @@ function RegisterScreen({location, history}) {
             dispatch(register(email, name, user_name, phone_number, password))
         }
     
-       
     }
 
 
@@ -57,14 +55,14 @@ function RegisterScreen({location, history}) {
             <Form onSubmit={ submitHandler }>
                 <Form.Group controlId='name'>
                     <Form.Label>Name </Form.Label>
-                        <Form.Control type='text' placeholder='Enter your name' value={name}  onChange={(e) => setName(e.target.value) } >
+                        <Form.Control required type='text' placeholder='Enter your name' value={name}  onChange={(e) => setName(e.target.value) } >
 
                         </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='user_name'>
                     <Form.Label>Username</Form.Label>
-                    <Form.Control type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
+                    <Form.Control required type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
@@ -72,14 +70,14 @@ function RegisterScreen({location, history}) {
 
                 <Form.Group controlId='email'>
                     <Form.Label>Email Addresss</Form.Label>
-                    <Form.Control type='email' placeholder='Enter email' value={email}  onChange={(e) => setEmail(e.target.value) } >
+                    <Form.Control required type='email' placeholder='Enter email' value={email}  onChange={(e) => setEmail(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='phone_number'>
                     <Form.Label>Phone Number</Form.Label>
-                    <Form.Control type='phone' placeholder='Enter phone number' value={phone_number}  onChange={(e) => setPhone(e.target.value) } >
+                    <Form.Control required type='phone' placeholder='Enter phone number' value={phone_number}  onChange={(e) => setPhone(e.target.value) } >
 
                     </Form.Control>
 
@@ -87,13 +85,13 @@ function RegisterScreen({location, history}) {
 
                 <Form.Group controlId='password'>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type='password' placeholder='Enter password' value={password}  onChange={(e) => setPassword(e.target.value) } >
+                    <Form.Control required type='password' placeholder='Enter password' value={password}  onChange={(e) => setPassword(e.target.value) } >
                     </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='confirmpassword'>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type='password' placeholder='Confirm password' value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value) } >
+                    <Form.Control required type='password' placeholder='Confirm password' value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value) } >
                     </Form.Control>
                 </Form.Group >
 

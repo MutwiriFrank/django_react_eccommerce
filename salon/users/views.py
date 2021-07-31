@@ -75,10 +75,10 @@ class GetUserProfile(APIView):
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
     
-    def get(self, request): 
+    def get(self, request, user_id): 
         try:
-            current_user = self.request.user
-            serializer = UserSerializer(current_user, many=False)
+            user = NewUser.objects.get(id=user_id)
+            serializer = UserSerializer(user, many=False)
             return Response(serializer.data)
         except :
             return Response("you are not logged in")
@@ -109,10 +109,11 @@ class UpdateUserProfile(APIView):
 class AdminGetUsers(APIView):
     permission_classes = [IsAdminUser] 
     serializer_class = UserSerializer
-    
+    print("aaam here")
     def get(self, request):
         users = NewUser.objects.all().filter(is_active=True)
         serializer = UserSerializer(users, many=True)
+        print(serializer.data)
         return Response(serializer.data)
     
 
@@ -158,9 +159,6 @@ class AdminGetPutUserInformation(APIView):
         user.email = data["email"]
         user.phone_number = data["phone_number"]
         
-        if data["password"] !=  '':
-            user.password = make_password(data["password"])
-
         user.save()
         serializer = UserSerializer(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
