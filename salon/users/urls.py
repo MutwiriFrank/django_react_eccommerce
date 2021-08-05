@@ -18,7 +18,7 @@ urlpatterns = [
     path('profile/update/', UpdateUserProfile.as_view(), name="update_profile"),
     path('all_users/', AdminGetUsers.as_view(), name="users"),
     path('delete/<str:user_id>/', AdminDeleteUser.as_view(), name="delete_user"),
-    path('get_edit/<str:user_id>/', AdminGetPutUserInformation.as_view(), name="delete_user"),
+    path('edit/<str:user_id>/', AdminGetPutUserInformation.as_view(), name="delete_user"),
     path('<str:user_id>/', GetUserProfile.as_view(), name="user_profile"),
     
     

@@ -45,7 +45,7 @@ function ProfileScreen({history}) {
                 dispatch({ type: USER_UPDATE_PROFILE_RESET })
                 dispatch(getUserDetails(userId.toString())) 
                 dispatch(listMyOrders()) 
-            }else{
+            }else if ( userId === user.id ){
                 setName(user.name)
                 setUsername(user.user_name) 
                 setEmail(user.email)

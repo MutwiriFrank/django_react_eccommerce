@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS , PRODUCT_LIST_FAIL,
-         PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS , PRODUCT_DETAILS_FAIL
+        PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS , PRODUCT_DETAILS_FAIL, PRODUCT_DETAILS_RESET,
+        PRODUCT_DELETE_REQUEST,  PRODUCT_DELETE_SUCCESS , PRODUCT_DELETE_FAIL,
+        PRODUCT_CREATE_REQUEST,  PRODUCT_CREATE_SUCCESS , PRODUCT_CREATE_FAIL, 
+        PRODUCT_EDIT_REQUEST,  PRODUCT_EDIT_SUCCESS , PRODUCT_EDIT_FAIL, PRODUCT_EDIT_RESET
+
+
         } from '../constants/productConstants'
 
 
@@ -34,7 +39,7 @@ export const listProductDetails = (pk) => async (dispatch) => {
 
         dispatch({
             type: PRODUCT_DETAILS_SUCCESS,
-            payload: data  
+            payload: data   
         })
 
     } catch (error) {
@@ -44,5 +49,115 @@ export const listProductDetails = (pk) => async (dispatch) => {
             ? error.response.data.detail
             : error.message,
     })
+    }
+}
+
+
+export const deleteProduct = (pk) => async(dispatch ) => {
+    try{
+        dispatch({
+            type: PRODUCT_DELETE_REQUEST,
+        })
+        //identify user and send data
+        const accessToken = JSON.parse(localStorage.getItem('userInfoAccess'));
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization : `Bearer ${accessToken}`
+            }
+        }
+
+        const {data} = await axios.delete(`/api/store/product/delete/${pk}/`, config)
+
+        dispatch({
+            type: PRODUCT_DELETE_SUCCESS,
+            payload: data
+        })
+
+
+    }catch(error){
+        dispatch({
+            type: PRODUCT_DELETE_FAIL,
+            payload: error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+    
+        })
+
+    }
+}
+
+export const productCreateAction = (name, price, description, countInStock, dealer, category, image) => async (dispatch) => {
+    try{
+        dispatch({
+            type: PRODUCT_CREATE_REQUEST
+        })
+
+        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+        const config = {
+            headers: {
+                'Content-type': 'application/json',
+                Authorization: `Bearer ${accessKey}`
+            }
+        }    
+        const { data } = await axios.post(
+            '/api/store/product/create/', 
+            { "name": name, "price": price, "description": description, "countInStock": countInStock,
+                        "dealer": dealer, "category": category, "image": image}, 
+            config
+        )
+
+        dispatch({
+            type: PRODUCT_CREATE_SUCCESS,
+            payload: data
+        })
+
+
+    }catch(error){
+        dispatch({
+            type: PRODUCT_CREATE_FAIL,
+            payload: error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+        })
+    }
+}
+
+export const productEditAction = (product) => async (dispatch) =>{
+    try{
+        dispatch({
+            type: PRODUCT_EDIT_REQUEST
+        })
+        const accessToken = JSON.parse(localStorage.getItem('userInfoAccess'))
+
+        const config = {
+            headers : {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`
+            }
+        }
+        console.log("product", product)
+
+        const {data} = await axios.put(
+            `/api/store/product/edit/${product.pk }/`, product, config
+        )
+    
+        dispatch({
+            type: PRODUCT_EDIT_SUCCESS,
+            
+        })
+  
+
+       
+    }catch(error){
+        dispatch({
+            type: PRODUCT_EDIT_FAIL,
+            payload: error.response && error.response.detail 
+            ? error.response.detail
+            : error.message
+        
+        
+        })
     }
 }

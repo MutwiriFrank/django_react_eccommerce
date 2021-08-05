@@ -4,7 +4,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import { getUserDetails } from '../actions/userActions'
+import { getUserDetails, updateUser } from '../actions/userActions'
 import FormContainer from '../components/FormContainer'
 
 
@@ -15,19 +15,19 @@ function AdminEditUserScreen({match, history}) {
     const [user_name, setUsername] = useState('')
     const [phone_number, setPhone] = useState('')
     const [email, setEmail] = useState('')
-    const [message, setMessage] = useState('')
-
+    
     const dispatch = useDispatch()
-
-
 
     const userDetails = useSelector(state => state.userDetails)
     const { error, loading, user } = userDetails
 
-    console.log("userId", userId)
-    console.log("user.id", user.id)
+    const userUpdate = useSelector(state => state.userUpdate)
+    const {error:updateError, loading: updateLoading, success: updateSuccess} = userUpdate
 
     useEffect(() => {
+        if(updateSuccess){
+            history.push('/admin/userlist')
+        }else{
             if(user && user.id === userId ){
                 setName(user.name)
                 setUsername(user.user_name) 
@@ -40,27 +40,17 @@ function AdminEditUserScreen({match, history}) {
 
                 
             }
-        }, [dispatch, userId, user])
+        }
 
-    // useEffect(() => {
-    //     if( !user.id !== userId ){
-    //         dispatch(getUserDetails(userId.toString())) 
-            
-    //     }else{
-    //         console.log("user-else", user.id)
-    //         setName(user.name)
-    //         setUsername(user.user_name) 
-    //         setEmail(user.email)
-    //         setPhone(user.phone_number)
+        } , [dispatch, userId, user, updateSuccess, history])
+    
 
-    //     }
-     
-    // }, [ userId, user])
+
+
 
     const submitHandler = (e) =>{
         e.preventDefault()
-        console.log("Clicked")
-      
+        dispatch(updateUser({id:user.id, name,email,  user_name, phone_number}))
     }
 
 
@@ -73,6 +63,9 @@ function AdminEditUserScreen({match, history}) {
             </Link>        
             <FormContainer>
                 <h1>Edit User</h1>
+                { updateLoading && <Loader /> }
+                {updateError && <Message variant='danger' >updateError</Message> }
+
                 { loading ? <Loader /> : error ? <Message variant='danger' >{error}</Message> : (
 
                     <Form onSubmit={ submitHandler }>

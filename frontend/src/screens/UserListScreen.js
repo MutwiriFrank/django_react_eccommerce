@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { LinkContainer} from 'react-router-bootstrap'
 import { Table, Button,  } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,7 +7,6 @@ import Message from '../components/Message'
 import { listUsers, deleteUser } from '../actions/userActions'
 
 
-    
 function UserListScreen( {history} ) {
 
     const dispatch = useDispatch()
@@ -45,6 +44,7 @@ function UserListScreen( {history} ) {
     return (
         
         <div>
+            { delete_error && <Message>{delete_error}</Message> }
 
             {loading  ? 
                 <Loader /> 

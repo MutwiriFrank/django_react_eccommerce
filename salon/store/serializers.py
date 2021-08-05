@@ -1,27 +1,34 @@
 from rest_framework import serializers
-from .models import Product, Category, Order, OrderItem, ShippingAddress
+from .models import Product, Category, Order, OrderItem, ShippingAddress, Dealer
 from users.serializers import UserSerializer
 
 class CategorySerializer(serializers.ModelSerializer):
-   
+
     class Meta:
         model = Category
         fields = ('name', )
 
+class DealerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Dealer
+        fields = ('shop_name', )
+
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
+    dealer = DealerSerializer()
 
     class Meta:
         model = Product
-        fields = ( 'pk', 'category', 'name', 'description', 'countInStock','price', 'image', 'rating', 'numReviews')
-  
-  
+        fields = ( 'pk', 'id', 'category', 'dealer', 'name','dealer', 'description', 'countInStock','price', 'image', 'rating', 'numReviews')
+
+
 class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
             model = ShippingAddress
             fields = "__all__" 
- 
- 
+
+
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
@@ -40,14 +47,11 @@ class OrderSerializer(serializers.ModelSerializer):
         items = obj.orderitem_set.all()
         serializer = OrderItemSerializer(items, many=True)
         return serializer.data
-    
     def get_shippingAddress(self, obj):
         try:
             address = obj.shippingaddress #can acccess using . and lowercase because its onetoone rlship
-             
         except:
             address = False
-     
             
         serializer = ShippingAddressSerializer(address, many=False)
         

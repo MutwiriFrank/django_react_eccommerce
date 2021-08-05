@@ -8,17 +8,110 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from . serializers import ProductSerializer, OrderSerializer
-from . models import Product, Order, ShippingAddress, OrderItem
+from . models import Category, Product, Order, ShippingAddress, OrderItem, Dealer
 
 
 # Create your views here.
 
+class ProductCreate(APIView):
+    permission_classes = [IsAdminUser, ]
+    serializer_class = ProductSerializer
+
+    def post(self, request):
+        data = request.data
+        name = data['name']
+        category = data['category']
+        description = data['description']
+        price = data['price']
+        countInStock = data['countInStock']
+        try:
+            rating = 4
+        except:
+            pass
+        try:
+            numReviews = 34
+        except:
+            pass
+        try:
+            image = data['image']
+        except:
+            pass
+        category_name = data['category']
+        print("category_name", category_name)
+        category = Category.objects.get(name=category_name)
+        
+        dealer_name = data['dealer']
+        dealer = Dealer.objects.get(shop_name=dealer_name)
+        
+
+        product = Product.objects.create(name=name, price=price, description=description, image=image, 
+                countInStock=countInStock, rating=rating, numReviews=numReviews, category=category, dealer=dealer )
+        
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data)
+
+
+
+        serializer = ProductSerializer()
+    
 
 class ProductList(ListAPIView):
     permission_classes = [AllowAny,]
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
 
+
+class ProductEdit(APIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ProductSerializer
+
+    def put(self, request, pk):
+        try:
+            product = Product.objects.get(id=pk)
+        except:
+            return Response("Error, Product not found. Please try again.")
+        data=request.data
+        print(data)
+
+        product.name = data['name']
+        product.description = data['description']
+        product.price = data['price']
+        product.countInStock = data['countInStock']
+        try:
+            product.rating = data['rating']
+        except:
+            pass
+        try:
+            product.numReviews = data['numReviews']
+        except:
+            pass
+        try:
+            product.image = data['image']
+        except:
+            pass
+        category_name = data['category']['name']
+        
+        category = Category.objects.get(name=category_name)
+        print("category", category)
+        product.category = category
+
+        dealer_shop_name = data['dealer']['shop_name']
+        product.dealer = Dealer.objects.get(shop_name=dealer_shop_name)
+        product.save()
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK )
+
+class ProductDelete(APIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = ProductSerializer
+
+    def delete(self, request, pk):
+        try:
+            product = Product.objects.get(id = pk)
+            product.delete()
+            return Response("Product deleted successfully", status=status.HTTP_200_OK)
+        except:
+            return Response("Error occured, try again.", status=status.HTTP_400_BAD_REQUEST)
     
 class ProductDetail(ListAPIView):
     permission_classes = [AllowAny,]
@@ -27,11 +120,13 @@ class ProductDetail(ListAPIView):
     def get(self, request, pk):
         try:
             product = Product.objects.get(pk=pk)
-            data = ProductSerializer(product).data
+            
         except:
             Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
-        
+
+        data = ProductSerializer(product).data
         return Response(data, status=status.HTTP_200_OK)
+        
 
 
 class ProductChange(RetrieveUpdateDestroyAPIView):
@@ -47,7 +142,6 @@ class AddOrderItem(APIView):
     def post(self, request):
         data = request.data
         orderItems = data['orderItems']
-        print(data)
         if orderItems :
             # 1. create order
             order = Order.objects.create(user= request.user, 
@@ -90,7 +184,6 @@ class GetMyOrders(APIView):
         except:
             return Response({"detail": "We could not identify you. Try again, or  logout and login again."}, 
             status=status.HTTP_400_BAD_REQUEST )
-        print("user", user)
         orders = user.order_set.all()
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -135,3 +228,21 @@ class UpdateOrderToPaid(APIView):
         # serializer = OrderSerializer(order, many=False)
         # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'detail': 'Order is paid'}, status=status.HTTP_200_OK)
+
+
+class EditUploadImage(APIView):
+    permission_classes = IsAdminUser
+    
+    def post(self, request) :
+        data= request.data
+        product_id = data['product_id']
+        try: 
+            product = Product.objects.get(id= product_id)
+        except:
+            return Response ("product could not be identified", status=status.HTTP_400_BAD_REQUEST)
+        
+        product.image = request.FILES('image')
+        product.save()
+        return Response('Image was uploaded')
+
+        

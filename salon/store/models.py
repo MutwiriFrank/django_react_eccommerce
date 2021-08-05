@@ -1,19 +1,21 @@
-from io import BytesIO
-from PIL import Image
+
 import uuid
 
-from django.core.files import File
+
 from django.db import models
 
 from users.models import NewUser
 
 
-class Dealer(NewUser):
+class Dealer(models.Model):
+    store_dealer = models.ForeignKey(NewUser, blank=True, null=True, on_delete=models.CASCADE)
     is_dealer = models.BooleanField(default=True)
-    shop_name = models.CharField(max_length=100, null=True, blank=True)
-    # location
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null = True, blank=True )
+    shop_name = models.CharField(max_length=100, null=True, blank=True,  default='mniiz_shop') 
+    location = models.CharField(max_length=255, null=True, blank=True,  default='mniiz_shop') 
+
+    phone_number = models.CharField(max_length=13, null=True, blank=True)
+
+
 
     class Meta:
         ordering = ('shop_name',)
@@ -35,19 +37,20 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, null=True)
+
+    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, related_name="dealer", null=True, blank=True, default='mniiz_shop')
     category = models.ForeignKey(Category, related_name="category", on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField( blank=True, null=True)
+    image = models.ImageField( blank=True, null=True, default='index.jpg')
     date_added = models.DateTimeField(auto_now_add=True)
     countInStock = models.IntegerField(null=True, blank=True, default=0)
     rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     numReviews = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        ordering = ('-date_added',)
+        ordering = ('-date_added',)     
 
     def __str__(self):
         return self.name
@@ -59,7 +62,6 @@ class Review(models.Model):
     name = models.CharField(max_length=200, null=True )
     rating = models.IntegerField(null=True, blank=True, default=0)
     comment = models.TextField(blank=True, null=True)
-    
     
     def __str__(self):
         return str( self.product)  + " - " + (self.rating)

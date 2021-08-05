@@ -199,7 +199,7 @@ function OrderScreen({ match  }) {
                                     <tr key={index}>
                                         <td>{index+1}</td>
                                         <td>                                      
-                                        <Image src={item.image} alt={item.name} fluid  />
+                                        <Image src={item.image.url} alt={item.name} fluid  />
                                         </td>
                                         <td>{item.name}</td>
                                         <td >{item.quantity}</td>

@@ -109,11 +109,9 @@ class UpdateUserProfile(APIView):
 class AdminGetUsers(APIView):
     permission_classes = [IsAdminUser] 
     serializer_class = UserSerializer
-    print("aaam here")
     def get(self, request):
         users = NewUser.objects.all().filter(is_active=True)
         serializer = UserSerializer(users, many=True)
-        print(serializer.data)
         return Response(serializer.data)
     
 
@@ -128,24 +126,12 @@ class AdminDeleteUser(APIView):
             return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
         user.is_active = False
         user.save()
-        print(user.is_active)
         return Response({"detail":"deactivated successfully"}, status=status.HTTP_200_OK)
 
 
 class AdminGetPutUserInformation(APIView):
     permission_classes = [ IsAdminUser ]
     serializer_class = [ UserSerializer ]
-
-    def get(self, request, user_id):
-        try:
-            user = NewUser.objects.get(id=user_id)
-        except:
-            return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
-
-        serializer = UserSerializer(user, many=False)
-        if serializer:
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({"detail":"Try again"}, status=status.HTTP_200_OK)
 
     def put(self, request, user_id):
         try:

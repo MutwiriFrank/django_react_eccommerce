@@ -29,13 +29,13 @@ export const createOrder = (order) => async (dispatch, getState) =>{
             `/api/store/order/add/`, 
             order, config     
         )
-   
-       dispatch({  
-           type: ORDER_CREATE_SUCCESS,
-           payload: data
-       })
 
-       dispatch({  
+        dispatch({  
+            type: ORDER_CREATE_SUCCESS,
+            payload: data
+        })
+
+        dispatch({  
             type: ORDER_CREATE_RESET,
             payload: data
         })

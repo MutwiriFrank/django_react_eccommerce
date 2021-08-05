@@ -11,7 +11,6 @@ import { ORDER_CREATE_RESET } from '../constants/orderConstants'
 function PlaceOrderScreen({history}) {
     const orderCreate = useSelector(state => state.orderCreate)
     const {order , error, success} = orderCreate
- 
     const payment = localStorage.getItem('paymentMethod') 
     ? JSON.parse(localStorage.getItem('paymentMethod')) 
     : {}
@@ -22,20 +21,19 @@ function PlaceOrderScreen({history}) {
     cart.ItemsPrice =  cartItems.reduce((acc, item ) => acc + item.qty * item.price, 0 )
     cart.shippingFee = 200
     cart.totalPrice = (Number(cart.ItemsPrice) + Number(cart.shippingFee))
-  
+
     if(!payment){
         history.push('/payment')
 
     }
     console.log(error)
-   
+
     useEffect (() =>{
         if(success){
-            console.log(4)
             history.push(`/order/${order.id}`)
-            dispatch({ type:ORDER_CREATE_RESET })
+            // dispatch({ type:ORDER_CREATE_RESET })
         }
-    },[success, history])
+    },[success, history, dispatch, order])
     
 
     const  placeOrder = () => {
@@ -48,7 +46,6 @@ function PlaceOrderScreen({history}) {
             totalPrice: cart.totalPrice
 
         }) )
-     
     }
 
     return error ? (
