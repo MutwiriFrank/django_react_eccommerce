@@ -231,7 +231,7 @@ class UpdateOrderToPaid(APIView):
 
 
 class EditUploadImage(APIView):
-    permission_classes = IsAdminUser
+    permission_classes = [IsAdminUser, ]
     
     def post(self, request) :
         data= request.data
@@ -241,8 +241,30 @@ class EditUploadImage(APIView):
         except:
             return Response ("product could not be identified", status=status.HTTP_400_BAD_REQUEST)
         
-        product.image = request.FILES('image')
+        product.image = request.FILES.get('image')
         product.save()
         return Response('Image was uploaded')
 
         
+class OrderList(ListAPIView):
+    permission_classes = [IsAdminUser,]
+    serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+    print(queryset)
+
+class UpdateOrderToDelivered(APIView):
+    permission_classes = [IsAdminUser, ]
+    serializer_class = OrderSerializer
+
+    def put(self, request, order_id):
+        try:
+            order = Order.objects.get(id=order_id)
+        except:
+            return Response({"detail": "Error experienced"}, status = status.HTTP_400_BAD_REQUEST )
+        
+        order.isDelivered = True
+        order.deliveredAt = datetime.now()
+        order.save()
+        return Response({'detail': 'Order is delivered'}, status=status.HTTP_200_OK)
+
+
