@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from rest_framework.views import APIView
 from rest_framework.generics import  ListAPIView, RetrieveUpdateDestroyAPIView
@@ -7,8 +8,8 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from . serializers import ProductSerializer, OrderSerializer
-from . models import Category, Product, Order, ShippingAddress, OrderItem, Dealer
+from . serializers import ProductSerializer, OrderSerializer, TopProductsSerializer
+from . models import Category, Product, Order, ShippingAddress, OrderItem, Dealer, Review, TopProducts
 
 
 # Create your views here.
@@ -37,7 +38,6 @@ class ProductCreate(APIView):
         except:
             pass
         category_name = data['category']
-        print("category_name", category_name)
         category = Category.objects.get(name=category_name)
         
         dealer_name = data['dealer']
@@ -52,13 +52,34 @@ class ProductCreate(APIView):
 
 
 
-        serializer = ProductSerializer()
-    
 
 class ProductList(ListAPIView):
     permission_classes = [AllowAny,]
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+
+    def get(self, request):
+        query = request.query_params.get('keyword')    
+        if query == None:
+            query = ''
+        products = Product.objects.filter(name__icontains=query)
+
+        page = request.query_params.get('page') # page we are on
+        paginator = Paginator(products, 1) # set up paginator
+
+        try:
+            products = paginator.page(page)  #if we pass a page from frontend
+        except PageNotAnInteger: # if we have not sent any page
+            products = paginator.page(1) # the first page is returned
+        except EmptyPage:  # when a page passed by user does not exist or have no content
+            products = paginator.page(paginator.num_pages)
+
+        if page == None:
+            page = 1
+
+        
+
+        serializer = ProductSerializer(products, many=True)
+        return Response({"products": serializer.data, "page": page, "pages":paginator.num_pages })
 
 
 class ProductEdit(APIView):
@@ -69,7 +90,7 @@ class ProductEdit(APIView):
         try:
             product = Product.objects.get(id=pk)
         except:
-            return Response("Error, Product not found. Please try again.")
+            return Response("Error, Product not found. Please try again.", status=status.HTTP_400_BAD_REQUEST )
         data=request.data
         print(data)
 
@@ -92,7 +113,6 @@ class ProductEdit(APIView):
         category_name = data['category']['name']
         
         category = Category.objects.get(name=category_name)
-        print("category", category)
         product.category = category
 
         dealer_shop_name = data['dealer']['shop_name']
@@ -122,10 +142,26 @@ class ProductDetail(ListAPIView):
             product = Product.objects.get(pk=pk)
             
         except:
-            Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
+            return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
 
         data = ProductSerializer(product).data
         return Response(data, status=status.HTTP_200_OK)
+
+class EditUploadImage(APIView):
+    permission_classes = [IsAdminUser, ]
+    
+    def post(self, request) :
+        data= request.data
+        product_id = data['product_id']
+        try: 
+            product = Product.objects.get(id= product_id)
+        except:
+            return Response ("product could not be identified", status=status.HTTP_400_BAD_REQUEST)
+        
+        product.image = request.FILES.get('image')
+        product.save()
+        return Response('Image was uploaded')
+
         
 
 
@@ -229,22 +265,6 @@ class UpdateOrderToPaid(APIView):
         # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'detail': 'Order is paid'}, status=status.HTTP_200_OK)
 
-
-class EditUploadImage(APIView):
-    permission_classes = [IsAdminUser, ]
-    
-    def post(self, request) :
-        data= request.data
-        product_id = data['product_id']
-        try: 
-            product = Product.objects.get(id= product_id)
-        except:
-            return Response ("product could not be identified", status=status.HTTP_400_BAD_REQUEST)
-        
-        product.image = request.FILES.get('image')
-        product.save()
-        return Response('Image was uploaded')
-
         
 class OrderList(ListAPIView):
     permission_classes = [IsAdminUser,]
@@ -265,6 +285,88 @@ class UpdateOrderToDelivered(APIView):
         order.isDelivered = True
         order.deliveredAt = datetime.now()
         order.save()
-        return Response({'detail': 'Order is delivered'}, status=status.HTTP_200_OK)
+        return Response({'detail': 'Order is delivered'}, status=status.HTTP_400_BAD_REQUEST)
+
+class CreateReview(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProductSerializer
+
+    def post(self, request, product_id):
+
+        user = request.user
+        data = request.data
+        print(data)
+        try:
+            product= Product.objects.get(id=product_id)
+        except:
+            return Response ({'detail': 'Error! Product not found'}, status=status.HTTP_404_NOT_FOUND )
+
+        # Check if user has already reviewed the product
+        user_review_exist = product.review_set.filter(user=user).exists()
+
+        if user_review_exist:
+            print("reviewed already")
+            return Response({'detail': 'Error! you have alredy reviewed product'}, status=status.HTTP_400_BAD_REQUEST )
+
+        try:
+            rating = data['rating']  or None
+        except:
+            pass
+        try:
+            comment = data['comment'] or None
+        except:
+            pass
+
+        # rating_values = ("1" ,"2" , "3" , "4" , "5" )
+
+        # if rating  is not  rating_values:
+        #     return Response({'detail':  'Error! Maximum rating is 5'} , status=status.HTTP_400_BAD_REQUEST )
+
+        if rating == 0 and comment == None:
+            return Response( {'detail':  'Error! Please add a rating and a comment'} , status=status.HTTP_400_BAD_REQUEST )
+
+        print("rating", product.rating)
+
+        # 3. Add review 
+        user_orders = user.order_set.filter(isPaid=True)
+        if user_orders.count() == 0:
+            return Response ({'detail':  'Error! You have not purchased anything from our shop'}, status=status.HTTP_400_BAD_REQUEST )
+        
+        bought_items = []
+        for order in user_orders:
+            order.orderitem_set.filter(product = product)
+            bought_items.append(product)
 
 
+        if len(bought_items) == 0:
+            return Response({'detail':  'Error! You have not purchased this item from our shop'} , status=status.HTTP_400_BAD_REQUEST )
+
+        else :
+            review = Review.objects.create(
+                user=user,
+                product = product,
+                name = user.user_name,
+                comment = comment,
+                rating=rating,
+            )
+
+            reviews = product.review_set.all()
+            product.numReviews = len(reviews)
+
+            total_ratings = 0
+            for i in reviews:
+                total_ratings += i.rating
+
+            print("total_ratings", total_ratings)
+            product.rating = total_ratings / len(reviews)
+            print("final_rating", product.rating)
+            product.save()
+
+            return Response({"detail": "Review Added"})
+
+        
+        
+
+
+
+        
