@@ -1,0 +1,22 @@
+.checkout_stepsDiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly; 
+    padding: 0;
+    margin: 0 0 10 0;
+
+}
+.checkout_stepsDiv li{
+    text-decoration: none;
+    font-weight: 510;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+@media screen and (max-width: 480px){
+    .checkout_stepsDiv li{
+        font-size: 0.9rem
+        
+    }
+    
+}

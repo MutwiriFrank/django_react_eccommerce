@@ -1,70 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { ListGroup,Table, Button, Row, Col, Image, Card} from 'react-bootstrap'
+import { ListGroup,Table, Button, Row, Col, Image, Card, ListGroupItem} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { PayPalButton } from 'react-paypal-button-v2'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { getOrderDetails, payOrder, deliverOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstants'
+import '../css/Order.css'
 
-
-// function OrderScreen({ match  }) {
-//     const orderId = match.params.id
-//     const dispatch = useDispatch()
-
-//     const [sdkReady, setSdkReady] = useState(false)
-
-//     const orderDetails = useSelector(state => state.orderDetails)
-//     const { order, error, loading } = orderDetails
-
-//     const orderPay = useSelector(state => state.orderPay)
-//     const { loading: loadingPay, success: successPay } = orderPay
-
-//     try{
-//         if(order){
-//             console.log(order)
-//             order.ItemsPrice =  order.order_items.reduce((acc, item ) => acc + item.quantity * item.price, 0 ).toFixed(2)
-//         }
-
-//     }catch{
-//        const error2 = "Order does not exist"
-//     }
-
-//     const addPayPalScript = () =>{
-//         const script = document.createElement('script')
-//         script.type = 'text/javascript'
-//         script.src = "https://www.paypal.com/sdk/js?client-id=AdbuNTQ9aF9RpssvbzWFy_d0w-aon4P67Nss40XTpTKtp-j2_JBEIHEKMYLzekSdZqJeczweMT65zyLc"
-//         script.async = true
-//         script.onload = () => {
-//             setSdkReady(true)
-//         }
-//         document.body.appendChild(script)
-//     }
-
-
-//     useEffect (() =>{
-//         if(!order || successPay || order.id !== Number(orderId)){
-//             console.log("nimefika hapa")
-//             dispatch(getOrderDetails(orderId))
-//         }else if(!order.isPaid){
-//             if(!window.paypal){
-//                 addPayPalScript()
-//             }else{
-//                 setSdkReady(true)
-//             }
-//         }
-       
-//     },[dispatch,order, orderId, successPay  ])
-    
-
-//     const successPaymentHandler = (paymentResult) => {
-//         console.log("nimefika hapa")
-//         dispatch(payOrder(orderId, paymentResult))
-//     }
-   
-
-//     console.log(error)
-function OrderScreen({ match  }) {
+function OrderScreen({ match, history  }) {
     const orderId = match.params.id
     const dispatch = useDispatch()
 
@@ -76,12 +21,18 @@ function OrderScreen({ match  }) {
 
     const orderPay = useSelector(state => state.orderPay)
     const { loading: loadingPay, success: successPay } = orderPay
+ 
+    const orderDeliver = useSelector(state => state.orderDeliver)
+    const { loading: loadingDeliver, success: successDeliver } = orderDeliver
 
-    // const orderDeliver = useSelector(state => state.orderDeliver)
-    // const { loading: loadingDeliver, success: successDeliver } = orderDeliver
-
-    // const userLogin = useSelector(state => state.userLogin)
-    // const { userInfo } = userLogin
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+    
+    useEffect(() => {
+        if (!userInfo){
+            history.push('/login')
+        }
+    },[userInfo, history])
 
 
     try{
@@ -108,24 +59,31 @@ function OrderScreen({ match  }) {
         document.body.appendChild(script)
     }
 
+
     useEffect(() => {
-        if (!order || successPay || order.id !== Number(orderId) ) {
+        if (!order || successPay || order.id !== Number(orderId) || successDeliver ) {
+            dispatch({ type: ORDER_PAY_RESET })
+            dispatch({ type: ORDER_DELIVER_RESET })
+
+
             dispatch(getOrderDetails(orderId))
-        } else if (!order.isPaid) {
-            if (!window.paypal) {
-                addPayPalScript()
-            } else {
-                setSdkReady(true)
-            } 
-        }
-    }, [dispatch, order, orderId, successPay ])
+        } 
+        
+        // else if (!order.isPaid) {
+        //     if (!window.paypal) {
+        //         addPayPalScript()
+        //     } else {
+        //         setSdkReady(true)
+        //     } 
+        // }
+    }, [dispatch, order, orderId, successPay, successDeliver  ])
 
 
-    const successPaymentHandler = (paymentResult) => {
-        dispatch(payOrder(orderId, paymentResult))
-    }
+    
 
-
+    const deliverHandler = () =>(
+        dispatch(deliverOrder(order))
+    )
 
 
     return loading ? (
@@ -135,17 +93,17 @@ function OrderScreen({ match  }) {
     ) : order == 'does not exist' ? (
         <Message variant='danger'>Order does not exist </Message>
     ): (
-        <div>
+        <div className ="mainOrder_div">
 
             <Row>
-                <Col md={8}>
+                <Col md={7} >
                     <ListGroup variant='flush'>
                         <ListGroup.Item >
-                            <h2>Delivery</h2>
-                            <p><strong>Name: </strong>{order.user.name}</p>
-                            <p><strong>Email: </strong>{order.user.email}</p>
-                            <p><strong>Phone Number: </strong>{order.shippingAddress.phone}</p>
-                            <p>
+                            <p className="subtitle" >Delivery</p>
+                            <p className="ordinary_p"><strong>Name: </strong>{order.user.name}</p>
+                            <p className="ordinary_p"><strong>Email: </strong>{order.user.email}</p>
+                            <p className="ordinary_p"><strong>Phone Number: </strong>{order.shippingAddress.phone}</p>
+                            <p className="ordinary_p">
                                 <strong>Address:   </strong>
                                 {order.shippingAddress.city }, {order.shippingAddress.estate}, {order.shippingAddress.road}, {order.shippingAddress.landmark} 
 
@@ -161,11 +119,10 @@ function OrderScreen({ match  }) {
 
                     </ListGroup>
 
-                    <ListGroup>
+                    <ListGroup variant='flush'>
                         <ListGroup.Item >
-                            <h2>Payment Method</h2>
-                            {console.log(order)}
-                            <p>
+                            <p className="subtitle">Payment Method</p>
+                            <p className="ordinary_p">
                                 <strong>Method:   </strong>
                                 {order.payment_method} 
                             </p>
@@ -175,48 +132,40 @@ function OrderScreen({ match  }) {
                                 <Message variant='warning' >Not paid</Message>
                             )                             
                             }
-
                         </ListGroup.Item>
-
                     </ListGroup>
                     
-                    <ListGroup>
-                    
-                    <Table  bordered hover size="sm">
+                    <ListGroup>               
+                    <Table  responsive className='table-sm order__table' bordered hover size="sm">
                             <thead>
                                 <tr>
                                 <th></th>
-                                <th>Image</th>
-                                <th > Name</th>
-                                <th>Quantity</th>
-                                <th> Price</th>
-                                <th>Total</th>
+                                <th className="table_subtitle"> Name</th>
+                                <th className="table_subtitle">Quantity</th>
+                                <th className="table_subtitle"> Price</th>
+                                <th className="table_subtitle"> Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
                                 {order.order_items.map((item, index) => (
                                     <tr key={index}>
-                                        <td>{index+1}</td>
-                                        <td>                                      
-                                        <Image src={item.image.url} alt={item.name} fluid  />
-                                        </td>
-                                        <td>{item.name}</td>
-                                        <td >{item.quantity}</td>
-                                        <td>{item.price}</td>  
-                                        <td>{item.price * item.quantity}</td>
+                                        <td className="ordinary_p">{index+1}</td>                                 
+                                        <td className="ordinary_p">{item.name}</td>
+                                        <td className="ordinary_p" >{item.quantity}</td>
+                                        <td className="ordinary_p">{item.price}</td>  
+                                        <td className="ordinary_p">{item.price * item.quantity}</td>
                                     </tr>                            
                                     
                                 ))}
                                 <tr >
-                                    <td colSpan="5"><strong>Total</strong>  </td>
+                                    <td className="ordinary_p" colSpan="4"><strong>Total</strong>  </td>
                                     <td>{ order.ItemsPrice}</td>
                                 </tr>
                             
                             </tbody>
                         </Table>
-                    </ListGroup>
-                
+                    </ListGroup>              
                 </Col>
             
                 <Col md={4}>
@@ -224,44 +173,49 @@ function OrderScreen({ match  }) {
                         <ListGroup variant='flush'>
                             <ListGroup.Item>
                         
-                                    <h2>Order Summary</h2>
+                                    <p className="subtitle">Order Summary</p>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                     <Row>
-                                        <Col>Item Total</Col>
-                                        <Col>Ksh {order.ItemsPrice}</Col>
+                                        <Col className="ordinary_p">Item Total</Col>
+                                        <Col className="ordinary_p" >Ksh {order.ItemsPrice}</Col>
                                     </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                     <Row>
-                                        <Col>Delivery fee</Col>
-                                        <Col>Ksh {order.shipping_price}</Col>
+                                        <Col className="ordinary_p">Delivery fee</Col>
+                                        <Col className="ordinary_p">Ksh {order.shipping_price}</Col>
                                     </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                    {error && <Message vvariant='danger' >{error}</Message>}
+                                    {error && <Message variant='danger' >{error}</Message>}
                             </ListGroup.Item>
                             <ListGroup.Item>
                                     <Row>
-                                        <Col>Total</Col>
-                                        <Col>Ksh  {Number(order.ItemsPrice)+ Number(order.shipping_price)} </Col>
+                                        <Col className="ordinary_p">Total</Col>
+                                        <Col className="ordinary_p">Ksh  {Number(order.ItemsPrice)+ Number(order.shipping_price)} </Col>
                                     </Row>
                             </ListGroup.Item>
-                            {!order.isPaid && (
-                                    <ListGroup.Item>
-                                        {loadingPay && <Loader />}
-                                        {!sdkReady ? (
-                                            <Loader />
-                                        ) : (
-                                                <PayPalButton
-                                                    amount={order.totalPrice}
-                                                    onSuccess={successPaymentHandler}
-                                                />
-                                            )}
-                                    </ListGroup.Item>
-                                )}
+                  
                         
                         </ListGroup>
+                        
+                        { userInfo && userInfo.isAdmin && !order.isDelivered && order.isPaid && (
+
+                            <ListGroup.Item>
+                                <Button
+                                type="button"
+                                variant="success"
+                                className ="btn btn-block"
+                                onClick={ deliverHandler}                              
+                                >
+                                    Mark as Delivered
+                                </Button>
+
+                            </ListGroup.Item>
+                        )}
+                    
+                        
                     
                     </Card>
 

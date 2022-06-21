@@ -1,12 +1,15 @@
 from django.urls import path
-from .views import (ProductList, ProductChange, ProductDetail, ProductEdit, ProductDelete, ProductCreate,
+from .views import (ListSubCategories, ListCategories, ProductList, ProductChange, ProductDetail, ProductEdit, ProductDelete, ProductCreate,
                     AddOrderItem, GetOrderById, UpdateOrderToPaid, GetMyOrders, EditUploadImage, OrderList, 
-                    UpdateOrderToDelivered, CreateReview, CaroselProducts )
+                    UpdateOrderToDelivered, CreateReview, ListCaroselProducts, ListTopProducts , getSubcategoryProducts,
+                    ListRoomCategories,
+                    )
 
 app_name = 'store'
 
 urlpatterns = [
     path('', ProductList.as_view(), name="list_products"),
+    path('subcategory/<int:subcategory_id>/', getSubcategoryProducts.as_view(), name="list_products_incategory"),
     path('product/edit/<int:pk>/', ProductEdit.as_view(), name="product_edit"),
     path('product/create/', ProductCreate.as_view(), name="product_create"),
     path('product/edit_image/', EditUploadImage.as_view(), name="upload_image"),
@@ -15,7 +18,13 @@ urlpatterns = [
     path('product/<int:pk>/', ProductDetail.as_view(), name="product_detail"),
     path('product/<int:product_id>/review/', CreateReview.as_view(), name="product_review"),
 
+    path('categories/', ListCategories.as_view(), name="carosel_products"),
+    path('sub_categories/', ListSubCategories.as_view(), name="sub_categories"), 
+    path('rooms/', ListRoomCategories.as_view(), name="rooms"), 
 
+
+    path('carosel/', ListCaroselProducts.as_view(), name="carosel_products"),
+    path('top_products/', ListTopProducts.as_view(), name="top_products"),
 
     path('order/add/', AddOrderItem.as_view(), name="add_order"),
     path('order/my-orders/', GetMyOrders.as_view(), name="my_orders"),

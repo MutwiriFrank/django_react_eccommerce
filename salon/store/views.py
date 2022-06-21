@@ -8,8 +8,9 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from . serializers import ProductSerializer, OrderSerializer, TopProductsSerializer
-from . models import Category, Product, Order, ShippingAddress, OrderItem, Dealer, Review, TopProducts
+from . serializers import ( ProductSerializer, OrderSerializer, CaroselItemsSerializer, CategorySerializer, 
+                            SubCategorySerializer, RoomSerializer)
+from . models import (Category, Product, Order, ShippingAddress, OrderItem, Dealer, Review, CaroselItems, SubCategory, Room)
 
 
 # Create your views here.
@@ -21,7 +22,7 @@ class ProductCreate(APIView):
     def post(self, request):
         data = request.data
         name = data['name']
-        category = data['category']
+        subcategory = data['category']
         description = data['description']
         price = data['price']
         countInStock = data['countInStock']
@@ -38,19 +39,17 @@ class ProductCreate(APIView):
         except:
             pass
         category_name = data['category']
-        category = Category.objects.get(name=category_name)
+        subcategory = SubCategory.objects.get(name=category_name)
         
         dealer_name = data['dealer']
         dealer = Dealer.objects.get(shop_name=dealer_name)
         
 
         product = Product.objects.create(name=name, price=price, description=description, image=image, 
-                countInStock=countInStock, rating=rating, numReviews=numReviews, category=category, dealer=dealer )
+                countInStock=countInStock, rating=rating, numReviews=numReviews, subcategory=subcategory, dealer=dealer )
         
         serializer = ProductSerializer(product, many=False)
         return Response(serializer.data)
-
-
 
 
 class ProductList(ListAPIView):
@@ -64,7 +63,7 @@ class ProductList(ListAPIView):
         products = Product.objects.filter(name__icontains=query)
 
         page = request.query_params.get('page') # page we are on
-        paginator = Paginator(products, 1) # set up paginator
+        paginator = Paginator(products, 24) # set up paginator
 
         try:
             products = paginator.page(page)  #if we pass a page from frontend
@@ -92,7 +91,6 @@ class ProductEdit(APIView):
         except:
             return Response("Error, Product not found. Please try again.", status=status.HTTP_400_BAD_REQUEST )
         data=request.data
-        print(data)
 
         product.name = data['name']
         product.description = data['description']
@@ -121,6 +119,8 @@ class ProductEdit(APIView):
         serializer = ProductSerializer(product, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK )
 
+
+
 class ProductDelete(APIView):
     permission_classes = [IsAdminUser]
     serializer_class = ProductSerializer
@@ -142,7 +142,7 @@ class ProductDetail(ListAPIView):
             product = Product.objects.get(pk=pk)
             
         except:
-            return Response('Product not found', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Product not found'}, status=status.HTTP_400_BAD_REQUEST)
 
         data = ProductSerializer(product).data
         return Response(data, status=status.HTTP_200_OK)
@@ -156,7 +156,7 @@ class EditUploadImage(APIView):
         try: 
             product = Product.objects.get(id= product_id)
         except:
-            return Response ("product could not be identified", status=status.HTTP_400_BAD_REQUEST)
+            return Response ({"detail": "product could not be identified"}, status=status.HTTP_400_BAD_REQUEST)
         
         product.image = request.FILES.get('image')
         product.save()
@@ -242,6 +242,7 @@ class GetOrderById(APIView):
         
         if user.is_staff or order.user:
             serializer = OrderSerializer(order, many=False)
+            print(serializer.data)
             return Response(serializer.data)
         return Response({"detail":"You cant view another users order"}, status=status.HTTP_400_BAD_REQUEST )       
     
@@ -263,14 +264,13 @@ class UpdateOrderToPaid(APIView):
         order.save()
         # serializer = OrderSerializer(order, many=False)
         # return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({'detail': 'Order is paid'}, status=status.HTTP_200_OK)
+        return Response({'Order is paid'}, status=status.HTTP_200_OK)
 
         
 class OrderList(ListAPIView):
     permission_classes = [IsAdminUser,]
     serializer_class = OrderSerializer
     queryset = Order.objects.all()
-    print(queryset)
 
 class UpdateOrderToDelivered(APIView):
     permission_classes = [IsAdminUser, ]
@@ -285,7 +285,7 @@ class UpdateOrderToDelivered(APIView):
         order.isDelivered = True
         order.deliveredAt = datetime.now()
         order.save()
-        return Response({'detail': 'Order is delivered'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({ 'Order is delivered'}, )
 
 class CreateReview(APIView):
     permission_classes = [IsAuthenticated]
@@ -295,7 +295,6 @@ class CreateReview(APIView):
 
         user = request.user
         data = request.data
-        print(data)
         try:
             product= Product.objects.get(id=product_id)
         except:
@@ -305,7 +304,6 @@ class CreateReview(APIView):
         user_review_exist = product.review_set.filter(user=user).exists()
 
         if user_review_exist:
-            print("reviewed already")
             return Response({'detail': 'Error! you have alredy reviewed product'}, status=status.HTTP_400_BAD_REQUEST )
 
         try:
@@ -325,7 +323,6 @@ class CreateReview(APIView):
         if rating == 0 and comment == None:
             return Response( {'detail':  'Error! Please add a rating and a comment'} , status=status.HTTP_400_BAD_REQUEST )
 
-        print("rating", product.rating)
 
         # 3. Add review 
         user_orders = user.order_set.filter(isPaid=True)
@@ -357,15 +354,106 @@ class CreateReview(APIView):
             for i in reviews:
                 total_ratings += i.rating
 
-            print("total_ratings", total_ratings)
             product.rating = total_ratings / len(reviews)
-            print("final_rating", product.rating)
             product.save()
 
             return Response({"detail": "Review Added"})
 
+
+class ListCaroselProducts(APIView):
+    serializer_class = [CaroselItemsSerializer, ]
+
+    def get(self, request):
+        carosel = CaroselItems.objects.filter().order_by('-id')[0:5]
+        serializer = CaroselItemsSerializer(carosel, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ListTopProducts(APIView):
+    
+    def get(self, request):
+        topProducts = Product.objects.filter().order_by("-rating") [0:8]
+        serializer = ProductSerializer(topProducts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ListBedroomTopProducts(APIView):
+    
+    def get(self, request):
+        bedroomProducts = Product.objects.filter().order_by("-rating") [0:8]
+        serializer = ProductSerializer(bedroomProducts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ListCategories(APIView):
+
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ListRoomCategories(APIView):
+
+    def get(self, request):
+        rooms = Room.objects.all()
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ListSubCategories(APIView):
+
+    def get(self, request):
+        subcategories = SubCategory.objects.all()
+        serializer = SubCategorySerializer(subcategories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class getSubcategoryProducts(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, subcategory_id):
         
+        try:
+            subcategory = SubCategory.objects.get(id=subcategory_id)
+        except:
+            return Response ({"detail": "Error, category does not exist"},  status=status.HTTP_400_BAD_REQUEST)
+
+        products = subcategory.product_set.all()
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK )
+
+
+class getProductsByRooms(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, subcategory_id):
         
+        try:
+            room = Room.objects.get(id=subcategory_id)
+        except:
+            return Response ({"detail": "Error, category does not exist"},  status=status.HTTP_400_BAD_REQUEST)
+
+        products = room.product_set.all()
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK )
+
+
+class ListBedroomTopProducts(APIView):
+    
+    def get(self, request):
+        room = Room.objects.get(room="Bedroom")
+        products = room.product_set.filter().order_by("-rating") [0:8]
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ListLivingRoomTopProducts(APIView):
+    
+    def get(self, request):
+        room = Room.objects.get(room="Living")
+        products = room.product_set.filter().order_by("-rating") [0:8]
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 

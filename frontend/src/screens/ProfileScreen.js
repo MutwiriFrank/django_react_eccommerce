@@ -9,6 +9,7 @@ import FormContainer from '../components/FormContainer'
 import { getUserDetails, updateUserProfile } from '../actions/userActions'
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
 import { listMyOrders } from '../actions/orderActions'
+import '../css/Profile.css'
 
 
 
@@ -25,10 +26,9 @@ function ProfileScreen({history}) {
 
     const userDetails = useSelector(state => state.userDetails)
     const { error, loading, user } = userDetails
+    
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
-    const userId = Number(userInfo.id)
-    console.log(userId)
 
     const userUpdateProfile = useSelector(state => state.userUpdateProfile)
     const { success } = userUpdateProfile
@@ -41,6 +41,7 @@ function ProfileScreen({history}) {
         if (!userInfo){
             history.push('/login')
         }else{
+            const userId = Number(userInfo.id)
             if(!user || !user.name || success || userId !== user.id ){
                 dispatch({ type: USER_UPDATE_PROFILE_RESET })
                 dispatch(getUserDetails(userId.toString())) 
@@ -65,7 +66,7 @@ function ProfileScreen({history}) {
         if (password.length < 8){
             setMessage("password is too short")}
 
-        if (password != confirmPassword){
+        if (password !== confirmPassword){
             setMessage("password do not match")
 
         
@@ -90,50 +91,53 @@ function ProfileScreen({history}) {
 
     return (
         <Row>
-            <Col md={3}> 
-                <h2>User Profile</h2>
-                {error && <Message variant='danger'>{error}</Message>}
+            <Col sm={12} md={7} lg={5} className="profile__div"> 
+
+                <p className="subtitle">User Profile</p>
+
+                {error && <Message variant='danger'></Message>}
                 {message && <Message variant='danger'>{message}</Message>}
+                <p className="ordinary_p" > <strong>Edit by changing the values</strong> </p>
             <Form onSubmit={ submitHandler }>
                 <Form.Group controlId='name'>
-                    <Form.Label>Name </Form.Label>
-                        <Form.Control type='text' value={name}  onChange={(e) => setName(e.target.value) } >
+                    <Form.Label className="ordinary_p">Name </Form.Label>
+                        <Form.Control className="ordinary_p" type='text' value={name}  onChange={(e) => setName(e.target.value) } >
 
                         </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='user_name'>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
+                    <Form.Label className="ordinary_p" >Username</Form.Label>
+                    <Form.Control className="ordinary_p" type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
 
 
                 <Form.Group controlId='email'>
-                    <Form.Label>Email Addresss</Form.Label>
-                    <Form.Control type='email' placeholder='Enter email' value={email}  onChange={(e) => setEmail(e.target.value) } >
+                    <Form.Label className="ordinary_p" >Email Addresss</Form.Label>
+                    <Form.Control className="ordinary_p" type='email' placeholder='Enter email' value={email}  onChange={(e) => setEmail(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='phone_number'>
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control type='phone' placeholder='Enter phone number' value={phone_number}  onChange={(e) => setPhone(e.target.value) } >
+                    <Form.Label className="ordinary_p" >Phone Number</Form.Label>
+                    <Form.Control className="ordinary_p" type='phone' placeholder='Enter phone number' value={phone_number}  onChange={(e) => setPhone(e.target.value) } >
 
                     </Form.Control>
 
                 </Form.Group >
 
                 <Form.Group controlId='password'>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type='password' placeholder='Enter password' value={password}  onChange={(e) => setPassword(e.target.value) } >
+                    <Form.Label className="ordinary_p" >Password</Form.Label>
+                    <Form.Control className="ordinary_p" type='password' placeholder='Enter password' value={password}  onChange={(e) => setPassword(e.target.value) } >
                     </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='confirmpassword'>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control type='password' placeholder='Confirm password' value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value) } >
+                    <Form.Label className="ordinary_p" >Password</Form.Label>
+                    <Form.Control className="ordinary_p" type='password' placeholder='Confirm password' value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value) } >
                     </Form.Control>
                 </Form.Group >
 
@@ -145,75 +149,7 @@ function ProfileScreen({history}) {
 
             
             </Col>
-            <Col md={9}>
-                <h2>My Orders</h2>
-                {loadingOrders ? (
-                    <Loader />
-                ) : errorOrders ? (
-                    <Message variant="danger" >{{error}}</Message>
-                ) : (
-                    <Table responsive className='table-sm' bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                <th></th>
-                                <th>CODE</th>
-                                <th>DATE</th>
-                                <th >TOTAL</th>
-                                <th>PAID</th>
-                                <th> DELIVERED</th>
-                                <th>VIEW ORDER</th>
-                                <th>CANCEL</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                                
-                                {orders.map((order, index) => (
-                                    <tr key={index}>                         
-                                        <td>{index+1}</td>
-                                        <td>
-                                            <Link to={`/order/${order.id}`}>
-                                                <p style={{  color:"blue", textDecoration: "underline"}}>{order.id}</p> 
-                                            </Link>
-                                        </td>
-                                        <td>{(order.created_at).toString().split("T")[0]}</td>
-                                        <td>Ksh{(order.total_price).toString().split(".")[0]}</td>
-                                        <td>{order.isPaid ? 
-                                            (<i class="fa fa-check" style={{color:"green"}}></i>) 
-                                            : (<i class="fa fa-times" style={{color:"red"}}  ></i>)
-                                        
-                                        }</td>
-                                        <td>{order.isDelivered ? 
-                                            (<i class="fa fa-check" style={{color:"green"}} ></i>)
-                                            : ( <i class="fa fa-times" style={{color:"red"}} ></i>)
-                                        
-                                        }</td>  
-                                        <td> 
-                                            <Link to={`/order/${order.id}`}>
-                                                <i class="fa fa-eye" aria-hidden="true"></i>
-                                            </Link>
-                                        </td>
-                                        <td>
-                                        <Button
-                                                type= 'button'
-                                                variant= 'light'
-                                        > 
-                                            <i className='fa fa-trash' style={{color:"red", fontSize:"19px" }}></i>
-
-                                            </Button>
-                                        </td>
-                                    </tr>                                
-                                    
-                                ))}
-
-                            
-                            </tbody>
-                        </Table>
-                )
-                
-                
-                }
-            </Col>
+            
             
         </Row>
     )

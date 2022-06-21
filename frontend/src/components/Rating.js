@@ -1,10 +1,11 @@
 import React from 'react'
+import '../css/Product.css'
 
 
 function Rating({ value, text, color }) {
     return (
         <div className="rating">
-         
+        
             <span>
                 <i style={{ color }} className={
                     value >= 1
@@ -66,9 +67,11 @@ function Rating({ value, text, color }) {
                 </i>
             </span>
 
-            <span>{text && text}</span>
+            <p className="product__reviews">{text && text} </p>
+            
         </div>
     )
 }
+
 
 export default Rating

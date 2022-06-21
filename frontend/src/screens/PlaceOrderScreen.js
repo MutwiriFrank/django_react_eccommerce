@@ -6,7 +6,7 @@ import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
 import {createOrder} from '../actions/orderActions'
 import { ORDER_CREATE_RESET } from '../constants/orderConstants'
-
+import '../css/PlaceOrder.css'
 
 function PlaceOrderScreen({history}) {
     const orderCreate = useSelector(state => state.orderCreate)
@@ -26,7 +26,6 @@ function PlaceOrderScreen({history}) {
         history.push('/payment')
 
     }
-    console.log(error)
 
     useEffect (() =>{
         if(success){
@@ -52,21 +51,65 @@ function PlaceOrderScreen({history}) {
         <Message>{error}</Message>
     ) :
     
-     ( 
+    ( 
         <div>
             <CheckoutSteps step1 step2 step3 step4 />
 
             <Row>
-                <Col md={8}>
+            <ListGroup>                  
+
+            <Table responsive className='table-sm placeOrder_table' bordered hover size="sm">
+                <thead>
+                    <tr>
+                    <th></th>
+                    <th className="table_subtitle">Image</th>
+                    <th className="table_subtitle"> Name</th>
+                    <th className="table_subtitle"> Quantity</th>
+                    <th className="table_subtitle"> Price</th>
+                    <th className="table_subtitle">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {cart.cartItems.map((item, index) => (
+                        <tr key={index}>
+                            <td>{index+1}</td>
+                            <td className="image_td">
+                            
+                                <Image src={item.image} alt={item.name} fluid  />                                      
+                            
+                            </td>
+                            <td className="ordinary_p" >{item.name}</td>
+                            <td className="ordinary_p" >{item.qty}</td>
+                            <td className="ordinary_p" >{item.price * 1}</td>  
+                            <td className="ordinary_p" >{item.price * item.qty}</td>
+                        </tr>
+                      
+                        
+                    ))}
+                    <tr >
+                        <td colSpan="5"><strong>Total</strong>  </td>
+                        <td>{ cart.ItemsPrice}</td>
+                    </tr>
+                
+                </tbody>
+            </Table>
+
+        </ListGroup>
+            
+            </Row>
+
+            <Row>
+                <Col md={7}>
                     <ListGroup>
                         <ListGroup.Item >
-                            <h2>Delivery</h2>
-                            <p>
-                                <strong>Shipping:   </strong>
-                                {cart.shippingAddress.city } {cart.shippingAddress.estate} {cart.shippingAddress.road}
-                                {cart.shippingAddress.landmark} {cart.shippingAddress.phone}
-
-                            </p>
+                            <p className="subtitle" >Delivery</p>
+                                                        
+                                <p className="ordinary_p"  >
+                                    <strong>Address:   </strong>
+                                    {cart.shippingAddress.city } {cart.shippingAddress.estate} {cart.shippingAddress.road}
+                                    {cart.shippingAddress.landmark} {cart.shippingAddress.phone}
+                                </p>
+                            
 
                         </ListGroup.Item>
 
@@ -74,8 +117,8 @@ function PlaceOrderScreen({history}) {
 
                     <ListGroup>
                         <ListGroup.Item >
-                            <h2>Payment Method</h2>
-                            <p>
+                            <p className="subtitle"  >Payment Method</p>
+                            <p className="ordinary_p" >
                                 <strong>Method:   </strong>
                                 {payment} 
                             </p>
@@ -84,79 +127,36 @@ function PlaceOrderScreen({history}) {
 
                     </ListGroup>
 
-                    <ListGroup>
-                       
-
-                        <Table  bordered hover size="sm">
-                            <thead>
-                                <tr>
-                                <th></th>
-                                <th>Image</th>
-                                <th > Name</th>
-                                <th>Quantity</th>
-                                <th> Price</th>
-                                <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {cart.cartItems.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{index+1}</td>
-                                        <td>
-                                        <Col >
-                                            <Image src={item.image} alt={item.name} fluid  />
-                                        </Col>
-                                        
-                                        </td>
-                                        <td>{item.name}</td>
-                                        <td >{item.qty}</td>
-                                        <td>{item.price}</td>  
-                                        <td>{item.price * item.qty}</td>
-                                    </tr>
-                                  
-                                    
-                                ))}
-                                <tr >
-                                    <td colSpan="5"><strong>Total</strong>  </td>
-                                    <td>{ cart.ItemsPrice}</td>
-                                </tr>
-                            
-                            </tbody>
-                        </Table>
-
-                    </ListGroup>
-                   
                 </Col>
                 
 
-                <Col md={4}>
+                <Col md={5}>
                     <Card>
                         <ListGroup variant='flush'>
                             <ListGroup.Item>
-                            
-                                    <h2>Order Summary</h2>
+                            <Col className="summary" >Order Summary</Col>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                     <Row>
-                                        <Col>Item Total</Col>
-                                        <Col>Ksh {cart.ItemsPrice}</Col>
+                                        <Col className="ordinary_p" >Total</Col>
+                                        <Col className="ordinary_p" >Ksh {cart.ItemsPrice}</Col>
                                     </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
                                     <Row>
-                                        <Col>Delivery fee</Col>
-                                        <Col>Ksh {cart.shippingFee}</Col>
+                                        <Col className="ordinary_p" >Delivery fee</Col>
+                                        <Col className="ordinary_p" >Ksh {cart.shippingFee}</Col>
                                     </Row>
 
                             </ListGroup.Item>
-                            <ListGroup.Item>
-                                    {error && <Message vvariant='danger' >{error}</Message>}
+                            <div>
+                                    {error && <Message variant='danger' >{error}</Message>}
 
-                            </ListGroup.Item>
+                            </div>
                             <ListGroup.Item>
                                      <Row>
-                                        <Col>Total</Col>
-                                        <Col>Ksh  {cart.ItemsPrice+ cart.shippingFee} </Col>
+                                        <Col className="ordinary_p">Total</Col>
+                                        <Col className="ordinary_p">Ksh  {cart.ItemsPrice+ cart.shippingFee} </Col>
                                     </Row>
 
                             </ListGroup.Item>
@@ -164,21 +164,29 @@ function PlaceOrderScreen({history}) {
                                     <Row>
                                         <Button
                                             type = 'button'
-                                            className = 'btn-block'
+                                            className = 'btn-block order_button'
                                             disabled = {cart.cartItems === 0 }
                                             onClick= {placeOrder}
+                                            variant='danger'
                                         >
                                         
                                         Place Order</Button>
                                     </Row>
+                                   
 
                             </ListGroup.Item>
                         </ListGroup>
-                        
+                        {cartItems.length === 0 && (
+                            <Message variant='danger' > No items in cart</Message>
+                               
+                            
+                            
+                        )}
                     </Card>
 
                 </Col>
             </Row>
+            
             
         </div>
     )

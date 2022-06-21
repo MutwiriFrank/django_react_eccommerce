@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-cy^ces4t@3b=@nz7097c-b*d9av^(lwgf-t6o6%3l)zm$1-skw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '210a-154-77-49-81.ngrok.io' ]
 
 
 # Application definition
@@ -34,10 +34,11 @@ INSTALLED_APPS = [
     'django_seed',
     'corsheaders',
     
-    # our apps
+    # my apps
 
     'users',   
     'store',
+    'mpesa_api',
 
 
 ]
@@ -62,7 +63,7 @@ if DEBUG:
     INSTALLED_APPS += [
         'debug_toolbar',
     ]
-    INTERNAL_IPS = ['127.0.0.1', ]
+    INTERNAL_IPS = ['127.0.0.1', 'localhost', ]
 
 import mimetypes
 mimetypes.add_type("application/javascript", ".js", True)

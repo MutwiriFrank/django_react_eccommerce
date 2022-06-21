@@ -7,14 +7,22 @@ from django.db import models
 from users.models import NewUser
 
 
+class Room(models.Model):
+    name = models.CharField(max_length=255,blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Dealer(models.Model):
     store_dealer = models.ForeignKey(NewUser, blank=True, null=True, on_delete=models.CASCADE)
     is_dealer = models.BooleanField(default=True)
     shop_name = models.CharField(max_length=100, null=True, blank=True,  default='mniiz_shop') 
-    location = models.CharField(max_length=255, null=True, blank=True,  default='mniiz_shop') 
-
+    location = models.CharField(max_length=255, null=True, blank=True,  default='Nairobi') 
+    city = models.CharField(max_length=255, null=True, blank=True,  default='NAIROBI') 
+    email = models.EmailField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=13, null=True, blank=True)
-
+    notes = models.TextField(null=True, blank=True)
 
 
     class Meta:
@@ -25,6 +33,10 @@ class Dealer(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
+    rating = models.IntegerField(null=True, blank=True)
+    
 
     class Meta:
         ordering = ('name',)
@@ -35,11 +47,31 @@ class Category(models.Model):
     def get_absolute_url(self):
         return f'/{self.slug}'
 
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
+    rating = models.IntegerField(null=True, blank=True)   
+
+    def __str__(self):
+            return f"{self.name }- {self.id}"
+
+
+class CaroselItems(models.Model):
+    image = models.ImageField( blank=True, null=True, default='index.jpg')
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
+
 
 class Product(models.Model):
 
-    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, related_name="dealer", null=True, blank=True, default='mniiz_shop')
-    category = models.ForeignKey(Category, related_name="category", on_delete=models.CASCADE)
+    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL,  null=True, blank=True, default='mniiz_shop')
+    subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, blank=True )
+    room = models.ManyToManyField('Room', blank=True,null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
@@ -48,6 +80,8 @@ class Product(models.Model):
     countInStock = models.IntegerField(null=True, blank=True, default=0)
     rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
     numReviews = models.IntegerField(null=True, blank=True)
+    color = models.CharField(max_length=255, null=True, blank=True)
+    size = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ('-date_added',)     
@@ -57,20 +91,22 @@ class Product(models.Model):
 
     
 class Review(models.Model):
-    Product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey(NewUser, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, null=True )
     rating = models.IntegerField(null=True, blank=True, default=0)
     comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True,  null=True, blank=True)
+
     
     def __str__(self):
-        return str( self.product)  + " - " + (self.rating)
+        return f" {self.product}  "
 
 
 class Order(models.Model):
     PAYMENTMETHODS = (
         ("mpesa", "mpesa"),
-        ("ondelevery", "ondelevery"),     
+        ("ondelivery", "ondelivery"),     
     )
     DELIVERYOPTIONS = (
         ("pick_up", "pick_up"),

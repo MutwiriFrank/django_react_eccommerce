@@ -23,7 +23,6 @@ class UserSerializer(ModelSerializer):
 
 
 class UserSerializerWithToken(UserSerializer):
-   
     
     class Meta:
         model = NewUser
@@ -35,8 +34,6 @@ class UserSerializerWithToken(UserSerializer):
     def get_isAdmin(self, obj):
         return obj.is_staff
         
-    
-
 
 class RegisterUserSerializer(ModelSerializer):
     email = serializers.EmailField(required=True )

@@ -1,26 +1,65 @@
 from rest_framework import serializers
-from .models import Product, Category, Order, OrderItem, ShippingAddress, Dealer
+from .models import Product, Category, Order, OrderItem, ShippingAddress, Dealer, Review, CaroselItems, SubCategory, Room
 from users.serializers import UserSerializer
 
-class CategorySerializer(serializers.ModelSerializer):
+
+class CaroselItemsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Category
-        fields = ('name', )
+        model = CaroselItems
+        fields = "__all__"
+
 
 class DealerSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Dealer
         fields = ('shop_name', )
 
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = "__all__"
+
+        
+
+class SubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategory
+        fields =  ("category", "id","name", "image", "description")
+
+
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    subcategory = SubCategorySerializer()
     dealer = DealerSerializer()
+    review = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Product
-        fields = ( 'pk', 'id', 'category', 'dealer', 'name','dealer', 'description', 'countInStock','price', 'image', 'rating', 'numReviews')
+        fields = ( 'pk', 'id', 'subcategory', 'dealer', 'name','dealer', 'description', 'countInStock','price', 'image', 'rating', 'review',  'numReviews')
+
+    def get_review(self, obj):
+        review = obj.review_set.all()
+        serializer = ReviewSerializer(review, many=True)
+        return serializer.data
+
+class CategorySerializer(serializers.ModelSerializer):
+    subcategory = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Category
+        fields = ('name', 'description', 'image', 'subcategory'  )
+    
+    def get_subcategory(self, obj):
+        items = obj.subcategory_set.all()
+        serializer = SubCategorySerializer(items, many=True)
+        return serializer.data
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+            model = Room
+            fields = "__all__" 
 
 
 class ShippingAddressSerializer(serializers.ModelSerializer):
@@ -62,6 +101,7 @@ class OrderSerializer(serializers.ModelSerializer):
         serializer = UserSerializer(user, many=False)
         return serializer.data
         
+
 
 
 

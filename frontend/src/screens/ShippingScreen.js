@@ -5,6 +5,7 @@ import { saveShippingAddress } from '../actions/cartActions'
 import Message from '../components/Message'
 import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
+import '../css/Delivery.css'
 
 
 function ShippingScreen({history}) {
@@ -29,15 +30,16 @@ function ShippingScreen({history}) {
     }
 
     return (
+      
         <FormContainer>
             <CheckoutSteps step1 step2  />
-            <h1>Fill Delivery Details </h1>
+            <p className="subtitle" >Fill Details </p>
          
             {message && <Message variant='danger'>{message}</Message>}
             <Form onSubmit={ submitHandler }>
             <Form.Group controlId='city'>
-                    <Form.Label>City </Form.Label>
-                        <Form.Control required type='text' value={city ? city : ''}  placeholder='Enter City'  onChange={(e) => 
+                    <Form.Label className="form__deliveryDetails" >City </Form.Label>
+                        <Form.Control  className="form__deliveryDetails" required type='text' value={city ? city : ''}  placeholder='Enter City'  onChange={(e) => 
                             setCity(e.target.value) } >
 
                         </Form.Control>
@@ -46,32 +48,32 @@ function ShippingScreen({history}) {
 
 
                 <Form.Group controlId='estate'>
-                    <Form.Label>Estate or Location</Form.Label>
-                    <Form.Control required type='text' placeholder='Enter estate' value={estate ?  estate : ''}  onChange={(e) => 
+                    <Form.Label   className="form__deliveryDetails" >Estate or Location</Form.Label>
+                    <Form.Control  className="form__deliveryDetails" required type='text' placeholder='Enter estate' value={estate ?  estate : ''}  onChange={(e) => 
                         setEstate(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
 
-                <Form.Group controlId='road'>
-                    <Form.Label>Road</Form.Label>
-                    <Form.Control  required type='text' placeholder='Enter road' value={road ? road : ''}  onChange={(e) => 
+                <Form.Group  className="form__deliveryDetails"controlId='road'>
+                    <Form.Label  className="form__deliveryDetails" >Road</Form.Label>
+                    <Form.Control  className="form__deliveryDetails"  required type='text' placeholder='Enter road' value={road ? road : ''}  onChange={(e) => 
                         setRoad(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='landmark'>
-                    <Form.Label>Landmark</Form.Label>
-                    <Form.Control required type='text' placeholder='Enter landmark' value={landmark ? landmark : ''}  onChange={(e) => 
+                    <Form.Label  className="form__deliveryDetails" >Landmark</Form.Label>
+                    <Form.Control  className="form__deliveryDetails" required type='text' placeholder='Enter landmark' value={landmark ? landmark : ''}  onChange={(e) => 
                         setLandmark(e.target.value) } >
 
                     </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='phone'>
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control required type='phone' placeholder='Enter phone number' value={phone ? phone : ''}  onChange={(e) => 
+                    <Form.Label  className="form__deliveryDetails" >Phone Number</Form.Label>
+                    <Form.Control  className="form__deliveryDetails" required type='phone' placeholder='Enter phone number' value={phone ? phone : ''}  onChange={(e) => 
                         setPhone(e.target.value) } >
 
                     </Form.Control>
@@ -79,13 +81,13 @@ function ShippingScreen({history}) {
                 </Form.Group >
 
                 <Form.Group controlId='phone'>
-                    <Form.Label>Alternative phone</Form.Label>
-                    <Form.Control required type='phone' placeholder='Enter alternative phone number' value={alternative_phone ? alternative_phone : ''}
+                    <Form.Label  className="form__deliveryDetails" >Alternative phone</Form.Label>
+                    <Form.Control  className="form__deliveryDetails" required type='phone' placeholder='Enter alternative phone number' value={alternative_phone ? alternative_phone : ''}
                       onChange={(e) => setAlternative_phone(e.target.value) } >
                     </Form.Control>
                 </Form.Group >
 
-                <Button type='submit' className="my-2" variant='primary '>Continue</Button>
+                <Button type='submit' className="continue_button" variant='danger '>Continue</Button>
 
             
 
@@ -93,6 +95,7 @@ function ShippingScreen({history}) {
             </Form>
             
         </FormContainer>
+       
     )
 }
 

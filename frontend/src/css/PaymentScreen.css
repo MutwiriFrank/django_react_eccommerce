@@ -1,0 +1,23 @@
+.continue__button{
+    margin-top: 1rem !important;
+}
+
+
+@media screen and (max-width: 480px){
+    .subtitle{
+        font-weight: bold;
+        font-size: 0.9rem;
+
+    }
+    .form__deliveryDetails{
+        font-size: 0.9rem;
+        
+    }
+    .continue__button{
+        margin-top: 0.3rem;
+        padding-top: 0.1rem;
+        padding-bottom: 0.1rem;
+    
+
+    }
+}

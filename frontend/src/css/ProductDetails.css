@@ -1,0 +1,188 @@
+.image_Details_description_Row{
+    display: flex;
+    justify-content: space-between;
+}
+
+.product_detailsImage {
+    max-height: 300px;
+    
+}
+.image__column{
+    padding : 2rem;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rempx;
+}
+
+.product__DetailsDiv{
+    padding: 2rem;
+    
+}
+.quantity_input {
+    padding: 0;
+    margin: 0;
+    border: 0.5px;
+}
+
+.btn__container{
+    text-align: center;
+}
+.div__addButton{
+    display: none;
+}
+.product__nameTitle p{
+    font-weight: bold;
+    font-size: 3rem;
+
+}
+.quantity_row{
+    margin-bottom: -10px;
+    padding: -5px;
+}
+
+.description__column{
+    padding: 2rem;
+}
+.description_heading{
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.textarea{
+    border: none;
+    resize: none;
+    outline: none;
+    
+}
+.button__div{
+    
+    display: flex;
+    justify-content: start;
+    margin-top: 3rem;
+}
+
+.Reviews_title{
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2rem;
+}
+.subtitle{
+    font-size: 1rem;
+    font-weight: bold;
+}
+.create__reviewDiv{
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+.reviews{
+    padding: 2rem;
+}
+
+@media screen and (max-width: 767px){
+    .description__column{
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+
+
+}
+
+
+
+@media screen and (max-width: 480px){
+    .addTo__cart {
+        bottom: 0;
+        width: 40%;
+        position: fixed;
+        padding: 0.3rem;
+        background: rgb(238, 75, 75);
+        border: 0px;
+        margin-top:0.4rem;
+        z-index: 10;
+        
+    }
+    .div__addButton{
+        display: flex;
+        justify-content: center;
+    }
+
+    .button__div{
+        display: none;
+    }
+    .image__column{
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+    .product__DetailsDiv{
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+    .product__DetailsDiv p{
+        font-size: 0.9rem;
+        margin-top: -5px;
+        margin-bottom: -5px;
+    }
+    .description__column{
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 1.7rem;
+        padding-right: 1.7rem;
+        
+    }
+    .description__column p{
+        font-size: 0.9rem;
+    }
+    .description_heading{
+        font-size: 1rem;
+        margin: 1rem;
+    }
+    .description{
+        padding-right: 1rem;
+        padding-left: 1rem
+    }
+    .Reviews_title{
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+    .reviews p {
+        font-size: 0.9rem;
+        padding-top: -10px;
+        padding-bottom: 0;
+        margin-bottom: 0;
+        margin-top: -5px;
+    }
+    .create__reviewDiv{
+        padding-top: 0;
+    }
+    .create__reviewDiv p{
+        font-size: 0.9rem
+    }
+    .rating__label{
+        font-size: 0.85rem;
+
+    }
+    .Reviews_title{
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+    .subtitle2 {
+        font-size: 0.9rem ;
+        font-weight: bold;
+    }
+    .review_button{
+        margin-top: 0.3rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+
+    }
+    .reviews{
+        margin-top: 1rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+    }
+    
+    
+    
+}

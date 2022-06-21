@@ -2,22 +2,33 @@ import { createStore , combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
+import { categoryListReducer, RoomCategoryListReducer} from './reducers/categoryReducer'
+import { subcategoryProductsReducer } from './reducers/subcategoryProductsReducer' 
+
+
 import { productListReducers, productDetailsReducers, productDeleteReducer, productCreateReducer,
-        productEditReducer} from './reducers/productReducers'
+        productEditReducer, productReviewCreateReducer, topProductListReducers} from './reducers/productReducers' 
 import { cartReducer} from './reducers/cartReducers'
 import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, 
     userDeleteReducer, userUpdateReducer } from './reducers/userReducers'
-import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer } from './reducers/OrderReducers'
+import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer, listOrdersReducer,
+    orderDeliverReducer } from './reducers/OrderReducers' 
 
+import { caroselReducer } from './reducers/caroselReducers'
 
 const reducer = combineReducers({
         productList: productListReducers,
         productDetails : productDetailsReducers,
+        subcategoryProducts : subcategoryProductsReducer,
         productDelete: productDeleteReducer,
         productCreate: productCreateReducer,
         productEdit : productEditReducer,
-
+        productReviewCreate : productReviewCreateReducer,
+        categories : categoryListReducer,
         cart : cartReducer,
+        carosel : caroselReducer, 
+        topProducts: topProductListReducers,
+        rooms: RoomCategoryListReducer,
 
         userLogin: userLoginReducer,
         userRegister: userRegisterReducer,
@@ -31,8 +42,8 @@ const reducer = combineReducers({
         orderDetails : orderDetailsReducer,
         orderPay : orderPayReducer,
         myOrders : orderListMyReducer,
-
-    
+        listAllOrders : listOrdersReducer,
+        orderDeliver : orderDeliverReducer,
 
 })
 

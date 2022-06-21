@@ -12,11 +12,12 @@ export const cartReducer = (state = {cartItems:[], shippingAddress: {} }, action
             if(existitem){
             // check if an item already exist in the cart
                 return{
-                    ...state,
+                    ...state, // return the original state and change cart items(state.cartItems)
                     cartItems: state.cartItems.map(x => x.product === existitem.product ? item : x )
                 }
 
             }else{
+                
             //add pproduct to cart
                 return{
                     ...state, 
@@ -32,7 +33,7 @@ export const cartReducer = (state = {cartItems:[], shippingAddress: {} }, action
 
         case CART_SAVE_SHIPPING_ADDRESS:
             return{
-                ...state, 
+                ...state,
                 shippingAddress: action.payload
             }
         case CART_CLEAR_SHIPPING_ADDRESS:

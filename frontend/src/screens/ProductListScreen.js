@@ -5,6 +5,7 @@ import { Table, Button, Col, Row} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import Paginate from '../components/Paginate'
 import { listProducts, deleteProduct } from '../actions/productActions'
 
 
@@ -13,7 +14,7 @@ function ProductListScreen( {history, match} ) {
     const dispatch = useDispatch()
 
     const productList = useSelector(state => state.productList)
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
@@ -28,14 +29,16 @@ function ProductListScreen( {history, match} ) {
         console.log("success", successDelete)
     }
 
+    let keyword = history.location.search
+
     useEffect(() => {
         if (userInfo && userInfo.isAdmin ) {
-            dispatch(listProducts())
+            dispatch(listProducts(keyword))
         }else{
             history.push('/login')
         }
         
-    }, [dispatch, history, userInfo, successDelete] )
+    }, [dispatch, history, userInfo, successDelete, keyword] )
 
     
     const deleteHandler = (pk) =>{
@@ -67,6 +70,7 @@ function ProductListScreen( {history, match} ) {
                 : error ?<Message  variant='danger'>{error}</Message>
                 : !products ? <Message>Kindly reload to view the Products</Message>
                 :(
+                    <div>
                     <Table responsive className='table-sm' bordered hover size="sm" >
                         <thead>
                             <tr>
@@ -106,6 +110,8 @@ function ProductListScreen( {history, match} ) {
                             ) )}                             
                         </tbody>
                     </Table>
+                    <Paginate pages={pages} page={page} isAdmin={true}  />
+                    </div>
                 )
             }   
             

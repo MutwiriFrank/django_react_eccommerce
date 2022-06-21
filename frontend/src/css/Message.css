@@ -1,0 +1,16 @@
+@media screen and (max-width: 480px) {
+    .alert__div{
+        margin-top: 1rem;
+        margin-right: 2rem;
+        margin-left: 1rem;
+        padding-top : 1rem;
+        padding-bottom: 0;
+        padding-left: 1rem;
+        padding-right: 0;
+
+    }
+    .ordinary_p{
+        font-size: 0.9rem;
+    }
+
+}

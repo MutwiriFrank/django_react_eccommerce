@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import Message from '../components/Message'
 import { addToCart, removeFromCart  } from '../actions/cartActions'
+import '../css/Cart.css'
 
 function CartScreen({ match, location, history }) {
     const productId = match.params.pk
@@ -26,101 +27,104 @@ function CartScreen({ match, location, history }) {
     const checkoutHandler = ( ) =>{
         history.push('/login?redirect=delivery')
     }
-
     return ( 
         <Row>
-            <Col md={9}>
-                <h1>Shopping Cart</h1>
-                {cartItems.length !== 0  &&
-                     <Message><Link to='/'>Continue shopping</Link></Message>
-                } 
+            <Col md={8} classme="cart_itemsList">
+                <div className="your__cartDiv" >
+                    <p className="your__cart" >Your Cart</p> 
+                </div>
+                
+               
 
                 {cartItems.length === 0 ? (
                     <Message variant='info'>
                         Your cart is empty <Link to='/'>Go Back</Link>
                     </Message>
                 ) : (
-                        <ListGroup variant='flush'>
+                        <div>
                             {cartItems.map(item => (
-                                <ListGroup.Item key={item.product}>
+                                <div key={item.product}>
                                     <Row>
-                                        <Col md={2}>
-                                            <Image src={item.image} alt={item.name} fluid rounded />
+                                        <Col xs={2}  >
+                                        <Link to={`/product/${item.product}`}><Image className="cart__image" src={item.image} alt={item.name}
+                                            fluid rounded /></Link>
                                         </Col>
-                                        <Col md={3}>
-                                            <Link to={`/product/${item.product}`}>{item.name}</Link>
-                                        </Col>
-
-                                        <Col md={2}>
-                                            Ksh {item.price}
+                                        <Col xs={2} className="cart__ItemDetails" >
+                                            <Link to={`/product/${item.product}`}><small>{item.name}</small></Link>
                                         </Col>
 
-                                        <Col md={3} xs='auto' className='my-1'>
-                                            <Form.Control
-                                                className = 'form-select'
+                                        <Col xs={2} className="cart__ItemDetails" >
+                                            <p> {item.price * 1}</p> 
+                                        </Col>
+
+                                        <Col xs={2} className=''>
+                                            <Form
                                                 as="select"
                                                 value={item.qty}
                                                 onChange={(e) => dispatch(addToCart(item.product, Number(e.target.value)))}
+                                                className="quantity_input"
                                             >
                                                 {
 
                                                     [...Array(item.countInStock).keys()].map((x) => (
-                                                        <option key={x + 1} value={x + 1}>
+                                                        <option className="quantity"  key={x + 1} value={x + 1} >
                                                             {x + 1}
                                                         </option>
                                                     ))
                                                 }
 
-                                            </Form.Control>
+                                            </Form>
                                         </Col>
-                                        <Col md={1} >
-                                            Ksh {item.qty * item.price}
+                                        <Col xs={2} className="cart__ItemDetails" > 
+                                           <p>{item.qty * item.price} </p> 
                                         
                                         </Col>
-                                        <Col md={1} >
-                                            <Button
-                                                type= 'button'
-                                                variant= 'light'
+                                        <Col xs={1} >
+                                            <button
+                                                className="remove_button"
                                                 onClick = {()=>removeFromCartHandler(item.product)}
+                                                
                                             >
-                                             <i className='fa fa-trash' style={{color:"red", fontSize:"19px" }}></i>
+                                            <p>x</p>
 
-                                            </Button>
+                                            </button>
                                         
-                                        </Col>
-                                        
-
-                                       
+                                        </Col>                   
                                     </Row>
-                                </ListGroup.Item>
+                                    <hr />
+                                </div>
                             ))}
-                        </ListGroup>
+                        </div>
                     )}
+
+                    {cartItems.length !== 0  &&
+                        <Message><span className="continue__shoping"><Link to='/'>Continue shopping</Link></span></Message>
+                    } 
             </Col>
 
-            <Col md={3}>
+            <Col md={4}>
                 <Card className="subtotal-card">
-                    <ListGroup variant='flush'>
-                             <ListGroup.Item>
-                                 <h4>Total Cost</h4> 
-                               
-                                 
-                                 <h5>Ksh  { cartItems.reduce((acc, item ) => acc + item.qty * item.price, 0 ) }</h5>
-                                 <p> For <strong>{ cartItems.reduce((acc, item ) => acc + item.qty, 0 ) }</strong> Items in cart</p>
-                             </ListGroup.Item>
-                    </ListGroup>
-                    <ListGroup>
-                        <Button
-                            type='button'
-                            className='btn-block m-3'
-                            disabled = {cartItems.length === 0}
-                            onClick = {checkoutHandler}
-                        > Proceed to checkout
+                    
+                        
+                            <p className="subtitle">Total Cost</p> 
+                        
+                            <div>
+                                <p>Ksh <strong>{ cartItems.reduce((acc, item ) => acc + item.qty * item.price, 0 ) }  </strong> </p>
+                                <p> For <strong>{ cartItems.reduce((acc, item ) => acc + item.qty, 0 ) }</strong> Items in cart</p>
+                            
+                            </div>
+                            
+                            <Button
+                                type='button'
+                                variant='danger'
+                                className='c'
+                                disabled = {cartItems.length === 0}
+                                onClick = {checkoutHandler}
+                            > checkout
 
-                        </Button>
-                    </ListGroup>
-                </Card>
-             
+                            </Button>
+                   
+                </Card>        
             </Col>
         </Row>
     )

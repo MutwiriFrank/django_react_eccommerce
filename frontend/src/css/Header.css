@@ -1,0 +1,159 @@
+.header {
+    height: 9vh;
+    display: flex;
+    align-items: center;
+    background: #131921;
+    position:sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header__logo {
+    width: 100px;
+    object-fit: contain;
+    margin: 0 20px;
+    margin-top: 18px;
+}
+
+.header__search {
+    display:flex;
+    flex: 1 ;
+    align-items: center;
+    border-radius: 24px;
+} 
+
+.header__searchInput {
+    height: 12px;
+    padding: 10px;
+    border: none;
+    width: 85%;
+}
+
+.mainNav_search{
+    width: 100%;
+}
+
+.smallNav__search{
+    display:none;
+    
+}
+
+.search__btn{
+    background-color: #131921;
+    border: none;
+}
+
+.header__searchIcon {
+    color:rgb(245, 245, 245);
+
+}
+
+.header__optionLineOne{
+    font-size: 10px;
+}
+
+.header__optionLineTwo {
+    font-size: 13px;
+    justify-content: space-evenly;
+}
+
+.header__nav {
+    display:flex;
+    justify-content: space-evenly; 
+    align-items: center;
+}
+
+.header__option {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: white  ;
+}
+
+.header__optionlogInOut{
+    align-items: center;
+    padding-top: 15px;
+}
+
+.header__optionBasket{
+    color: white;
+    height: 25px;
+    padding-top: 0px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+
+}
+
+.header_basketCount{
+    margin-left: 10px;
+}
+
+.nav_admin_dropdown {
+    color: #131921;
+}
+
+.smaller__nav{
+    padding: 0.3rem;
+    background: off-white;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+@media screen and (max-width: 650px){
+
+    .mainNav_search{
+        display: none;
+    }
+    .header__logo{
+        margin: 0 10px;
+        margin-top: 10px;
+    }
+ 
+    
+    .smaller__nav{
+        padding: 0.3rem;
+        background: off-white;
+        display: flex;
+        border-bottom: 1px solid #131921;
+    }
+  
+    .smallNav__search{
+        margin-left: 10px;
+        display:block;
+        width: 60%;
+        justify-content: flex-end;
+    }
+
+    .header__searchInput{
+        border: 2px solid #131921;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .header__logo {
+        width: 70px;
+        object-fit: contain;
+        margin: 0 10px;
+        margin-top: 8px;
+    }
+
+    .header__optionLineTwo {
+        font-size: 11px;
+    }
+
+    .header__option {
+        display: flex;
+        flex-direction: column;
+        margin-left: 6px;
+        margin-right: 6px;
+        color: white  ;
+        
+    }
+
+
+}

@@ -17,6 +17,9 @@ urlpatterns = [
     # store
     path('api/store/', include('store.urls', namespace='store' )),
 
+    # store
+    # path('api/mp_payment/', include('mpesa_api.urls', namespace='mpesa_api' )),
+
     # django rest web login
     path('api_auth/', include('rest_framework.urls', namespace='rest_framework')),
 

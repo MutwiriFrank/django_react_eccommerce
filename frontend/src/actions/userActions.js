@@ -37,6 +37,7 @@ export const login = (email, password) => async (dispatch) => {
             type: USER_LOGIN_SUCCESS,
             payload: data
         })
+        
 
         localStorage.setItem('userInfo', JSON.stringify(data))
         localStorage.setItem('userInfoAccess', JSON.stringify(data.access))
@@ -136,7 +137,6 @@ export const getUserDetails = (pk) => async(dispatch, getState) => {
         const { userLogin: { userInfo },  } = getState()
 
         const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
-        console.log("PH:", pk)
         const config = {
             headers: {
                 'Content-type': 'application/json',
@@ -148,7 +148,6 @@ export const getUserDetails = (pk) => async(dispatch, getState) => {
             `/api/users/${pk}/`,
             config           
         )
-        console.log("data", data)
 
         dispatch({
             type: USER_DETAILS_SUCCESS,

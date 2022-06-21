@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import FormContainer from '../components/FormContainer'
 import { login } from '../actions/userActions'
+import '../css/TextForm.css'
 
 function LoginScreen({ location, history }) {
     const [email, setEmail] = useState('')
@@ -31,26 +32,28 @@ function LoginScreen({ location, history }) {
 
     return (
         <FormContainer>
-            <h1>Sign In</h1>
+            <p className="subtitle">Sign In</p>
             {error && <Message variant='danger'>{error}</Message>}
             {loading && <Loader />}
             <Form onSubmit={submitHandler}>
 
                 <Form.Group controlId='email'>
-                    <Form.Label>Email Address</Form.Label>
+                    <Form.Label className="ordinary_p">Email Address</Form.Label>
                     <Form.Control
                         type='email'
                         placeholder='Enter Email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        className="ordinary_p"
                     >
                     </Form.Control>
                 </Form.Group>
 
 
                 <Form.Group controlId='password'>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label className="ordinary_p">Password</Form.Label>
                     <Form.Control
+                        className="ordinary_p"
                         type='password'
                         placeholder='Enter Password'
                         value={password}
@@ -60,14 +63,14 @@ function LoginScreen({ location, history }) {
                     </Form.Control>
                 </Form.Group>
 
-                <Button type='submit' variant='primary'>
+                <Button type='submit' variant='danger' className="login__button">
                     Sign In
                 </Button>
             </Form>
 
             <Row className='py-3'>
-                <Col>
-                    New Customer? <Link
+                <Col  className="ordinary_p">
+                    New Customer? <Link 
                         to={redirect ? `/register?redirect=${redirect}` : '/register'}>
                         Register
                         </Link>

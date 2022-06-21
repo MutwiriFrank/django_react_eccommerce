@@ -1,0 +1,30 @@
+footer{
+    background-color: #131921;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-top: 0.6rem;
+    
+} 
+.list__column{
+    margin-top: 2rem;
+}
+
+li{
+    list-style: none;
+    color: #d3d6c0;;
+
+}
+.copyright{
+    margin-top: 1rem;
+}
+
+@media screen and  (max-width: 480px) {
+    li{
+        font-size: 0.9rem;
+    }
+    footer{
+        margin-top: 2px;
+    
+    } 
+    
+}

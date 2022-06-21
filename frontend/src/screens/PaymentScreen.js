@@ -5,6 +5,7 @@ import Message from '../components/Message'
 import FormContainer from '../components/FormContainer'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { savePaymentMethod } from '../actions/cartActions'
+import '../css/PaymentScreen.css'
 
 
 function PaymentScreen({history}) {
@@ -14,7 +15,7 @@ function PaymentScreen({history}) {
 
     const dispatch = useDispatch()
 
-    const [ paymentMethod, setPaymentMethod ] = useState('mpesa')
+    const [ paymentMethod, setPaymentMethod ] = useState()
 
     if(!shippingAddress.city){
         history.push('/delivery')
@@ -24,14 +25,9 @@ function PaymentScreen({history}) {
         e.preventDefault()
         dispatch(savePaymentMethod(paymentMethod))
         history.push('/placeorder')
-     
     }
 
-  
-
     return (
-      
-       
 
         <FormContainer>
 
@@ -40,33 +36,52 @@ function PaymentScreen({history}) {
 
             <Form onSubmit={submitHandler}>
                 <Form.Group>
-                    <Form.Label as='legend'>Select Method</Form.Label>
+                    <Form.Label className="subtitle" as='legend'>Select Method</Form.Label>
+                    <Col> 
+                    <Form.Check
+                        required
+                        type='radio'
+                        label='Pay on Delivey'
+                        value='ondelivery'
+                        id='ondelivery'
+                        name='paymentMethod'
+                        className="form__deliveryDetails" 
+                        onChange = {(e) => setPaymentMethod(e.target.value) }
+                    >
+                    </Form.Check>
+                </Col>
+                    
+                    
                     <Col>
                         <Form.Check
+                            disabled
                             type='radio'
                             label='Mpesa'
                             value='mpesa'
-                            id='mpssesa'
+                            id='mpesa'
                             name='paymentMethod'
-                            checked
-                            onChange = {(e) => setPaymentMethod(e.target.value) }
-                        >
-                        </Form.Check>
-                    </Col>
-                    <Col>
-                        <Form.Check
-                            type='radio'
-                            label='Pay on Delivey'
-                            value='ondelivery'
-                            id='ondelivery'
-                            name='paymentMethod'
+                            className="form__deliveryDetails" 
                             
                             onChange = {(e) => setPaymentMethod(e.target.value) }
                         >
                         </Form.Check>
                     </Col>
+                
+                    <Col>
+                        <Form.Check
+                        disabled
+                            type='radio'
+                            label='Card'
+                            value='card'
+                            id='card'
+                            name='paymentMethod'
+                            className="form__deliveryDetails" 
+                            onChange = {(e) => setPaymentMethod(e.target.value) }
+                        >
+                        </Form.Check>
+                    </Col>
                 </Form.Group>
-                <Button type='submit' variant='primary' >Continue</Button>
+                <Button className="continue__button" type='submit' variant='danger' >Continue</Button>
                 
             </Form>
         </FormContainer>
