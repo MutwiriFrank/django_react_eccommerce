@@ -55,14 +55,14 @@ function RegisterScreen({location, history}) {
             {message && <Message variant='danger'>{message}</Message>}
             <Form onSubmit={ submitHandler }>
                 <Form.Group controlId='name'>
-                    <Form.Label className="ordinary_p" >Name </Form.Label>
+                    <Form.Label className="ordinary_p" >First Name </Form.Label>
                         <Form.Control  className="ordinary_p" required type='text' placeholder='Enter your name' value={name}  onChange={(e) => setName(e.target.value) } >
 
                         </Form.Control>
                 </Form.Group >
 
                 <Form.Group controlId='user_name'>
-                    <Form.Label className="ordinary_p" >Username</Form.Label>
+                    <Form.Label className="ordinary_p" >Second name</Form.Label>
                     <Form.Control className="ordinary_p" required type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
 
                     </Form.Control>

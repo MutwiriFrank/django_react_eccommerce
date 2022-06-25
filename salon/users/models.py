@@ -37,8 +37,8 @@ class CustomAccountManager(BaseUserManager):
 
 class NewUser( AbstractBaseUser, PermissionsMixin ):
     email = models.EmailField(_('email address'), unique=True)
-    user_name = models.CharField(max_length=100, unique=True )
-    name = models.CharField(max_length=100, blank=False)
+    user_name = models.CharField(max_length=100 ) # Second name
+    name = models.CharField(max_length=100, blank=False) # First name
     start_date = models.DateTimeField(default=timezone.now)
     is_staff = models.BooleanField(default=False) # people who can access admin
     is_active = models.BooleanField(default=True    )

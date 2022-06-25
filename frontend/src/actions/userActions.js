@@ -134,13 +134,14 @@ export const getUserDetails = (pk) => async(dispatch, getState) => {
         dispatch({
             type: USER_DETAILS_REQUEST
         })
-        const { userLogin: { userInfo },  } = getState()
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accessKey}`
+                Authorization: `Bearer ${userInfo.token }`
             }
         }
 
@@ -170,12 +171,14 @@ export const updateUserProfile = (user) => async(dispatch, getState) => {
         dispatch({
             type: USER_UPDATE_PROFILE_REQUEST
         })
-        const { userLogin: { userInfo }, } = getState()
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${accessKey}`
+                Authorization: `Bearer ${userInfo.token }`
             }
         }
         const { data } = await axios.put(
@@ -215,12 +218,14 @@ export const listUsers= () => async(dispatch, getState) => {
         dispatch({
             type: USER_LIST_REQUEST
         })
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accessKey}`
+                Authorization: `Bearer ${userInfo.token }`
             }
         }
 
@@ -247,16 +252,19 @@ export const listUsers= () => async(dispatch, getState) => {
 }
 
 
-export const deleteUser= (id) => async(dispatch) => {
+export const deleteUser= (id) => async(dispatch, getState) => {
     try {
         dispatch({
             type: USER_DELETE_REQUEST
         })
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${accessKey}`
+                Authorization: `Bearer ${userInfo.token }`
             }
         }
         const { data } = await axios.delete(
@@ -281,16 +289,20 @@ export const deleteUser= (id) => async(dispatch) => {
 
 }
 
-export const updateUser= (user) => async(dispatch) => {
+export const updateUser= (user) => async(dispatch, getState) => {
     try {
         dispatch({
             type: USER_UPDATE_REQUEST
         })
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${accessKey}`
+                Authorization: `Bearer ${userInfo.token }`
             }
         }
         const { data } = await axios.put(

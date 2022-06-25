@@ -42,7 +42,7 @@ function ProductListScreen( {history, match} ) {
 
     
     const deleteHandler = (pk) =>{
-        if(window.confirm("Are you sure you want to delete this user? ")){
+        if(window.confirm("Are you sure you want to delete this product? ")){
             dispatch(deleteProduct(pk))
         }
         
@@ -91,7 +91,7 @@ function ProductListScreen( {history, match} ) {
                                     <td>{product.pk} </td>
                                     <td>{product.name}</td>
                                     <td>{product.price}</td>
-                                    <td>{product.category.name}</td>
+                                    <td>{product.category}</td>
                                     <td>{product.countInStock}</td>
                                     <td>{product.dealer.shop_name}</td>
                                     <td>

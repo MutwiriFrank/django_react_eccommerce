@@ -55,18 +55,21 @@ export const listProductDetails = (pk) => async (dispatch) => {
 }
 
 
-export const deleteProduct = (pk) => async(dispatch ) => {
+export const deleteProduct = (pk) => async(dispatch, getState ) => {
     try{
         dispatch({
             type: PRODUCT_DELETE_REQUEST,
         })
         //identify user and send data
-        const accessToken = JSON.parse(localStorage.getItem('userInfoAccess'));
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
+     
         const config = {
             headers: {
-                "Content-Type": "application/json",
-                Authorization : `Bearer ${accessToken}`
+                'Content-type': 'application/json',
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
 
@@ -90,19 +93,23 @@ export const deleteProduct = (pk) => async(dispatch ) => {
     }
 }
 
-export const productCreateAction = (name, price, description, countInStock, dealer, category, image) => async (dispatch) => {
+export const productCreateAction = (name, price, description, countInStock, dealer, category, image) => async (dispatch, getState) => {
     try{
         dispatch({
             type: PRODUCT_CREATE_REQUEST
         })
 
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
+     
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${accessKey}`
+                Authorization : `Bearer ${userInfo.token}`
             }
-        }    
+        }   
         const { data } = await axios.post(
             '/api/store/product/create/', 
             { "name": name, "price": price, "description": description, "countInStock": countInStock,
@@ -125,17 +132,20 @@ export const productCreateAction = (name, price, description, countInStock, deal
     }
 }
 
-export const productEditAction = (product) => async (dispatch) =>{
+export const productEditAction = (product) => async (dispatch, getState) =>{
     try{
         dispatch({
             type: PRODUCT_EDIT_REQUEST
         })
-        const accessToken = JSON.parse(localStorage.getItem('userInfoAccess'))
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
+     
         const config = {
-            headers : {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
+            headers: {
+                'Content-type': 'application/json',
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
 
@@ -160,19 +170,22 @@ export const productEditAction = (product) => async (dispatch) =>{
     }
 }
 
-export const productCreateReview = ( productId, review) => async (dispatch) => {
+export const productCreateReview = ( productId, review) => async (dispatch, getState) => {
     try {
 
         dispatch({
             type: PRODUCT_REVIEW_CREATE_REQUEST
         })
 
-        const accessToken = JSON.parse(localStorage.getItem('userInfoAccess'))
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
+     
         const config = {
-            headers : {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
+            headers: {
+                'Content-type': 'application/json',
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
         

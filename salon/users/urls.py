@@ -3,7 +3,6 @@ from rest_framework_simplejwt.views import ( TokenObtainPairView, TokenRefreshVi
 from .views import ( CustomUserCreate,StylistCreateView, BlacklistTokenUpdateView,
                     MyTokenObtainPairView, GetUserProfile, AdminGetUsers, UpdateUserProfile, AdminDeleteUser, AdminGetPutUserInformation)
 
-
 app_name = 'users'
 
 urlpatterns = [

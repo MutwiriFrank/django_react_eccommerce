@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import Product, Category, Review,  Dealer, Order, OrderItem, ShippingAddress, CaroselItems, SubCategory, Room
+from .models import Product, Category,QuerySearched, Review,  Dealer, Order, OrderItem, ShippingAddress, CaroselItems,Tag, SubCategory, Room
 
 # Register your models here.
 admin.site.register(CaroselItems)
+
+
 
 admin.site.register(Dealer)  
 
@@ -22,3 +24,6 @@ admin.site.register(OrderItem)
 
 admin.site.register(ShippingAddress)
 
+admin.site.register(QuerySearched)
+
+admin.site.register(Tag)

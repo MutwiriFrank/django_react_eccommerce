@@ -31,6 +31,24 @@ class Dealer(models.Model):
     def __str__(self):
         return self.shop_name
 
+class QuerySearched(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+    date = models.DateField(null=True, auto_now=True )
+    time = models.TimeField(null=True, blank=True , auto_now=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Tag (models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+    def __str__(self):
+        return str(self.name)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -71,6 +89,9 @@ class Product(models.Model):
 
     dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL,  null=True, blank=True, default='mniiz_shop')
     subcategory = models.ForeignKey(SubCategory, on_delete=models.SET_NULL, null=True, blank=True )
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True )
+    tag = models.ManyToManyField(Tag, blank=True,null=True)
+    querysearched = models.ManyToManyField(QuerySearched, blank=True,null=True)
     room = models.ManyToManyField('Room', blank=True,null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -155,3 +176,6 @@ class ShippingAddress(models.Model):
     phone = models.CharField(max_length=100, blank=True, null=True)
     alternative_phone = models.CharField(max_length=200, blank=True, null=True)
     shipping_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+
+

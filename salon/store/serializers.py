@@ -104,5 +104,19 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 
+    # class Meta:
+    #     model= SearchQuery
+    #     fields = ('query', )
+
+    
+    # def create(self, validated_data):
+    #     instance = self.Meta.model(**validated_data)  # SearchQuery
+
+    #     if instance is not None:
+    #         instance.save()
+    #         return instance
+
+
+
 
 

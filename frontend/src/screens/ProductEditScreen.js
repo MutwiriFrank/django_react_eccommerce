@@ -145,7 +145,7 @@ function ProductEditScreen({history, match }) {
 
                 <Form.Group controlId='category'>
                     <Form.Label>Category</Form.Label>
-                    <Form.Control  type='text' placeholder='Enter phone number' value={category.name}  
+                    <Form.Control  type='text' placeholder='Enter category' value={category}  
                         onChange={(e) => setCategory(e.target.value) } >
                     </Form.Control>
 

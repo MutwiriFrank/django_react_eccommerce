@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from rest_framework_simplejwt import tokens
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from .models import NewUser, Stylist
 
 # customer registration
-
+ 
 
 class UserSerializer(ModelSerializer):
     pk = serializers.SerializerMethodField(read_only=True)
@@ -23,10 +23,15 @@ class UserSerializer(ModelSerializer):
 
 
 class UserSerializerWithToken(UserSerializer):
-    
+    token = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = NewUser
-        fields = ('id', 'pk', 'isAdmin', 'user_name', 'email', 'name',"phone_number", "password" )
+        fields = ('id', 'pk', 'isAdmin', 'user_name', 'email', 'name',"phone_number", "password", 'token' )
+
+    def get_token(self, obj):
+        token= AccessToken.for_user(obj)
+        return str(token)
         
     def get_pk(self, obj):
         return obj.id

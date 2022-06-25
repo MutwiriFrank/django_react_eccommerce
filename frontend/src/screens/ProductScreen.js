@@ -54,10 +54,13 @@ function ProductScreen({match, history}) {
             
             {!product && <Message variant="danger">Product is not found</Message>  }
 
+
             {loading ?  <Loader /> 
                 : error ? <Message variant="danger">{error}</Message>
                 :(
                     <div >
+                    {console.log(product.category)}
+
                     <Row className="image_Details_description_Row">
                         <Col sm={12}  md={4} className="image__column">
                             <Image className="product_detailsImage" src={product.image} alt={product.name} fluid/>

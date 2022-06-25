@@ -18,14 +18,15 @@ export const createOrder = (order) => async (dispatch, getState) =>{
         dispatch({
             type: ORDER_CREATE_REQUEST
         })
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
-        const accessKey = JSON.parse(localStorage.getItem('userInfoAccess'));
-        
-
+     
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accessKey}`
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
 
@@ -69,12 +70,21 @@ export const getOrderDetails = (id) => async(dispatch, getState) => {
         dispatch({
             type: ORDER_DETAILS_REQUEST       
         })
-        const accesskey = JSON.parse(localStorage.getItem('userInfoAccess'))
+
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
+
+        console.log(userInfo.token)
+
+
+        
 
         const config = {
             headers: {
                 'Content-Type' : 'application/json',
-                Authorization : `Bearer ${accesskey}`
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
 
@@ -102,14 +112,18 @@ export const payOrder = (id, paymentResult ) => async(dispatch, getState) =>{
         dispatch({
             type: ORDER_PAY_REQUEST,
         })
-        const accesstoken = JSON.parse(localStorage.getItem('userInfoAccess'))
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
+     
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accesstoken}`
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
+
         //get data, we need headers and access
         const {data} = await axios.put(`/api/store/order/${id}/pay/`,paymentResult, config )
 
@@ -141,13 +155,18 @@ export const listMyOrders = ( ) => async (dispatch, getState) =>{
         })
         // identify user 
 
-        const accesstoken = JSON.parse(localStorage.getItem('userInfoAccess'))
+        const {
+            userLogin: { userInfo },
+        } = getState()
+
+     
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accesstoken}`
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
+
 
         // make request and get response
 
@@ -176,21 +195,25 @@ export const listMyOrders = ( ) => async (dispatch, getState) =>{
     //fetch orders
 }
 
-export const ordersList = () => async (dispatch, getstate) => {
+export const ordersList = () => async (dispatch, getState) => {
 
     try {
         dispatch({
             type: ORDERS_LIST_REQUEST
         })
 
-        const accesstoken = JSON.parse(localStorage.getItem('userInfoAccess')) 
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
+     
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accesstoken}`
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
+
 
         const {data} = await axios.get('/api/store/orders/', config)
 
@@ -212,17 +235,20 @@ export const ordersList = () => async (dispatch, getstate) => {
     }
 }
 
-export const deliverOrder = ( order ) => async(dispatch ) =>{
+export const deliverOrder = ( order ) => async(dispatch, getState ) =>{
     try{
         dispatch({
             type: ORDER_DELIVER_REQUEST,
         })
-        const accesstoken = JSON.parse(localStorage.getItem('userInfoAccess'))
+        const {
+            userLogin: { userInfo },
+        } = getState()
 
+     
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${accesstoken}`
+                Authorization : `Bearer ${userInfo.token}`
             }
         }
         //get data, we need headers and access

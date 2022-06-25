@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.postgres.search import SearchVector, SearchQuery
 
 from rest_framework.views import APIView
 from rest_framework.generics import  ListAPIView, RetrieveUpdateDestroyAPIView
@@ -10,7 +11,7 @@ from rest_framework import status
 
 from . serializers import ( ProductSerializer, OrderSerializer, CaroselItemsSerializer, CategorySerializer, 
                             SubCategorySerializer, RoomSerializer)
-from . models import (Category, Product, Order, ShippingAddress, OrderItem, Dealer, Review, CaroselItems, SubCategory, Room)
+from . models import (Category, Product, Order, ShippingAddress, QuerySearched, OrderItem, Dealer, Review, CaroselItems, SubCategory, Room)
 
 
 # Create your views here.
@@ -58,9 +59,28 @@ class ProductList(ListAPIView):
 
     def get(self, request):
         query = request.query_params.get('keyword')    
+        #  request.query_params is a more correctly named synonym for request.GET in django rest
         if query == None:
             query = ''
-        products = Product.objects.filter(name__icontains=query)
+     
+            
+        # if query.is_valid():
+        #     print("query", query)
+
+        # category = Category.objects.filter(name__icontains=query)
+        # products = Category.
+    
+        
+
+        # products = Product.objects.filter(
+        #     name__icontains=query )
+
+        products = Product.objects.annotate(
+            search=SearchVector('name', 'category__name', 'tag__name', 'subcategory__name', 'querysearched__name') ,).filter(search=query)
+        if not products:
+            
+            QuerySearched.objects.create(name=query)
+
 
         page = request.query_params.get('page') # page we are on
         paginator = Paginator(products, 24) # set up paginator
@@ -90,7 +110,9 @@ class ProductEdit(APIView):
             product = Product.objects.get(id=pk)
         except:
             return Response("Error, Product not found. Please try again.", status=status.HTTP_400_BAD_REQUEST )
-        data=request.data
+        data=request.data 
+
+        # request.data is same as request.POST or request.FILES in django
 
         product.name = data['name']
         product.description = data['description']
@@ -172,10 +194,14 @@ class ProductChange(RetrieveUpdateDestroyAPIView):
     
     
 class AddOrderItem(APIView):
+
+   
+    permission_classes = [AllowAny]
     serializer_class = OrderSerializer
 
     
     def post(self, request):
+        print(request.user)
         data = request.data
         orderItems = data['orderItems']
         if orderItems :

@@ -9,7 +9,7 @@ from django.contrib.auth.hashers import make_password
 
 from .models import NewUser
 from .serializers import RegisterUserSerializer, RegisterStylistSerializer, UserSerializer, UserSerializerWithToken
-
+  
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
