@@ -96,7 +96,7 @@ function RegisterScreen({location, history}) {
                     </Form.Control>
                 </Form.Group >
 
-                <Button  type='submit' className="login__button" variant='danger'>Sign In</Button>
+                <Button  type='submit' className="login__button" variant='danger'>Sign Up</Button>
 
             </Form>
 

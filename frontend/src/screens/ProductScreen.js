@@ -28,7 +28,9 @@ function ProductScreen({match, history}) {
     const {message, loading: loadingReviewCreate, success:successReviewCreate, error: errorReviewCreate,} = productReviewCreate
     
 
+
     useEffect(() => {
+        dispatch({ type: PRODUCT_REVIEW_CREATE_RESET})
         if(successReviewCreate){
             setRating(0)
             setComment('')
