@@ -1,16 +1,18 @@
-Product review error displayed w when reviewing a product,does not dissapear in unreviewed products
+<!-- Product review error displayed w when reviewing a product,does not dissapear in unreviewed products  ---done--
 
-Login credentials username and password are not clared when a user logs out. In registration form they are found.
+Login credentials username and password are not clared when a user logs out. In registration form they are found. --- done --
 
-search only works with product name and not categories and subcategories  -- done
+search only works with product name and not categories and subcategories  -- done -->
 
-Validate frontend phone numbers
+Validate frontend phone numbers  ----semi done
 
-Shoft database to postgress to enable postgress full text search ---- done
+<!-- Login errors not displaying ---done -->
+
+<!-- Shoft database to postgress to enable postgress full text search ---- done
 
 Save all the words people search ---- done -tags
 
-link these common names to be searched with each product by use of tags -- done  -search vector
+link these common names to be searched with each product by use of tags -- done  -search vector -->
 
 404 page
 
@@ -20,7 +22,7 @@ ajax search
 
 Sort reviews by latest
 
-Page after placing order
+Page after placing order, rembesha kiasi
 
 Add category pictures on home page
 
@@ -77,3 +79,8 @@ on hovering all categories hamburger check if menu is displayed else  display me
 react proxy errors
 
 Send bulk main after user purchase. And give them a promocode for next purxhase
+
+
+Add a drop down on Hello guesrt, to show visited product, orders, wishlist
+
+Admin order items not showing

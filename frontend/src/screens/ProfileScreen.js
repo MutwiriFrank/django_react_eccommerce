@@ -14,7 +14,6 @@ import '../css/Profile.css'
 
 
 function ProfileScreen({history}) {
-    const [name, setName] = useState('')
     const [user_name, setUsername] = useState('')
     const [phone_number, setPhone] = useState('')
     const [email, setEmail] = useState('')
@@ -42,12 +41,11 @@ function ProfileScreen({history}) {
             history.push('/login')
         }else{
             const userId = Number(userInfo.id)
-            if(!user || !user.name || success || userId !== user.id ){
+            if(!user || !user.user_name || success || userId !== user.id ){
                 dispatch({ type: USER_UPDATE_PROFILE_RESET })
                 dispatch(getUserDetails(userId.toString())) 
                 dispatch(listMyOrders()) 
             }else if ( userId === user.id ){
-                setName(user.name)
                 setUsername(user.user_name) 
                 setEmail(user.email)
                 setPhone(user.phone_number)
@@ -78,7 +76,6 @@ function ProfileScreen({history}) {
             dispatch(updateUserProfile({
                 
                 'pk' : user.pk,
-                'name' : name,
                 'user_name' : user_name,
                 'email' : email,
                 'phone_number' : phone_number,
@@ -99,15 +96,10 @@ function ProfileScreen({history}) {
                 {message && <Message variant='danger'>{message}</Message>}
                 <p className="ordinary_p" > <strong>Edit by changing the values</strong> </p>
             <Form onSubmit={ submitHandler }>
-                <Form.Group controlId='name'>
-                    <Form.Label className="ordinary_p">Name </Form.Label>
-                        <Form.Control className="ordinary_p" type='text' value={name}  onChange={(e) => setName(e.target.value) } >
-
-                        </Form.Control>
-                </Form.Group >
+              
 
                 <Form.Group controlId='user_name'>
-                    <Form.Label className="ordinary_p" >Username</Form.Label>
+                    <Form.Label className="ordinary_p" >Name</Form.Label>
                     <Form.Control className="ordinary_p" type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
 
                     </Form.Control>

@@ -68,7 +68,7 @@ function UserListScreen( {history} ) {
                             { users.map((user, index) => (
                                 <tr key={index}>
                                     <td>{index + 1 }</td>
-                                    <td>{user.name} </td>
+                                    <td>{user.user_name} </td>
                                     <td>{user.email}</td>
                                     <td>{user.phone_number}</td>
                                     <td>{user.isAdmin ? (<i className="fa fa-check" style={{color: 'green'}} > </i> ) : ( <i className="fa fa-times" style={{color: 'red'}} ></i> ) }</td>

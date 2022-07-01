@@ -12,15 +12,26 @@ from .serializers import RegisterUserSerializer, RegisterStylistSerializer, User
   
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-    def validate(self, attrs):
-        data = super().validate(attrs)
+    def post(self, request, format='json'):   
 
-        serializer = UserSerializerWithToken(self.user).data
+    
+        def validate(self, attrs):
         
-        for k, v in serializer.items():
-            data[k] = v
-        
-        return data
+
+            try:
+                data = super().validate(attrs)
+
+                serializer = UserSerializerWithToken(self.user).data
+                
+                for k, v in serializer.items():
+                    data[k] = v
+                
+                return data
+
+            except:
+                    messsage = {'detail': 'user does not exist'}
+                    return Response(messsage, status=status.HTTP_400_BAD_REQUEST)
+            
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -36,12 +47,12 @@ class CustomUserCreate(APIView):
             if serializer.is_valid():
                 user = serializer.save()
                 if user:
-                    serializer = UserSerializerWithToken(user, many=False)
+                    serializer = UserSerializerWithToken(user)
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except:
-            messsage = {'detail': 'user with this email or username or phone number exist'}
-            return Response(messsage, status=status.HTTP_400_BAD_REQUEST)
+                messsage = {'detail': 'user with this email  or phone number exist'}
+                return Response(messsage, status=status.HTTP_400_BAD_REQUEST)
             
 
 class StylistCreateView(APIView):
@@ -92,7 +103,6 @@ class UpdateUserProfile(APIView):
         user = self.request.user
         
         data = self.request.data
-        user.name = data['name']
         user.user_name = data['user_name']
         user.email = data["email"]
         user.phone_number = data["phone_number"]
@@ -140,7 +150,6 @@ class AdminGetPutUserInformation(APIView):
             return Response({"detail":"User does not exist"}, status=status.HTTP_200_OK)
 
         data = self.request.data
-        user.name = data['name']
         user.user_name = data['user_name']
         user.email = data["email"]
         user.phone_number = data["phone_number"]

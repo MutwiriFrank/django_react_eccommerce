@@ -2,6 +2,8 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from .models import NewUser, Stylist
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 # customer registration
  
@@ -12,7 +14,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model =NewUser
-        fields = ('id', 'pk', 'isAdmin', 'user_name', 'email', 'name', "phone_number")
+        fields = ('id', 'pk', 'isAdmin', 'user_name', 'email', "phone_number")
         
         
     def get_pk(self, obj):
@@ -27,7 +29,7 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = NewUser
-        fields = ('id', 'pk', 'isAdmin', 'user_name', 'email', 'name',"phone_number", "password", 'token' )
+        fields = ('id', 'pk', 'isAdmin', 'user_name', 'email', "phone_number", "password", 'token' )
 
     def get_token(self, obj):
         token= AccessToken.for_user(obj)
@@ -43,13 +45,12 @@ class UserSerializerWithToken(UserSerializer):
 class RegisterUserSerializer(ModelSerializer):
     email = serializers.EmailField(required=True )
     user_name = serializers.CharField(required=True)
-    name = serializers.CharField(required=True)
     phone_number = serializers.CharField(required=True)
     password = serializers.CharField(min_length=8, write_only=True)
 
     class Meta:
         model = NewUser
-        fields = ('email', 'user_name', 'name', 'phone_number', 'password', )
+        fields = ('email', 'user_name',  'phone_number', 'password', )
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -59,12 +60,17 @@ class RegisterUserSerializer(ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+    
+    def validate_email(self, email):
+        users = NewUser.objects.filter(email=email)
+        if users : 
+            raise serializers.serializers.ValidationError('email is invalid')    
+        return email
 
 
 # stylist registration
 
 class RegisterStylistSerializer(ModelSerializer):
-    name = serializers.CharField(required=True)
     user_name =  serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     phone_number = serializers.CharField(required=True)
@@ -72,7 +78,7 @@ class RegisterStylistSerializer(ModelSerializer):
 
     class Meta:
         model= Stylist
-        fields = ('email', 'user_name', 'name', 'phone_number', 'password', 'location')
+        fields = ('email', 'user_name', 'phone_number', 'password', 'location')
         extra_kwargs = {'password': {'write_only': True}}
 
     

@@ -75,6 +75,7 @@ class ProductList(ListAPIView):
         # products = Product.objects.filter(
         #     name__icontains=query )
 
+        #  Full text search using postgres
         products = Product.objects.annotate(
             search=SearchVector('name', 'category__name', 'tag__name', 'subcategory__name', 'querysearched__name') ,).filter(search=query)
         if not products:
@@ -99,6 +100,29 @@ class ProductList(ListAPIView):
 
         serializer = ProductSerializer(products, many=True)
         return Response({"products": serializer.data, "page": page, "pages":paginator.num_pages })
+
+
+# Vieww for ajax calls
+class AjaxProductList(ListAPIView):
+    permission_classes = [AllowAny,]
+    serializer_class = ProductSerializer
+
+    def get(self, request):
+        query = request.query_params.get('keyword') 
+
+        if query == None :
+            return Response(status=status.HTTP_200_OK) 
+        products = Product.objects.annotate(
+            search=SearchVector('name', 'category__name', 'tag__name', 'subcategory__name', 'querysearched__name') ,).filter(search=query)
+      
+
+        if not products:
+          
+            return Response(status=status.HTTP_200_OK)
+        serializer = ProductSerializer(products, many=True)
+        return Response({"products": serializer.data })
+    
+
 
 
 class ProductEdit(APIView):
@@ -201,7 +225,7 @@ class AddOrderItem(APIView):
 
     
     def post(self, request):
-        print(request.user)
+        
         data = request.data
         orderItems = data['orderItems']
         if orderItems :
@@ -268,7 +292,7 @@ class GetOrderById(APIView):
         
         if user.is_staff or order.user:
             serializer = OrderSerializer(order, many=False)
-            print(serializer.data)
+        
             return Response(serializer.data)
         return Response({"detail":"You cant view another users order"}, status=status.HTTP_400_BAD_REQUEST )       
     
@@ -394,6 +418,13 @@ class ListCaroselProducts(APIView):
         serializer = CaroselItemsSerializer(carosel, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class Logo(APIView):
+    serializer_class = [CaroselItemsSerializer, ]
+
+    def get(self, request):
+        carosel = CaroselItems.objects.filter().order_by('-id')[0:5]
+        serializer = CaroselItemsSerializer(carosel, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ListTopProducts(APIView):
     
@@ -415,6 +446,7 @@ class ListCategories(APIView):
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
+        print(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ListRoomCategories(APIView):
@@ -442,6 +474,23 @@ class getSubcategoryProducts(APIView):
             return Response ({"detail": "Error, category does not exist"},  status=status.HTTP_400_BAD_REQUEST)
 
         products = subcategory.product_set.all()
+        serializer = ProductSerializer(products, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK )
+
+
+class CategoryProducts(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, category_id):
+        
+        try:
+            category = Category.objects.get(id=category_id)
+        except:
+            return Response ({"detail": "Error, category does not exist"},  status=status.HTTP_400_BAD_REQUEST)
+
+        products = Product.objects.filter(category=category)
+        
         serializer = ProductSerializer(products, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK )
@@ -479,7 +528,6 @@ class ListLivingRoomTopProducts(APIView):
         products = room.product_set.filter().order_by("-rating") [0:8]
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 
 

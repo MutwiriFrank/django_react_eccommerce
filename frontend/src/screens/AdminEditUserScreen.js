@@ -11,7 +11,6 @@ import FormContainer from '../components/FormContainer'
 function AdminEditUserScreen({match, history}) {
 
     const userId = Number(match.params.id)  
-    const [name, setName] = useState('')
     const [user_name, setUsername] = useState('')
     const [phone_number, setPhone] = useState('')
     const [email, setEmail] = useState('')
@@ -29,7 +28,6 @@ function AdminEditUserScreen({match, history}) {
             history.push('/admin/userlist')
         }else{
             if(user && user.id === userId ){
-                setName(user.name)
                 setUsername(user.user_name) 
                 setEmail(user.email)
                 setPhone(user.phone_number)
@@ -50,7 +48,7 @@ function AdminEditUserScreen({match, history}) {
 
     const submitHandler = (e) =>{
         e.preventDefault()
-        dispatch(updateUser({id:user.id, name,email,  user_name, phone_number}))
+        dispatch(updateUser({id:user.id, email,  user_name, phone_number}))
     }
 
 
@@ -69,12 +67,7 @@ function AdminEditUserScreen({match, history}) {
                 { loading ? <Loader /> : error ? <Message variant='danger' >{error}</Message> : (
 
                     <Form onSubmit={ submitHandler }>
-                        <Form.Group controlId='name'>
-                            <Form.Label>Name </Form.Label>
-                                <Form.Control type='text' placeholder='Enter your name' value={name}  onChange={(e) => setName(e.target.value) } >
-
-                                </Form.Control>
-                        </Form.Group >
+                      
 
                         <Form.Group controlId='user_name'>
                             <Form.Label>Username</Form.Label>
