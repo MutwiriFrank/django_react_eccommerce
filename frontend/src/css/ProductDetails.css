@@ -1,6 +1,14 @@
 .image_Details_description_Row{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.product__name{
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: bold;
+
 }
 
 .product_detailsImage {
@@ -8,18 +16,13 @@
     
 }
 .image__column{
-    padding : 2rem;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rempx;
+    margin-top: 5rem;
+    margin-bottom: 1rem;
 }
 
-.product__DetailsDiv{
-    padding: 2rem;
-    
-}
+
 .quantity_input {
-    padding: 0;
+    padding-right: 4rem;
     margin: 0;
     border: 0.5px;
 }
@@ -36,17 +39,11 @@
 
 }
 .quantity_row{
-    margin-bottom: -10px;
-    padding: -5px;
+    margin-bottom: 10px;
+
 }
 
-.description__column{
-    padding: 2rem;
-}
-.description_heading{
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+
 
 .textarea{
     border: none;
@@ -60,10 +57,30 @@
     justify-content: start;
     margin-top: 3rem;
 }
+.Add_to_cart_button{
+    border-radius: 10px;
+    width: 250px !important;
+    height: 45px;
+    background: #FFD301;
+}
+.Add_to_cart_button:hover{
+    background: #F1B900 !important;
+}
+
+.Add_to_cart_button_text{
+    font-size: 20px;
+    font-weight: bold;
+}
+.second_row{
+    margin-left:2rem;
+    margin-top: 5rem;
+}
 
 .Reviews_title{
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
     font-weight: bold;
-    text-align: center;
     font-size: 1.2rem;
 }
 .subtitle{
@@ -74,14 +91,20 @@
     padding-left: 2rem;
     padding-right: 2rem;
 }
-.reviews{
-    padding: 2rem;
+.description_heading{
+    margin-top: 2rem;
+    margin-bottom : 1rem;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 @media screen and (max-width: 767px){
     .description__column{
         padding-left: 3rem;
         padding-right: 3rem;
+    }
+    .image__column{
+        margin-top: 1rem;
     }
 
 
@@ -90,16 +113,53 @@
 
 
 @media screen and (max-width: 480px){
+    .image_Details_description_Row{
+        padding-bottom: 0;
+    }
+    .product__name{
+        font-size: 24px;
+        text-transform: uppercase;
+        font-weight: bold;
+    
+    }
+    .image_Details_description_Row{
+        padding: 0;
+    }
+
+    .mobile_col_description {
+        padding-top: 4rem;
+        padding-left: 4rem;
+        padding-right: 4rem;
+
+        
+    }
+    .product-price{
+        margin-bottom: 1.3rem;
+    }
+    .second_row{
+        margin-left:0rem;
+        margin-top: 1rem;
+        margin-bottom: 6rem;
+    }
+
     .addTo__cart {
-        bottom: 0;
-        width: 40%;
+        bottom: 2rem;
+        width: 200px;
+        height: 60px;
         position: fixed;
         padding: 0.3rem;
-        background: rgb(238, 75, 75);
+        background: #FFD301;
         border: 0px;
+        border-radius: 10px;
         margin-top:0.4rem;
         z-index: 10;
         
+    }
+    .addTo__cart:hover{
+        background: #F1B900 !important;
+    }
+    .Add_to_cart_button_text{
+        font-size:20px;
     }
     .div__addButton{
         display: flex;
@@ -117,39 +177,26 @@
         padding-top: 1rem;
         padding-bottom: 0;
     }
-    .product__DetailsDiv p{
-        font-size: 0.9rem;
-        margin-top: -5px;
-        margin-bottom: -5px;
-    }
+  
     .description__column{
         padding-top: 0;
         padding-bottom: 0;
-        padding-left: 1.7rem;
-        padding-right: 1.7rem;
+       
         
     }
     .description__column p{
         font-size: 0.9rem;
     }
     .description_heading{
-        font-size: 1rem;
-        margin: 1rem;
+        font-size: 20px;
+        font-weight: bold;
+       
     }
-    .description{
-        padding-right: 1rem;
-        padding-left: 1rem
-    }
+
     .Reviews_title{
-        font-size: 1rem;
-        margin-bottom: 0;
-    }
-    .reviews p {
-        font-size: 0.9rem;
-        padding-top: -10px;
-        padding-bottom: 0;
-        margin-bottom: 0;
-        margin-top: -5px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
     }
     .create__reviewDiv{
         padding-top: 0;
@@ -161,10 +208,7 @@
         font-size: 0.85rem;
 
     }
-    .Reviews_title{
-        font-size: 0.9rem;
-        font-weight: bold;
-    }
+   
     .subtitle2 {
         font-size: 0.9rem ;
         font-weight: bold;
@@ -173,6 +217,8 @@
         margin-top: 0.3rem;
         padding-top: 0.4rem;
         padding-bottom: 0.4rem;
+        background-color: #F1B900;
+        border-radius: 8px;
 
     }
     .reviews{

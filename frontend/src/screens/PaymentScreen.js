@@ -81,7 +81,7 @@ function PaymentScreen({history}) {
                         </Form.Check>
                     </Col>
                 </Form.Group>
-                <Button className="continue__button" type='submit' variant='danger' >Continue</Button>
+                <Button className=" registration_button" type='submit' variant='danger' >Continue</Button>
                 
             </Form>
         </FormContainer>

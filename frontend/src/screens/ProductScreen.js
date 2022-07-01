@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Col, Row, Image, ListGroup , Card, Button, Form, ListGroupItem } from 'react-bootstrap'
+import { Col, Row, Image, ListGroup , Button, Form } from 'react-bootstrap'
 
 import { listProductDetails, productCreateReview } from '../actions/productActions'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import {  PRODUCT_REVIEW_CREATE_RESET} from '../constants/productConstants'
+import {  PRODUCT_REVIEW_CREATE_RESET, AJAX_PRODUCT_LIST_RESET} from '../constants/productConstants'
+
 import '../css/ProductDetails.css'
 
 
@@ -25,9 +26,9 @@ function ProductScreen({match, history}) {
     const { userInfo } = userLogin
 
     const productReviewCreate = useSelector(state => state.productReviewCreate)
-    const {message, loading: loadingReviewCreate, success:successReviewCreate, error: errorReviewCreate,} = productReviewCreate
+    const { loading: loadingReviewCreate, success:successReviewCreate, error: errorReviewCreate,} = productReviewCreate
     
-
+    dispatch({type: AJAX_PRODUCT_LIST_RESET})
 
     useEffect(() => {
         dispatch({ type: PRODUCT_REVIEW_CREATE_RESET})
@@ -64,21 +65,19 @@ function ProductScreen({match, history}) {
                     {console.log(product.category)}
 
                     <Row className="image_Details_description_Row">
-                        <Col sm={12}  md={4} className="image__column">
+                        <Col sm={10}  md={5} className="image__column">
                             <Image className="product_detailsImage" src={product.image} alt={product.name} fluid/>
                         </Col>
                         
                         
-                        <Col sm={12} md={4}>
+                        <Col className="mobile_col_description" sm={10} md={6}>
                         
                             <div className="product__DetailsDiv">
                                     <p className="product__name" >{product.name}</p>
                                     <hr />
-                                    <p className="product__price" >ksh<strong>{product.price }</strong></p>
-                                    <hr />                                 
+                                    <p className="product-price" >ksh<strong>{product.price }</strong></p>
+                                                                 
                                     <Rating value={product.rating} text={`${product.numReviews} reviews `}  color={'#f8e825'}/>
-                                    <hr />
-                                    
 
                                     <Row className="quantity_row" >
                                         <Col className="product__quantity" >
@@ -108,38 +107,33 @@ function ProductScreen({match, history}) {
                                     <hr />
                                     
                             </div>
-                            
-                            
-                        </Col>
-                        <Col sm={12} md={4} className="description__column" >
-                            <p className="description_heading" >Description</p>
-                            <div>
-                                <p className="description" >{product.description}</p>
-                            </div>
-                        
-
                             <div className="button__div">
                                     
                                 <Button 
                                     onClick={addToCartHandler}
-                                    className='btn-block '
+                                    className='btn-block Add_to_cart_button'
                                     disabled={product.countInStock === 0} 
                                     type="button" 
                                     variant="danger"
-                                >Add to Cart</Button>
-                            </div>                             
-                        
+                                ><p className="Add_to_cart_button_text">Add to Cart</p></Button>
+                            </div>   
+                            
+                            <p className="description_heading" >Description</p>
+                            <div>
+                                <p className="description" >{product.description}</p>
+                            </div>                      
                         </Col>
+                        
                     </Row>
+                    
 
                     <Row className="second_row">
-                        <p className="Reviews_title">Reviews</p>
 
                         <Col sm={12} md={5}>                          
                             { product.review.length === 0 && <Message variant="info" >This item has no  reviews</Message>  }
 
                             {loadingReviewCreate && <Loader />}
-                            {successReviewCreate  && <Message variant="success" >Revie Submitted.</Message> }
+                            {successReviewCreate  && <Message variant="success" >Review Submitted.</Message> }
 
                             {errorReviewCreate  && <Message variant="danger" >{errorReviewCreate}</Message> }
 
@@ -204,9 +198,12 @@ function ProductScreen({match, history}) {
                         </Col>
 
                         <Col sm={12} md={7} className="" >
+                        <p className="Reviews_title">Reviews</p>
+
+
                             {product.review.map((review) => (
                                 <div key={review.id} className="reviews" >
-                                    <p className="subtitle">{review.name}</p> 
+                                    <p className="review-content">{review.name}</p> 
                                     <Rating  value={review.rating } color='#f8e825' />
                                     <p>{review.comment}</p>
                                     <hr />

@@ -167,7 +167,7 @@ function ProductEditScreen({history, match }) {
 
                 
 
-                <Button type='submit' style={{marginTop : "10px"}} variant='success'>Edit Product</Button>
+                <Button className="registration_button" type='submit' style={{marginTop : "10px"}} >Edit Product</Button>
 
             </Form>
 

@@ -1,4 +1,6 @@
 footer{
+    position: relative;
+    bottom: 0 !important;
     background-color: #131921;
     padding-left: 2rem;
     padding-right: 2rem;

@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap'
-import { BrowserRouter as Router ,Route } from 'react-router-dom'
+import { BrowserRouter as Router ,Route, Switch } from 'react-router-dom'
 
 import Header from './components/Header'
 
@@ -20,7 +20,9 @@ import ProductListScreen from './screens/ProductListScreen'
 import ProductCreateScreen from './screens/ProductCreateScreen' 
 import ProductEditScreen from './screens/ProductEditScreen' 
 import OrderListScreen from './screens/OrderListScreen' 
-import SubcategoryProductsScreen from './screens/SubcategoryProductsScreen'  
+import SubcategoryProductsScreen from './screens/SubcategoryProductsScreen'
+import CategoryProductsScreen from './screens/CategoryProductsScreen'
+import PageNotFound from './screens/404' 
 
 
 function App() {
@@ -28,11 +30,13 @@ function App() {
     <Router>
       <Header />
         <main className="p-y3">
+        <Switch>
           
             <Route path='/' component={HomeScreen} exact/>
             <Route path='/subcategory/:id' component={SubcategoryProductsScreen} />
+            <Route path='/category/:id' component={CategoryProductsScreen} />
+     
             
-            <Container>
             <Route path='/product/:pk' component={ProductScreen} />
             
             <Route path='/cart/:pk?' component={CartScreen} />
@@ -50,8 +54,14 @@ function App() {
             <Route path='/admin/product/create' component={ProductCreateScreen} />  
             <Route path='/admin/product/edit/:pk' component={ProductEditScreen} />  
             <Route path='/admin/orders' component={OrderListScreen} />
+            <Route component={PageNotFound} />
+          
+            
 
-          </Container>
+
+
+       
+          </Switch>
         </main>
       
     </Router>

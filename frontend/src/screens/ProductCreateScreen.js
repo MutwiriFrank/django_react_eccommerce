@@ -100,7 +100,7 @@ function ProductCreateScreen({history}) {
 
                 
 
-                <Button type='submit' style={{marginTop : "10px"}} variant='primary'>Add Product</Button>
+                <Button className="registration_button" type='submit' style={{marginTop : "10px"}} >Add Product</Button>
 
             </Form>
 

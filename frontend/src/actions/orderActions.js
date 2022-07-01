@@ -22,11 +22,18 @@ export const createOrder = (order) => async (dispatch, getState) =>{
             userLogin: { userInfo },
         } = getState()
 
+            // let token = userInfo.access
+
+            // if (!userInfo.access){
+            //     token = userInfo.token
+            // }
+
+
      
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${userInfo.token || userInfo.access}`
             }
         }
 
@@ -84,7 +91,7 @@ export const getOrderDetails = (id) => async(dispatch, getState) => {
         const config = {
             headers: {
                 'Content-Type' : 'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${userInfo.token || userInfo.access}`
             }
         }
 
@@ -116,11 +123,17 @@ export const payOrder = (id, paymentResult ) => async(dispatch, getState) =>{
             userLogin: { userInfo },
         } = getState()
 
+        let token = userInfo.access
+
+        if (!userInfo.access){
+            token = userInfo.token
+        }
+
      
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${token }`
             }
         }
 
@@ -163,7 +176,7 @@ export const listMyOrders = ( ) => async (dispatch, getState) =>{
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${userInfo.token || userInfo.access}`
             }
         }
 
@@ -210,7 +223,7 @@ export const ordersList = () => async (dispatch, getState) => {
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${userInfo.token || userInfo.access}`
             }
         }
 
@@ -248,7 +261,7 @@ export const deliverOrder = ( order ) => async(dispatch, getState ) =>{
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization : `Bearer ${userInfo.token}`
+                Authorization : `Bearer ${userInfo.token || userInfo.access}`
             }
         }
         //get data, we need headers and access

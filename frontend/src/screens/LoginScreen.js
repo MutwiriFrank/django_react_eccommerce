@@ -52,7 +52,7 @@ function LoginScreen({ location, history }) {
             <Col className="registration_form_col" sm={10} md={6} lg={4} >
             <p className="form_title">Sign In</p>
             {error && <Message variant='danger'>{error}</Message>}
-            {message && <Message variant='danger'>{message}</Message>}
+            {message && <Message variant='info'>{message}</Message>}
             {loading && <Loader />}
             <Form onSubmit={submitHandler}>
 
@@ -84,7 +84,7 @@ function LoginScreen({ location, history }) {
                     </Form.Control>
                 </Form.Group>
 
-                <Button type='submit' variant='danger' className="registration_button">
+                <Button type='submit' className="registration_button">
                     Sign In
                 </Button>
             </Form>

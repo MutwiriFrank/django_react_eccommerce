@@ -116,8 +116,8 @@ function CartScreen({ match, location, history }) {
                             
                             <Button
                                 type='button'
-                                variant='danger'
-                                className='c'
+                                
+                                className='registration_button'
                                 disabled = {cartItems.length === 0}
                                 onClick = {checkoutHandler}
                             > checkout

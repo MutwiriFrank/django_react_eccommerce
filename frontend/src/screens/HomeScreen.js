@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 // import { Link } from 'react-router-dom'
 import { Col, Row,Container } from 'react-bootstrap'
@@ -16,13 +16,13 @@ import '../css/Home.css'
 
 
 function HomeScreen({ history, match }) {
+    
     const dispatch = useDispatch()
     const productList = useSelector(state => state.productList )
     const {error, loading, products, page, pages } = productList
 
     let keyword = history.location.search
 
-    
 
 
     useEffect(() => {
@@ -76,13 +76,9 @@ function HomeScreen({ history, match }) {
                                 </Col>
                             ))}  
 
-
-
-
-                                   
                         </Row> 
 
-                     <Paginate page={page} pages={pages} keyword={keyword} />
+                    <Paginate page={page} pages={pages} keyword={keyword} />
                     
 
                     </div>

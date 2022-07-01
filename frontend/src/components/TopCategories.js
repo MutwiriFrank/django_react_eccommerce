@@ -1,87 +1,59 @@
-import React from 'react'
+import React, {useEffect, } from 'react'
 import { Row, Col, Card,Container } from 'react-bootstrap'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import '../css/TopCategories.css'
+import { listCategories } from '../actions/categoryAction'
 
 function TopCategories() {
+
+    const categories = useSelector(state => state.categories)
+    const { loading, categories:mainCategories } = categories
+
+    let topFourCategories = []
+    console.log("am here jo" )
+
+    if (mainCategories){
+        let topCategories = mainCategories.sort((a, b) => (a.rating > b.rating) ? 1 : -1)
+        topFourCategories = topCategories.slice(0, 4);
+    }
+
+    console.log("topcategories",topFourCategories )
+
+
     return (
-        <Container >
-        <Container >
+
             <div  className= " top__categories">
             <p className ="top__categoriesHeader" >Top Categories</p>
             <Row className="cart_row" >
             
-            <Col  xs={6} sm={6} md={6} lg={3} >
-                <Card className="top__categoriesCard">
-                    <Link to={`/`}>
-                        <Card.Img src="images/alexa.jpg" alt="" />
-                    </Link>
+            {
+                topFourCategories.map(category=>(
 
-                    <div className="text__div" >
-                        <Link to={`/`}>
-                            
-                            <p className="top__categoryCategoriesName">Wallpapers</p>
-                    
-                        </Link>
-                    </div>
-                        
-                              
-                </Card>
-            </Col>
-            <Col  xs={6} sm={6} md={6} lg={3} >
-            <Card className="top__categoriesCard" >
-                <Link to={`/`}>
-                    <Card.Img src="images/mouse.jpg" alt="" />
-                </Link>
-                
-                <div className="text__div" >
-                <Link to={`/`}>
-                    
-                    <p className="top__categoryCategoriesName">Wallpapers</p>
-            
-                </Link>
-            </div>
+                <Col key={category.id}  xs={6} sm={6} md={6} lg={3} >
+                    {console.log('category', category.id)}
 
-                            
-            </Card>
-            </Col>            
-            <Col  xs={6} sm={6} md={6} lg={3} >
                     <Card className="top__categoriesCard">
-                    <Link to={`/`}>
-                        <Card.Img src="images/alexa.jpg" alt="" />
-                    </Link>
-
-                    <div className="text__div" >
-                        <Link to={`/`}>
-                            
-                            <p className="top__categoryCategoriesName">Wallpapers</p>
-                    
+                        <Link to={`/category/${category.id}`}>
+                            <Card.Img src={category.image} alt="" />
                         </Link>
-                    </div>                                 
-                </Card>
-            </Col>
-            <Col  xs={6} sm={6} md={6} lg={3} >
-                <Card className="top__categoriesCard" >
-                    <Link to={`/`}>
-                        <Card.Img src="images/phone.jpg" alt=""  />
-                    </Link>
 
-                    <div className="text__div" >
-                        <Link to={`/`}>
+                        <div className="text__div" >
+                            <Link to={`/category/${category.id}`}>
+                                <p className="top__categoryCategoriesName">{category.name}</p>
+                        
+                            </Link>
+                        </div>
                             
-                            <p className="top__categoryCategoriesName">Wallpapers</p>
-                    
-                        </Link>
-                    </div>                                    
-                </Card>
+                                
+                    </Card>
             </Col>
-            
+            ))}  
             
             </Row>
 
             </div>
-        </Container>
-        </Container>
+        
     )
 }
 

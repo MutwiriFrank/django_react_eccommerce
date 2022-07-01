@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS , PRODUCT_LIST_FAIL,
+        AJAX_PRODUCT_LIST_REQUEST, AJAX_PRODUCT_LIST_SUCCESS , AJAX_PRODUCT_LIST_FAIL,
         PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS , PRODUCT_DETAILS_FAIL,
         PRODUCT_DELETE_REQUEST,  PRODUCT_DELETE_SUCCESS , PRODUCT_DELETE_FAIL,
         PRODUCT_CREATE_REQUEST,  PRODUCT_CREATE_SUCCESS , PRODUCT_CREATE_FAIL, 
@@ -15,7 +16,11 @@ export const listProducts = (keyword = '') => async (dispatch) => {
     try{
         dispatch({type: PRODUCT_LIST_REQUEST })
 
+        console.log("listKeyword", keyword)
+
         const {data} = await axios.get(`/api/store/${keyword} `)
+
+     
 
         dispatch({
             type: PRODUCT_LIST_SUCCESS,
@@ -32,6 +37,40 @@ export const listProducts = (keyword = '') => async (dispatch) => {
     }
 
 }
+
+export const listAjaxProducts = (keyword = '') => async (dispatch) => {
+    try{
+        console.log("am here")
+        dispatch({type: AJAX_PRODUCT_LIST_REQUEST })
+
+        console.log("AjaxKeyword", keyword)
+
+
+        const {data} = await axios.get(`/api/store/ajax_search/${keyword} `)
+
+        console.log("ajax products", data)
+
+        dispatch({
+            type: AJAX_PRODUCT_LIST_SUCCESS,
+            payload: data  
+        })
+       
+
+        
+
+    } catch (error) {
+
+    
+    dispatch({
+        type: AJAX_PRODUCT_LIST_FAIL,
+        payload: error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+    })
+    }
+
+}
+
 
 export const listProductDetails = (pk) => async (dispatch) => {
     try{

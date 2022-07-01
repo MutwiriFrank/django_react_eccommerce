@@ -14,19 +14,35 @@ Save all the words people search ---- done -tags
 
 link these common names to be searched with each product by use of tags -- done  -search vector -->
 
-404 page
+<!-- 404 page -- done -->
 
-logo
+<!-- logo ---done-- -->
 
-ajax search
+<!-- ajax search      -done after 3 days-->
 
-Sort reviews by latest
+<!-- React hide div on clicking outiside the div ---ajax lists + side bar  ---done-->
 
-Page after placing order, rembesha kiasi
+<!-- Sort reviews by latest -->
 
-Add category pictures on home page
+<!-- profile and order page to redirect non logged in users to login -done -->
 
-Add order Id
+<!-- Page after placing order, rembesha kiasi  --------done-->
+
+<!-- Add category links on home page -------------done-->
+
+Async views drf
+
+forgot password
+
+Add order Id - random no
+
+Hide Hel User on mobile
+
+Logged out users cannot comment-- currently -token error
+
+Add margin on left and riht in most pages
+
+Add no product found page if user search a non existing product
 
 On orders admin pannel shoudl display order ID, user and product
 
@@ -43,6 +59,10 @@ reduce carousel slider to 50% vh
 use sub category product names instead of ids
 
 Add striked through and percentage saved
+
+save user shipping
+
+Delivery in nairobi -300, outside nairobi. Also add client might be required to pay delivery fee in advance.
 
 On profile chande Username to Second name
 
@@ -84,3 +104,10 @@ Send bulk main after user purchase. And give them a promocode for next purxhase
 Add a drop down on Hello guesrt, to show visited product, orders, wishlist
 
 Admin order items not showing
+
+add throttling to prevent click jacking
+
+use slug
+
+Recommendation system
+

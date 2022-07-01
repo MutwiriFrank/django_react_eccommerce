@@ -3,10 +3,10 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 import { categoryListReducer, RoomCategoryListReducer} from './reducers/categoryReducer'
-import { subcategoryProductsReducer } from './reducers/subcategoryProductsReducer' 
+import { subcategoryProductsReducer, categoryProductsReducer } from './reducers/subcategoryProductsReducer' 
 
 
-import { productListReducers, productDetailsReducers, productDeleteReducer, productCreateReducer,
+import { productListReducers, ajaxProductListReducers, productDetailsReducers, productDeleteReducer, productCreateReducer,
         productEditReducer, productReviewCreateReducer, topProductListReducers} from './reducers/productReducers' 
 import { cartReducer} from './reducers/cartReducers'
 import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, 
@@ -18,8 +18,10 @@ import { caroselReducer } from './reducers/caroselReducers'
 
 const reducer = combineReducers({
         productList: productListReducers,
+        ajaxProductList: ajaxProductListReducers,
         productDetails : productDetailsReducers,
         subcategoryProducts : subcategoryProductsReducer,
+        categoryProducts: categoryProductsReducer,
         productDelete: productDeleteReducer,
         productCreate: productCreateReducer,
         productEdit : productEditReducer,

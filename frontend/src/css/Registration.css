@@ -42,12 +42,27 @@
 
 .registration_button{
     margin-top: 1rem !important; 
-    width: 100%;
-    align-Self: center !important;
+    width: 200px;
+    background: #FFD301;
+    background-color: #FFD301;
 }
+
+.registration_button:hover{
+    background: #F1B900 !important;
+    background-color: #F1B900 !important;
+}
+.registration_button:focus{
+    background: #F1B900 !important;
+    background-color: #F1B900 !important;
+}
+.registration_button:active{
+    background: #F1B900 !important;
+    background-color: #F1B900 !important;
+}
+
 .form_links{
     text-decoration: none;
-    color: tomato;
+    color: #F1B900;
     font-weight: bold;
     font-size: 14px;
 }

@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import { Container, Dropdown} from 'react-bootstrap'
+import React from 'react'
+import { Dropdown} from 'react-bootstrap'
 import {  Cart } from 'react-bootstrap-icons'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,7 +33,8 @@ function Header() {
         
         <div className='header'>
             <LinkContainer to={'/'}> 
-                <img className="header__logo" src="https://jdjd.com/dd.png" alt="Nebula" ></img>
+            
+                <img className="header__logo" src="images/nebula_homes2_logo.png"  alt="Nebula" ></img>
             </LinkContainer>
 
             <div className="mainNav_search">
@@ -41,34 +42,30 @@ function Header() {
 
             </div>
             <div className="header__nav" >
+
+                {userInfo &&
+                    <div className='header__option' >
                 
-                <LinkContainer to={'#'}> 
+                    <LinkContainer to={'/profile'}>                                                                                                                                                                     
+                        <span className='header__optionLineTwo' >Profile</span>
+                        </LinkContainer>
+                    </div>
+                }
 
-                <div className='header__option' >
-                    <span className='header__optionLineOne' >Hello,</span>
-                    <span className='header__optionLineTwo' >{ userInfo ? <p>{userInfo.user_name}  </p> : <p>Guest</p> }
-                    </span>
-                </div>
-                </LinkContainer>
-
-                <div className='header__option' >
-               
-                <LinkContainer to={'/profile'}>                                                                                                                                                                     
-                    <span className='header__optionLineTwo' >Profile</span>
-                    </LinkContainer>
-                </div>
-                <div className='header__option' >
-                    
-                    <LinkContainer to={'/orders'}> 
-                        <span className='header__optionLineTwo' >Orders</span>
-                    </LinkContainer>
-                </div>
-                <div className='header__option header__optionlogInOut' >
+                {userInfo &&
+                    <div className='header__option' >
+                        
+                        <LinkContainer to={'/orders'}> 
+                            <span className='header__optionLineTwo' >Orders</span>
+                        </LinkContainer>
+                    </div>
+                }
+                <div className='header__option ' >
                     <span className='header__optionLineTwo' >{ userInfo ?
                         <LinkContainer to={'/login'}> 
-                        <p onClick={logoutHandler} >Logout</p></LinkContainer> 
+                        <span onClick={logoutHandler} >Logout</span></LinkContainer> 
                         : <LinkContainer to={'/login'}> 
-                        <p>Login</p>
+                        <span>Login</span>
                         </LinkContainer> }
                     </span>
                 </div>

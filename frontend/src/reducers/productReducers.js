@@ -1,4 +1,5 @@
 import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS , PRODUCT_LIST_FAIL,
+    AJAX_PRODUCT_LIST_REQUEST, AJAX_PRODUCT_LIST_SUCCESS , AJAX_PRODUCT_LIST_FAIL,AJAX_PRODUCT_LIST_RESET,
     PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS , PRODUCT_DETAILS_FAIL, PRODUCT_DETAILS_RESET,
     PRODUCT_DELETE_REQUEST,  PRODUCT_DELETE_SUCCESS , PRODUCT_DELETE_FAIL,
     PRODUCT_CREATE_REQUEST,  PRODUCT_CREATE_RESET,  PRODUCT_CREATE_SUCCESS , PRODUCT_CREATE_FAIL,
@@ -25,6 +26,25 @@ export  const productListReducers = (state = {products :[]}, action) =>{
             return state
     }
 }
+
+export  const ajaxProductListReducers = (state = {ajaxProducts :[]}, action) =>{
+    switch (action.type) {
+        case AJAX_PRODUCT_LIST_REQUEST:
+            return {loading: true, ajaxProducts: []}
+
+        case AJAX_PRODUCT_LIST_SUCCESS:
+            return {loading: false, ajaxProducts: action.payload.products }
+
+        case AJAX_PRODUCT_LIST_FAIL:
+            return { loading: false, error: action.payload }
+        case AJAX_PRODUCT_LIST_RESET: 
+            return {product:{}}
+
+        default:
+            return state
+    }
+}
+
 
 export const productDetailsReducers = (state = {product: {review:[]} }, action) =>{
     switch (action.type){

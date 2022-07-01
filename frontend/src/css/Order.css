@@ -1,12 +1,27 @@
 .mainOrder_div{
-    padding-top: 1rem;
+    padding: 3rem;
+}
+
+.Order_Received{
+    margin-bottom: 2rem;
+}
+.Order_Details{
+    margin-top: 1rem;
+}
+.Order_Details::after
+{
+  content: '';
+  margin-top: 1rem;
+  border-bottom: 3px solid rgb(255, 221, 0);
+  width: 200px;
+  display: block;
 }
 
 .image_td > img{
     max-width: 100px;
 }
 .subtitle{
-    font-size: 1.1rem !important;
+    font-size: 20px !important;
     font-weight: bold;
     text-align: start;
 }
@@ -23,6 +38,9 @@ p > strong{
     text-transform: capitalize;
 }
 @media screen and (max-width: 480px) {
+    .mainOrder_div{
+        padding: 1rem;
+    }
     .subtitle{
         font-size: 0.95rem;
         

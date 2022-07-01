@@ -120,19 +120,26 @@ function Sidebar() {
     const showSidebar = () => setSidebar(!sidebar)
 
     const categories = useSelector(state => state.categories)
-    const {error, loading, categories:sidebarCategories } = categories
+    const {error, loading, categories: sidebarCategories } = categories
+
 
     // const rooms = useSelector(state => state.rooms)
-    // const { loading, rooms: sidebarRooms } = rooms
+    // const { loading, rooms: sidebarRooms } = roomsdd
 
     const dispatch = useDispatch()
 
-
     useEffect(() => {
-        dispatch(listCategories())
-        dispatch(listRoomCategories())
-    }, [dispatch])
 
+            if (listCategories.length ){
+
+            }else{
+                dispatch(listCategories())  
+            }
+    
+         
+    
+    
+    }, [dispatch,  ])
 
 
     return (

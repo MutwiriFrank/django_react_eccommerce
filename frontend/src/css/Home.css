@@ -1,3 +1,8 @@
+p{
+    color: black ;
+}
+
+
 .top__productsHeading {
     margin-top: 15px;
     font-size: 19px;
@@ -58,7 +63,7 @@
 .offer_textTwo {
     font-size: 3.7rem;
     font-weight: Bold;
-    color: Red;
+    color: #F1B900;
 }
 
 @media screen and (max-width: 800px){
@@ -92,7 +97,7 @@
     
     .offer_textTwo {
         font-size: 1.5rem;
-        color: Red;
+        color: #F1B900ed;
     }
 
     .offer__div{

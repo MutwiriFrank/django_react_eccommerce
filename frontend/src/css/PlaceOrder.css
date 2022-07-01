@@ -1,3 +1,8 @@
+.checkout_stepsDiv{
+    padding-top: 2rem;
+}
+
+
 .image_td > img{
     max-width: 100px;
 }
@@ -21,6 +26,12 @@ p > strong{
     font-size: 0.9rem;
     font-weight: 510;
     text-transform: capitalize;
+}
+.order_button{
+    background: #FFD301;
+}
+.order_button:hover{
+    background: #F1B900
 }
 @media screen and (max-width: 480px) {
     .subtitle{

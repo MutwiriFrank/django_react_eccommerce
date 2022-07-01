@@ -38,11 +38,7 @@ main{
     top: 0;
  
 }
-.product__col{
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-    margin: 0 !important ;
-}
+
 .homepage2{
     height: 100vh !important;
 }
@@ -63,11 +59,7 @@ main{
     .carousel img {
         height: 70vh;
     }
-    .product__col{
-        padding-left: 1px !important;
-        padding-right: 1px !important;
-        margin: 0 !important ;
-    }
+
     
 
 }

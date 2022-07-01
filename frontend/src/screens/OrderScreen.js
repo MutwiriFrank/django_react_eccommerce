@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { ListGroup,Table, Button, Row, Col, Image, Card, ListGroupItem} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Badge, ListGroup,Table, Button, Row, Col, Card} from 'react-bootstrap'
+
 import { useDispatch, useSelector } from 'react-redux'
 import { PayPalButton } from 'react-paypal-button-v2'
 import Message from '../components/Message'
@@ -96,11 +96,15 @@ function OrderScreen({ match, history  }) {
         <div className ="mainOrder_div">
 
             <Row>
+            <h1 className="Order_Received">Order Received</h1>
+            <p>Thank you. Your order has been received</p>
+            <p>Order ID : {order.id}</p>
+            <h3 className="Order_Details">Order Details</h3>
                 <Col md={7} >
                     <ListGroup variant='flush'>
                         <ListGroup.Item >
                             <p className="subtitle" >Delivery</p>
-                            <p className="ordinary_p"><strong>Name: </strong>{order.user.name}</p>
+                            <p className="ordinary_p"><strong>Name: </strong>{order.user.user_name}</p>
                             <p className="ordinary_p"><strong>Email: </strong>{order.user.email}</p>
                             <p className="ordinary_p"><strong>Phone Number: </strong>{order.shippingAddress.phone}</p>
                             <p className="ordinary_p">
@@ -108,12 +112,16 @@ function OrderScreen({ match, history  }) {
                                 {order.shippingAddress.city }, {order.shippingAddress.estate}, {order.shippingAddress.road}, {order.shippingAddress.landmark} 
 
                             </p>
-                            {order.isDelivered ? (
-                                <Message variant='success' >Delivered on {order.paidAt}</Message>
+                          
+                            <p> Delivery Status  {order.isDelivered ? (
+                                <Button variant='success' > Delivered on -  {order.deliveredAt}</Button>
                             ) : (
-                                <Message variant='warning' >Not Delivered</Message>
+                                <Button variant='warning' >Not Delivered</Button>
                             )                             
                             }
+                            </p>
+                            
+                           
 
                         </ListGroup.Item>
 
@@ -124,14 +132,14 @@ function OrderScreen({ match, history  }) {
                             <p className="subtitle">Payment Method</p>
                             <p className="ordinary_p">
                                 <strong>Method:   </strong>
-                                {order.payment_method} 
+                                {order.payment_method == 'ondelivery' ? <p>Cash on Delivery</p> : <p>Mpesa on delivery</p> } 
                             </p>
-                            {order.isPaid ? (
-                                <Message variant='success' >Paid on {order.paidAt}</Message>
+                            <p> Payment Status    {order.isPaid ? (
+                                <Button variant='success' >Paid on {order.paidAt}</Button>
                             ) : (
-                                <Message variant='warning' >Not paid</Message>
+                                <Button variant='warning' >Not paid</Button>
                             )                             
-                            }
+                            }</p>
                         </ListGroup.Item>
                     </ListGroup>
                     

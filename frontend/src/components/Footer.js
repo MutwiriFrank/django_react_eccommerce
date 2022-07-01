@@ -5,7 +5,7 @@ import '../css/Footer.css'
 
 function Footer() {
     return (      
-        <footer>
+        <footer >
             <Container>
                 <Row  >
                     <Col  className="list__column">

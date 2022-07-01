@@ -25,7 +25,7 @@
 }
 
 .continue__shoping a{
-    color: #D9534F;
+    color: #F1B900;
     text-decoration: none;
 }
 .subtotal_div{
@@ -47,11 +47,15 @@
     text-decoration: none;
 }
 .remove_button{
-    background-color: #D9534F;
+    background:  #FFD301;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-bottom: px;
     height: 32px;
+}
+
+.remove_button:hover{
+    background: #F1B900
 }
 .remove_button > p{
     font-weight: bold;

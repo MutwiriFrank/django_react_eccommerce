@@ -87,7 +87,7 @@ function ShippingScreen({history}) {
                     </Form.Control>
                 </Form.Group >
 
-                <Button type='submit' className="continue_button" variant='danger '>Continue</Button>
+                <Button type='submit' className="registration_button" >Continue</Button>
 
             
 
