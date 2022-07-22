@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+import random
+
 class CustomAccountManager(BaseUserManager):
 
     def create_superuser(self, email,  user_name,  phone_number, password, **other_fields):
@@ -44,7 +46,7 @@ class NewUser( AbstractBaseUser, PermissionsMixin ):
     is_active = models.BooleanField(default=True    )
     created_at = models.DateTimeField(auto_now_add=True)
     phone_number = models.CharField(max_length=12, blank=False, null=False, unique=True)
-
+    otp = models.CharField(max_length=6, null=True, blank=True)
 
     objects = CustomAccountManager()
 
@@ -54,13 +56,19 @@ class NewUser( AbstractBaseUser, PermissionsMixin ):
     def __str__(self):
         return self.user_name
 
-# multiple users https://www.botreetechnologies.com/blog/supporting-multiple-roles-using-djangos-user-model
-# class StylistProfile(models.Model):
-#     user = models.OneToOneField(NewUser, on_delete=models.CASCADE, null=True, related_name='intern_profile')
-#     phone_number = PhoneNumberField()
-#     bio = models.CharField(max_length=150, blank=True)
-#     location = models.CharField(max_length=30, blank=True)
-    #photo
+    def save(self, *args, **kwargs):
+        number_list = [x for x in range(10)]  # Use of list comprehension
+        code_items_for_otp = []
+
+        for i in range(6):
+            num = random.choice(number_list)
+            code_items_for_otp.append(num)
+
+        code_string = "".join(str(item)
+        for item in code_items_for_otp)  # list comprehension again
+        # A six digit random number from the list will be saved in top field
+        self.otp = code_string
+        super().save(*args, **kwargs)
 
 
 class Stylist(NewUser):

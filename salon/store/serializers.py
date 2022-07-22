@@ -30,7 +30,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
         fields =  ("category", "id","name", "image", "description")
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class AdminProductSerializer(serializers.ModelSerializer):
     subcategory = SubCategorySerializer()
     dealer = DealerSerializer()
     review = serializers.SerializerMethodField(read_only=True)
@@ -43,6 +43,21 @@ class ProductSerializer(serializers.ModelSerializer):
         review = obj.review_set.all()
         serializer = ReviewSerializer(review, many=True)
         return serializer.data
+
+
+class ProductSerializer(serializers.ModelSerializer):
+
+    review = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = ( 'pk', 'id', 'name', 'description', 'countInStock','price', 'image', 'rating', 'review',  'numReviews')
+
+    def get_review(self, obj):
+        review = obj.review_set.all()
+        serializer = ReviewSerializer(review, many=True)
+        return serializer.data
+
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategory = serializers.SerializerMethodField(read_only=True)

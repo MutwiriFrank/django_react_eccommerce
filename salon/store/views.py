@@ -9,13 +9,14 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from . serializers import ( ProductSerializer, OrderSerializer, CaroselItemsSerializer, CategorySerializer, 
+from . serializers import ( ProductSerializer, OrderSerializer, CaroselItemsSerializer, CategorySerializer,AdminProductSerializer, 
                             SubCategorySerializer, RoomSerializer)
 from . models import (Category, Product, Order, ShippingAddress, QuerySearched, OrderItem, Dealer, Review, CaroselItems, SubCategory, Room)
 
 
-# Create your views here.
 
+
+# Admin create new product
 class ProductCreate(APIView):
     permission_classes = [IsAdminUser, ]
     serializer_class = ProductSerializer
@@ -49,10 +50,10 @@ class ProductCreate(APIView):
         product = Product.objects.create(name=name, price=price, description=description, image=image, 
                 countInStock=countInStock, rating=rating, numReviews=numReviews, subcategory=subcategory, dealer=dealer )
         
-        serializer = ProductSerializer(product, many=False)
+        serializer = AdminProductSerializer(product, many=False)
         return Response(serializer.data)
 
-
+#List products searched by a user
 class ProductList(ListAPIView):
     permission_classes = [AllowAny,]
     serializer_class = ProductSerializer
@@ -62,26 +63,10 @@ class ProductList(ListAPIView):
         #  request.query_params is a more correctly named synonym for request.GET in django rest
         if query == None:
             query = ''
-     
-            
-        # if query.is_valid():
-        #     print("query", query)
-
-        # category = Category.objects.filter(name__icontains=query)
-        # products = Category.
-    
-        
-
-        # products = Product.objects.filter(
-        #     name__icontains=query )
-
-        #  Full text search using postgres
         products = Product.objects.annotate(
             search=SearchVector('name', 'category__name', 'tag__name', 'subcategory__name', 'querysearched__name') ,).filter(search=query)
         if not products:
-            
             QuerySearched.objects.create(name=query)
-
 
         page = request.query_params.get('page') # page we are on
         paginator = Paginator(products, 24) # set up paginator
@@ -96,13 +81,11 @@ class ProductList(ListAPIView):
         if page == None:
             page = 1
 
-        
-
         serializer = ProductSerializer(products, many=True)
         return Response({"products": serializer.data, "page": page, "pages":paginator.num_pages })
 
 
-# Vieww for ajax calls
+# View product realtime ehen searching - for ajax calls
 class AjaxProductList(ListAPIView):
     permission_classes = [AllowAny,]
     serializer_class = ProductSerializer
@@ -123,8 +106,7 @@ class AjaxProductList(ListAPIView):
         return Response({"products": serializer.data })
     
 
-
-
+#Admin - Edit product detaiils
 class ProductEdit(APIView):
     permission_classes = [IsAdminUser]
     serializer_class = ProductSerializer
@@ -166,7 +148,7 @@ class ProductEdit(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK )
 
 
-
+# Admin Delete products
 class ProductDelete(APIView):
     permission_classes = [IsAdminUser]
     serializer_class = ProductSerializer
@@ -178,7 +160,8 @@ class ProductDelete(APIView):
             return Response("Product deleted successfully", status=status.HTTP_200_OK)
         except:
             return Response("Error occured, try again.", status=status.HTTP_400_BAD_REQUEST)
-    
+
+# Product details view 
 class ProductDetail(ListAPIView):
     permission_classes = [AllowAny,]
     lookup_field = 'pk'
@@ -193,6 +176,7 @@ class ProductDetail(ListAPIView):
         data = ProductSerializer(product).data
         return Response(data, status=status.HTTP_200_OK)
 
+# Admin pload product image
 class EditUploadImage(APIView):
     permission_classes = [IsAdminUser, ]
     
@@ -208,18 +192,14 @@ class EditUploadImage(APIView):
         product.save()
         return Response('Image was uploaded')
 
-        
-
 
 class ProductChange(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser,]
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     
-    
-class AddOrderItem(APIView):
-
-   
+# User place order view -> whwn users place an order it create a new o
+class AddOrderItem(APIView):   
     permission_classes = [AllowAny]
     serializer_class = OrderSerializer
 
@@ -261,7 +241,7 @@ class AddOrderItem(APIView):
         else: 
             return Response({'detail': 'No order items'}, status=status.HTTP_400_BAD_REQUEST)
 
-
+# Get all orders for user. On a user Order page
 class GetMyOrders(APIView):
     
     def get(self, request, *args, **kwargs):
@@ -274,7 +254,8 @@ class GetMyOrders(APIView):
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-        
+
+# User can view a specific order
 class GetOrderById(APIView):
     permission_classes = [IsAuthenticated, ]
     serializer_class = [OrderSerializer, ]
@@ -296,7 +277,8 @@ class GetOrderById(APIView):
             return Response(serializer.data)
         return Response({"detail":"You cant view another users order"}, status=status.HTTP_400_BAD_REQUEST )       
     
-    
+
+# Admin update order to a paid order    
 class UpdateOrderToPaid(APIView):
     '''
     update oder to paid and time
@@ -316,7 +298,7 @@ class UpdateOrderToPaid(APIView):
         # return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'Order is paid'}, status=status.HTTP_200_OK)
 
-        
+# Admin view all orders
 class OrderList(ListAPIView):
     permission_classes = [IsAdminUser,]
     serializer_class = OrderSerializer
@@ -337,6 +319,8 @@ class UpdateOrderToDelivered(APIView):
         order.save()
         return Response({ 'Order is delivered'}, )
 
+
+# Create product review only Users who have bought 
 class CreateReview(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProductSerializer
@@ -410,6 +394,7 @@ class CreateReview(APIView):
             return Response({"detail": "Review Added"})
 
 
+# Get carousel items
 class ListCaroselProducts(APIView):
     serializer_class = [CaroselItemsSerializer, ]
 
@@ -489,9 +474,14 @@ class CategoryProducts(APIView):
         except:
             return Response ({"detail": "Error, category does not exist"},  status=status.HTTP_400_BAD_REQUEST)
 
+        print("category", category)
+
         products = Product.objects.filter(category=category)
+
+        print('categoryproduct', products)
         
         serializer = ProductSerializer(products, many=True)
+        print(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_200_OK )
 

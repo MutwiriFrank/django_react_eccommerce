@@ -1,7 +1,8 @@
 from django.urls import path
 from rest_framework_simplejwt.views import ( TokenObtainPairView, TokenRefreshView,)
 from .views import ( CustomUserCreate,StylistCreateView, BlacklistTokenUpdateView,
-                    MyTokenObtainPairView, GetUserProfile, AdminGetUsers, UpdateUserProfile, AdminDeleteUser, AdminGetPutUserInformation)
+                    MyTokenObtainPairView, GetUserProfile, AdminGetUsers, UpdateUserProfile, AdminDeleteUser, ForgetPasswordSendOtp,
+                    ResetPassword, AdminGetPutUserInformation)
 
 app_name = 'users'
 
@@ -11,6 +12,10 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', CustomUserCreate.as_view(), name="create_user"),
     path('logout/blacklist/', BlacklistTokenUpdateView.as_view(), name='blacklist'),
+    path('forget-password/', ForgetPasswordSendOtp.as_view()),
+    path('reset-password/', ResetPassword.as_view()),
+    
+
     
     path('stylist_register/', StylistCreateView.as_view(), name="create_user"),
     

@@ -5,32 +5,45 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated,  IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.views import ( TokenObtainPairView, TokenRefreshView,)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import serializers
+
+
+
 from django.contrib.auth.hashers import make_password   
+from django.http import HttpResponse
+from django.core.mail import BadHeaderError, send_mail
+from django.contrib.auth.hashers import make_password   
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 from .models import NewUser
 from .serializers import RegisterUserSerializer, RegisterStylistSerializer, UserSerializer, UserSerializerWithToken
   
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-    def post(self, request, format='json'):   
+    print("am yet to  getting user data")
 
-    
-        def validate(self, attrs):
+    def validate(self, attrs):
         
+    
 
-            try:
-                data = super().validate(attrs)
+        try:
+            print("am getting user data")
+            data = super().validate(attrs)
+            print("am getting user datayyyyyyyyyyyyy")
 
-                serializer = UserSerializerWithToken(self.user).data
-                
-                for k, v in serializer.items():
-                    data[k] = v
-                
-                return data
+            serializer = UserSerializerWithToken(self.user).data
+            
+            for k, v in serializer.items():
+                data[k] = v
+            
+            print("user data", data)
+            return data
+            
 
-            except:
-                    messsage = {'detail': 'user does not exist'}
-                    return Response(messsage, status=status.HTTP_400_BAD_REQUEST)
+        except:
+           raise serializers.ValidationError({'detail':'Wrong Username or password!'})
+       
             
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -157,5 +170,77 @@ class AdminGetPutUserInformation(APIView):
         user.save()
         serializer = UserSerializer(user, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ForgetPasswordSendOtp(APIView):
+    """
+     Users  who have forgot password to enter their email and OTP will be sent to their emails
+    """
+   
+    def post(self, request):
+        data = request.data
+        email = data['email']
+        user = NewUser.objects.get(email=email)
+        if NewUser.objects.filter(email=email).exists():
+            user = user
+            # send email with otp
+            subject ="Shanga Password Reset"
+
+            user_email = user.email
+
+            body = f"Use {user.otp} to reset your password "
+
+            email = EmailMessage(subject, body, settings.EMAIL_HOST_USER, ['mutwirifranco@gmail.com', user_email])
+
+            email.fail_silently = False
+
+            # email.send()
+            
+            try:
+                email.send()
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+                
+        
+            message = {
+                'detail': 'Success Message'}
+            return Response(message, status=status.HTTP_200_OK)
+        else:
+            message = {
+                'detail': 'Email or Phone Number not valid'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPassword(APIView):
+    """
+        Users to enter email, OTP and new password inorderto reset their pasword
+    """
+    def put(self, request):
+        data = request.data
+        user = NewUser.objects.get(email=data['email'])
+        if user.is_active:
+            # Check if otp is valid
+            if data['otp'] == user.otp:
+
+                new_password = data['password']
+                if new_password != '':
+                    # Change Password
+                    user.set_password(data['password'])
+                    user.save() # Here user otp will also be changed on save automatically 
+                    return Response('Your password has been reset ')
+                else:
+                    message = {
+                        'detail': 'Password cant be empty'}
+                    return Response(message, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                message = {
+                    'detail': 'OTP did not matched'}
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            message = {
+                'detail': 'This account is not active'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
 
         

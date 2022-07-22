@@ -153,7 +153,7 @@ class Order(models.Model):
     class Meta:
         ordering = ('-created_at',)
     
-    
+   
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True )
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True )
@@ -166,7 +166,7 @@ class OrderItem(models.Model):
     def __str__(self):
         return f'{self.product} - {self.order_code}'
     
-
+# shipping details
 class ShippingAddress(models.Model):
     order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
