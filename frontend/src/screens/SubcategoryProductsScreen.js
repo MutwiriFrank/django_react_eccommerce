@@ -6,7 +6,7 @@ import Product2 from  '../components/Product2'
 import Loader from  '../components/Loader'  
 import Message from  '../components/Message'  
 import Paginate from  '../components/Paginate'  
-import { listProductDetails } from '../actions/subcategoryProducts'
+import { getsubcategoryProducts } from '../actions/subcategoryProducts'
 import '../css/Home.css'
 
 function SubcategoryProductsScreen({history, match}) {
@@ -16,13 +16,13 @@ function SubcategoryProductsScreen({history, match}) {
     const {error, loading, products } = subcategoryProducts
 
 
-
     useEffect(() => {
         
-        dispatch(listProductDetails( match.params.id ))
-
+        dispatch(getsubcategoryProducts( match.params.id ))
         
     }, [dispatch, match])
+
+
 
     return (
         <div className="homepage homepage2">

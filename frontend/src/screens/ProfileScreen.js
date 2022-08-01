@@ -1,146 +1,172 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import {  ListGroup , Col, Row, } from 'react-bootstrap'
 import { LinkContainer  } from 'react-router-bootstrap'
-import { Form, Button, Row, Col, Table} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
-import FormContainer from '../components/FormContainer'
-import { getUserDetails, updateUserProfile } from '../actions/userActions'
-import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants'
-import { listMyOrders } from '../actions/orderActions'
+import EditProfile from '../components/EditProfile'
+import ProfileShipping from '../components/ProfileShipping'
+import CancelledOrders from '../components/CancelledOrders'
+
+import MyOrderScreen from '../screens/MyOrderScreen'
+
+
 import '../css/Profile.css'
 
 
 
 function ProfileScreen({history}) {
-    const [user_name, setUsername] = useState('')
-    const [phone_number, setPhone] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [message, setMessage] = useState('')
+    const [showUserDetails, setshowUserDetails] = useState(true)
+    const [showOrders, setShowOrders] = useState(false)
+    const [showProfileShipping, setShowProfileShipping] = useState(false)
+    // const [showCancelledOrders, setShowCancelledOrders] = useState(true)
 
-    const dispatch = useDispatch()
-
-    const userDetails = useSelector(state => state.userDetails)
-    const { error, loading, user } = userDetails
-    
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
-
-    const userUpdateProfile = useSelector(state => state.userUpdateProfile)
-    const { success } = userUpdateProfile
-
-    const myOrders = useSelector(state => state.myOrders )
-    const {loading:loadingOrders, error:errorOrders, orders } = myOrders
 
 
     useEffect(() => {
         if (!userInfo){
             history.push('/login')
-        }else{
-            const userId = Number(userInfo.id)
-            if(!user || !user.user_name || success || userId !== user.id ){
-                dispatch({ type: USER_UPDATE_PROFILE_RESET })
-                dispatch(getUserDetails(userId.toString())) 
-                dispatch(listMyOrders()) 
-            }else if ( userId === user.id ){
-                setUsername(user.user_name) 
-                setEmail(user.email)
-                setPhone(user.phone_number)
-            }
         }
-        
-    }, [dispatch, history, userInfo, user, success])
+    }, [ history, userInfo])
 
-    const submitHandler = (e) =>{
-        e.preventDefault()
+    const handleProfile = event => {
+        setshowUserDetails(true);
+        setShowOrders(false);
+        setShowProfileShipping(false)
+        // setShowCancelledOrders(false)
 
-        if (phone_number.charAt(0) !== 0){
-            setMessage("Your phone number must start with a zero")
-        }
-
-        if (password.length < 8){
-            setMessage("password is too short")}
-
-        if (password !== confirmPassword){
-            setMessage("password do not match")
-
-        
-        
-        } else {
-
-            if (password.length < 8){
-                setMessage("Details submitted")}
-            dispatch(updateUserProfile({
-                
-                'pk' : user.pk,
-                'user_name' : user_name,
-                'email' : email,
-                'phone_number' : phone_number,
-                'password' : password,
-            }
-            ))            
-        }
-        
     }
+
+    const handleOrders = event => {
+        setShowOrders(true);
+        setshowUserDetails(false)
+        setShowProfileShipping(false)
+        // setShowCancelledOrders(false)
+    }
+
+    const handleShipping = event => {
+        setShowProfileShipping(true)
+        setShowOrders(false);
+        setshowUserDetails(false)
+        // setShowCancelledOrders(false)
+    }
+
+    // const handleCancelledOrders = event => {
+    //     setShowCancelledOrders(true)
+    //     setShowProfileShipping(false)
+    //     setShowOrders(false);
+    //     setshowUserDetails(false)
+    // }
+
+   
 
     return (
         <Row>
-            <Col sm={12} md={7} lg={5} className="profile__div"> 
+            
+            <Col sm={0} md={0} lg={1}> </Col>
 
-                <p className="subtitle">User Profile</p>
+            <Col sm={0} md={0} lg={3} className="profile_sidebar_div" > 
+            <ListGroup className='profile_sidebar' >
+                <ListGroup.Item variant='flush'  className="profile_sidebar_list_group_item">
+                    <div className="profile_listgroup" >
+                
+                    <Link onClick={handleProfile} to='#'>
+                        <span className="profile_sidebar_links" >Edit Profile </span>
+                    </Link>
+                    
+                    </div>
+                </ListGroup.Item>
+        
+                <ListGroup.Item className="profile_sidebar_list_group_item" > 
+                    <div className="profile_listgroup"  >
+                        <Link onClick={handleOrders}  to='#'>
+                            <span className="profile_sidebar_links" > Orders</span>
+                        </Link>
+                        
+                    </div>     
+                </ListGroup.Item>
+        
+             {/*      <ListGroup.Item className="profile_sidebar_list_group_item" >    
+                    <div className="profile_listgroup" >
+                    
+                        <Link to='/'>
+                            <span className="profile_sidebar_links" >Pending Orders</span>
+                        </Link>
+                    </div>
+        
+                </ListGroup.Item>
+            
+                <ListGroup.Item className="profile_sidebar_list_group_item">                
+                    <div className="profile_listgroup">
+                        <Link to='/'>
+                            <span className="profile_sidebar_links" >Delivered Orders</span>
+                        </Link>
+                    </div>    
+                </ListGroup.Item>
 
-                {error && <Message variant='danger'></Message>}
-                {message && <Message variant='danger'>{message}</Message>}
-                <p className="ordinary_p" > <strong>Edit by changing the values</strong> </p>
-            <Form onSubmit={ submitHandler }>
-              
+       
+        
+                <ListGroup.Item className="profile_sidebar_list_group_item">                
+                    <div className="profile_listgroup">
+                        <Link onClick= {handleCancelledOrders} to='#'>
+                            <span className="profile_sidebar_links" >Cancelled Orders</span>
+                        </Link>
+                    </div>    
+                </ListGroup.Item>
 
-                <Form.Group controlId='user_name'>
-                    <Form.Label className="ordinary_p" >Name</Form.Label>
-                    <Form.Control className="ordinary_p" type='text' placeholder='Enter a unique username' value={user_name}  onChange={(e) => setUsername(e.target.value) } >
+                     */}
+        
+                <ListGroup.Item className="profile_sidebar_list_group_item">                
+                    <div className="profile_listgroup">
+                        <Link onClick = {handleShipping} to='#'>
+                            <span className="profile_sidebar_links" >Shipping Details</span>
+                        </Link>
+                    
+                    </div>    
+                </ListGroup.Item>
 
-                    </Form.Control>
-                </Form.Group >
+                <ListGroup.Item className="profile_sidebar_list_group_item">                
+                <div className="profile_listgroup">
+                    <Link to='#'>
+                        <span className="profile_sidebar_links" >Inbox</span>
+                    </Link>
+                </div>    
+            </ListGroup.Item>
 
+            </ListGroup>
+    
+        
+            </Col>
+            
+            <Col sm={12} md={6} lg={8} className="profile__div"> 
+                {showUserDetails && (
+                    <EditProfile />
+                )}
 
-                <Form.Group controlId='email'>
-                    <Form.Label className="ordinary_p" >Email Addresss</Form.Label>
-                    <Form.Control className="ordinary_p" type='email' placeholder='Enter email' value={email}  onChange={(e) => setEmail(e.target.value) } >
+                {showOrders && (
+                    <MyOrderScreen />
+                )}
 
-                    </Form.Control>
-                </Form.Group >
+                {showProfileShipping && (
+                    <ProfileShipping  />
+                )}
 
-                <Form.Group controlId='phone_number'>
-                    <Form.Label className="ordinary_p" >Phone Number</Form.Label>
-                    <Form.Control className="ordinary_p" type='phone' placeholder='Enter phone number' value={phone_number}  onChange={(e) => setPhone(e.target.value) } >
+{/*
+                {showCancelledOrders && (
+                    <CancelledOrders  />
+                )}
 
-                    </Form.Control>
-
-                </Form.Group >
-
-                <Form.Group controlId='password'>
-                    <Form.Label className="ordinary_p" >Password</Form.Label>
-                    <Form.Control className="ordinary_p" type='password' placeholder='Enter password' value={password}  onChange={(e) => setPassword(e.target.value) } >
-                    </Form.Control>
-                </Form.Group >
-
-                <Form.Group controlId='confirmpassword'>
-                    <Form.Label className="ordinary_p" >Password</Form.Label>
-                    <Form.Control className="ordinary_p" type='password' placeholder='Confirm password' value={confirmPassword}  onChange={(e) => setConfirmPassword(e.target.value) } >
-                    </Form.Control>
-                </Form.Group >
-
-                <Button type='submit' style={{marginTop : "10px"}} variant='primary'>Submit</Button>
-
-            </Form>
+            */}
+                    
+            </Col>
 
         
+            <Col sm={0} md={0} lg={1}> </Col>
 
-            
-            </Col>
+
             
             
         </Row>

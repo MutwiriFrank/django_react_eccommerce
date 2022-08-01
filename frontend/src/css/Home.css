@@ -2,6 +2,11 @@ p{
     color: black ;
 }
 
+a{
+    list-style: none;
+    text-decoration: none;
+}
+
 
 .top__productsHeading {
     margin-top: 15px;

@@ -13,7 +13,6 @@ function TopProducts() {
 
     const dispatch = useDispatch()
 
-
     const top_Products = useSelector(state => state.topProducts )
     const {error, loading, topProducts,  } = top_Products
 
@@ -27,7 +26,7 @@ function TopProducts() {
 
         <div>
       
-        { loading ? <p>Loading...</p>: error ? <Message variant='danger' >{error}</Message> : (
+        { loading ? <p></p>: error ? <Message variant='danger' >{error}</Message> : (
             <Row>
                 <p className="top__productsHeading" >Top Products</p>
 

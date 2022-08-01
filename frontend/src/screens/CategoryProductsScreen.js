@@ -18,11 +18,11 @@ function CategoryProductsScreen({history, match}) {
 
 
     useEffect(() => {
+     
+        dispatch(listCategoryProducts(match.params.id))
         
-        dispatch(listCategoryProducts( match.params.id ))
-
-        
-    }, [dispatch, match])
+    }, [dispatch, match,  ] )
+  
 
     return (
         <div className="homepage homepage2">

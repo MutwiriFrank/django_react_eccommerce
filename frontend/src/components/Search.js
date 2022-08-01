@@ -41,9 +41,11 @@ function Search() {
 
     const menuRef = useRef()
     useEffect(() => {
-        let ajaxkeyword = `?keyword=${keyword}`   
-        dispatch(listAjaxProducts( ajaxkeyword ))
-        setIsOpen(true)
+        if (keyword) {
+            let ajaxkeyword = `?keyword=${keyword}`   
+            dispatch(listAjaxProducts( ajaxkeyword ))
+            setIsOpen(true)
+        }
         
     }, [dispatch, keyword])
 

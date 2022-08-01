@@ -1,9 +1,11 @@
 .profile__div{
     padding-left: 2rem;
-    padding-right: 2rem;
+    padding-right: 0rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
+    background-color: white;
+    margin-top: 2rem;
 }
 .subtitle{
     margin-top: 1rem;
@@ -46,3 +48,43 @@ p > strong{
 
     
 }
+
+
+/* -------------------Sodebar--------------------------- */
+
+.profile_sidebar_div{
+    margin-top: 2rem;
+   
+
+}
+.profile_sidebar{
+    padding-top: 2rem;
+    padding-left: 2rem;
+    width: 80%;
+    background-color: white;
+}
+
+/* -------listgroup--------- */
+.profile_listgroup{
+    height: 50px;
+}
+.profile_sidebar_links{
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.LinkSPan{
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+}
+
+.profile_sidebar_list_group_item{
+    border: 0 !important;
+}
+
+/* ------------shipping--------------------- */
+
+/* .profile__div {
+
+} */

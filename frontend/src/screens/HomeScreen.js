@@ -21,6 +21,9 @@ function HomeScreen({ history, match }) {
     const productList = useSelector(state => state.productList )
     const {error, loading, products, page, pages } = productList
 
+    const carosel = useSelector(state => state.carosel )
+    const {  loading2,  caroselItems }   = carosel
+
     let keyword = history.location.search
 
 
@@ -85,7 +88,25 @@ function HomeScreen({ history, match }) {
                     
             }   
             </Container>   
-            <Footer />
+            {(() => {
+
+                if (keyword) {
+        
+                  return <p> </p>;
+        
+                } else if (loading) {
+        
+                  return <p> </p>;
+        
+                } else if (loading2){
+
+                }else {
+                    return <Footer /> ;
+                }
+        
+              })()}
+
+            
         </div>
     )
 }

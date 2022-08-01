@@ -21,6 +21,7 @@ export const login = (email, password) => async (dispatch) => {
             type: USER_LOGIN_REQUEST
         })
 
+        
         const config = {
             headers: {
                 'Content-type': 'application/json'
@@ -84,8 +85,7 @@ export const logout = () => (dispatch) =>{
     dispatch({
         type: CART_CLEAR_PAYMENT_METHOD
     }) 
-    
-    
+
 }
 
 
@@ -138,10 +138,17 @@ export const getUserDetails = (pk) => async(dispatch, getState) => {
             userLogin: { userInfo },
         } = getState()
 
+        let token
+        if (userInfo.access){
+            token= userInfo.access
+        }else{
+            token= userInfo.token
+        }
+
         const config = {
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${userInfo.token }`
+                Authorization: `Bearer ${token }`
             }
         }
 

@@ -11,14 +11,12 @@ function TopCategories() {
     const { loading, categories:mainCategories } = categories
 
     let topFourCategories = []
-    console.log("am here jo" )
 
     if (mainCategories){
         let topCategories = mainCategories.sort((a, b) => (a.rating > b.rating) ? 1 : -1)
         topFourCategories = topCategories.slice(0, 4);
     }
 
-    console.log("topcategories",topFourCategories )
 
 
     return (
@@ -31,7 +29,6 @@ function TopCategories() {
                 topFourCategories.map(category=>(
 
                 <Col key={category.id}  xs={6} sm={6} md={6} lg={3} >
-                    {console.log('category', category.id)}
 
                     <Card className="top__categoriesCard">
                         <Link to={`/category/${category.id}`}>

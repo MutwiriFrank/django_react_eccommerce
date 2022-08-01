@@ -30,29 +30,34 @@ link these common names to be searched with each product by use of tags -- done 
 
 <!-- Add category links on home page -------------done-->
 
-Async views drf
+<!-- category products not loading ---done-->
 
-forgot password
+Prefetch and select_relates, serializers. serializers  -improve drf perfomance
 
-Add order Id - random no
+<!-- Ajax should not send without input -->
 
-Hide Hel User on mobile
+<!-- forgot password -->
 
-Logged out users cannot comment-- currently -token error
+<!-- Add order Id - random no -->
 
-Add margin on left and riht in most pages
+<!-- Hide Hel User on mobile -->
+
+
+<!-- Logged out users cannot comment-- currently -token error -->
+
+<!-- Add margin on left and riht in most pages -->
 
 Add no product found page if user search a non existing product
 
 On orders admin pannel shoudl display order ID, user and product
 
-Profile page -ui-ux - include shipping info on profile page
+<!-- Profile page -ui-ux - include shipping info on profile page -->
 
 Profile page -check all situations. An unique email name displaying phone number must start with 0
 
 react hide side bar on clicking outside the side bar
 
-Reduce search bar width and add height
+<!-- Reduce search bar width and add height -->
 
 reduce carousel slider to 50% vh
 
@@ -92,13 +97,13 @@ deploy - https://www.youtube.com/watch?v=r0ECufCyyyw
 
 ui-ux
 
-Add Google login and regitsration
-
+ 
 on hovering all categories hamburger check if menu is displayed else  display menu
 
 react proxy errors
 
 Send bulk main after user purchase. And give them a promocode for next purxhase
+
 
 
 Add a drop down on Hello guesrt, to show visited product, orders, wishlist
@@ -111,3 +116,8 @@ use slug
 
 Recommendation system
 
+Lazy loading content
+
+Add crm to show all orders
+
+sow products whose no in stock is les than 5-> reorder value

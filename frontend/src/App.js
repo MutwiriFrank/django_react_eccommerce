@@ -22,6 +22,7 @@ import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen' 
 import SubcategoryProductsScreen from './screens/SubcategoryProductsScreen'
 import CategoryProductsScreen from './screens/CategoryProductsScreen'
+import ForgetPasswordScreen from './screens/ForgetPasswordScreen'
 import PageNotFound from './screens/404' 
 
 
@@ -41,6 +42,8 @@ function App() {
             
             <Route path='/cart/:pk?' component={CartScreen} />
             <Route path='/login' component={LoginScreen} />
+            <Route path='/forget-password' component={ForgetPasswordScreen} />
+            
             <Route path='/register' component={RegisterScreen} />
             <Route path='/profile' component={ProfileScreen} />
             <Route path='/delivery' component={ShippingScreen} />

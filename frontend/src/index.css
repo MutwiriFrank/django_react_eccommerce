@@ -1,21 +1,29 @@
 
-
+html, body {
+    overflow-x: hidden;
+  }
 
 body {
    margin: 0;
-   padding: 0;
+   padding: 0 !important;
+   background-color: #f0f1f1 !important;
+    max-width: 100% !important;
+    overflow-x: none;
+  
+
 }
 
 main{
     min-height: 80vh;
-    max-width: 1500px;
+    width: 100%;
+    max-width: 2000px;
 }
+
 
 
 /* carousel */
 .carousel {
     z-index: 0;
-
 }
 
 .carousel-item-next, 

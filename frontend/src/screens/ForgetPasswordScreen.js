@@ -9,25 +9,18 @@ import { login } from '../actions/userActions'
 import '../css/Registration.css'
 
 
-function LoginScreen({ location, history }) {
+
+function ForgetPasswordScreen({ location, history }) {
     const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
     const [message, setMessage] = useState('')
 
 
     const dispatch = useDispatch()
 
-    const redirect = location.search ? location.search.split('=')[1] : '/'
-
-    const userLogin = useSelector(state => state.userLogin)
-    const { error, loading, userInfo } = userLogin
-
-    useEffect(() => {
-        if (userInfo) {
-            history.push(redirect)
-        }
-    }, [history, userInfo, redirect])
-
+  
+        
+           
+ 
     const submitHandler = (e) => {
         e.preventDefault()
 
@@ -41,8 +34,10 @@ function LoginScreen({ location, history }) {
         //     setMessage("please enter atleast 8 characters  password")
 
         }else{
-            dispatch(login(email, password))
+            dispatch(login(email))
         }
+
+        history.push('/reset-password')
         
     }
 
@@ -50,10 +45,10 @@ function LoginScreen({ location, history }) {
         <div className="registration_div">
 
             <Col className="registration_form_col" sm={10} md={6} lg={4} >
-            <p className="form_title">Sign In</p>
-            {error && <Message variant='danger'>{error}</Message>}
+            <p className="form_title">Reset Password</p>
+      
             {message && <Message variant='info'>{message}</Message>}
-            {loading && <Loader />}
+        
             <Form onSubmit={submitHandler}>
 
                 <Form.Group className="form_group"  controlId='email'>
@@ -61,7 +56,7 @@ function LoginScreen({ location, history }) {
                     <Form.Control
                         required
                         type='email'
-                        placeholder='Enter Email'
+                        placeholder='Enter Your Email'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="ordinary_p"
@@ -69,46 +64,23 @@ function LoginScreen({ location, history }) {
                     </Form.Control>
                 </Form.Group>
 
-
-                <Form.Group className="form_group"  controlId='password'>
-                    <Form.Label className="form_label">Password</Form.Label>
-                    <Form.Control
-                        required
-                        className="ordinary_p"
-                        type='password'
-                        placeholder='Enter Password'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        
-                    >
-                    </Form.Control>
-                </Form.Group>
-
                 <Button type='submit' className="registration_button">
-                    Sign In
+                    Submit
                 </Button>
             </Form>
 
             <Row className='py-3'>
                 <Col  className="form_label">
-                    New Customer? <Link  className="form_links"
-                        to={redirect ? `/register?redirect=${redirect}` : '/register'}>
-                        Register
+                    Received OTP? <Link  className="form_links"
+                        to={'/reset-password'}>
+                        Create new password
                         </Link>
                 </Col>
             </Row>
-            <Row className='py-3'>
-            <Col  className="form_label">
-                Forget password? <Link  className="form_links"
-                    to={'/forget-password'}>
-                    Reset your password here
-                    </Link>
-            </Col>
-        </Row>
 
             </Col>
         </div>
     )
 }
 
-export default LoginScreen
+export default ForgetPasswordScreen

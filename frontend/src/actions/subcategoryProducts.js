@@ -4,7 +4,7 @@ import { SUBCATEGORY_ITEMS_LIST_REQUEST, SUBCATEGORY_ITEMS_LIST_SUCCESS, SUBCATE
 import axios from 'axios'
 
 
-export const listProductDetails = (id) => async (dispatch) => {
+export const getsubcategoryProducts = (id) => async (dispatch) => {
     try{
         dispatch({type: SUBCATEGORY_ITEMS_LIST_REQUEST })
 

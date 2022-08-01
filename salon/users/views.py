@@ -184,7 +184,7 @@ class ForgetPasswordSendOtp(APIView):
         if NewUser.objects.filter(email=email).exists():
             user = user
             # send email with otp
-            subject ="Shanga Password Reset"
+            subject ="Nebula Password Reset"
 
             user_email = user.email
 

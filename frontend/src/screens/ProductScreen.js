@@ -12,7 +12,6 @@ import {  PRODUCT_REVIEW_CREATE_RESET, AJAX_PRODUCT_LIST_RESET} from '../constan
 import '../css/ProductDetails.css'
 
 
-
 function ProductScreen({match, history}) {
     const [qty, setQty] = useState(1)
     const [rating, setRating] = useState(0)
@@ -75,8 +74,7 @@ function ProductScreen({match, history}) {
                             <div className="product__DetailsDiv">
                                     <p className="product__name" >{product.name}</p>
                                     <hr />
-                                    <p className="product-price" >ksh<strong>{product.price }</strong></p>
-                                                                 
+                                    <p className="product-price" >ksh<strong>{product.price }</strong></p>                                                           
                                     <Rating value={product.rating} text={`${product.numReviews} reviews `}  color={'#f8e825'}/>
 
                                     <Row className="quantity_row" >

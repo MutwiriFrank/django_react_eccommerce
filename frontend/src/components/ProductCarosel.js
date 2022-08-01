@@ -17,7 +17,7 @@ function ProductCarousel() {
     }, [dispatch] )
     
     return (
-        loading ? <Loader />
+        loading ? (<p></p>)
         : error ? <Message variant='danger' >{error}</Message> :(
             <div>
                 <Row> 

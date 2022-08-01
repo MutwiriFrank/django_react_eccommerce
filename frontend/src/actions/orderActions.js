@@ -22,11 +22,11 @@ export const createOrder = (order) => async (dispatch, getState) =>{
             userLogin: { userInfo },
         } = getState()
 
-            // let token = userInfo.access
+            let token = userInfo.access
 
-            // if (!userInfo.access){
-            //     token = userInfo.token
-            // }
+            if (!userInfo.access){
+                token = userInfo.token
+            }
 
 
      

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Button, Col, Table} from 'react-bootstrap'
@@ -7,7 +8,7 @@ import Message from '../components/Message'
 import { listMyOrders } from '../actions/orderActions'
 import '../css/Profile.css'
 
-function MyOrderScreen({history}) {
+function CancelledOrders({history}) {
 
     const dispatch = useDispatch()
 
@@ -30,10 +31,16 @@ function MyOrderScreen({history}) {
         
     }, [dispatch, history, userInfo, ])
 
+    // const delivered_orders = []
+
+    
+
+
     return (
         <Row>
-        <Col md={12} lg={12} >
+        <Col md={12} lg={9} >
                 <p className="subtitle">My Orders</p>
+                
                 {loadingOrders ? (
                     <Loader />
                 ) : errorOrders ? (
@@ -56,7 +63,9 @@ function MyOrderScreen({history}) {
                             <tbody>
                                 
                                 
-                                {orders.map((order, index) => (
+                                { 
+                                    
+                                    orders.map((order, index) => (
                                     <tr key={index}>                         
                                         <td className="ordinary_p" >{index+1}</td>
                                         <td className="ordinary_p" >
@@ -107,4 +116,4 @@ function MyOrderScreen({history}) {
     )
 }
 
-export default MyOrderScreen
+export default CancelledOrders

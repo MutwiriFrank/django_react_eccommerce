@@ -29,6 +29,9 @@ function CartScreen({ match, location, history }) {
     }
     return ( 
         <Row>
+        <Col lg={1} md={0} ></Col>
+        <Col lg={11} md={0} >
+        <Row>
             <Col md={8} classme="cart_itemsList">
                 <div className="your__cartDiv" >
                     <p className="your__cart" >Your Cart</p> 
@@ -41,7 +44,7 @@ function CartScreen({ match, location, history }) {
                         Your cart is empty <Link to='/'>Go Back</Link>
                     </Message>
                 ) : (
-                        <div>
+                        <div className='cart_div'>
                             {cartItems.map(item => (
                                 <div key={item.product}>
                                     <Row>
@@ -126,6 +129,10 @@ function CartScreen({ match, location, history }) {
                    
                 </Card>        
             </Col>
+        </Row>
+        </Col>
+
+        
         </Row>
     )
 }
