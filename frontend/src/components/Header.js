@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect }  from 'react' 
 import { Dropdown} from 'react-bootstrap'
 import {  Cart } from 'react-bootstrap-icons'
 import { LinkContainer } from 'react-router-bootstrap'
@@ -25,6 +25,10 @@ function Header() {
     const logoutHandler = () =>{
         dispatch(logout())
     }
+
+    useEffect(() => {
+        
+    } )
     
 
 

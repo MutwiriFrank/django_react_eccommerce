@@ -91,4 +91,3 @@ class RegisterStylistSerializer(ModelSerializer):
         instance.save()
         return instance
 
-

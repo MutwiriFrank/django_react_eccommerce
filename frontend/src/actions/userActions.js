@@ -6,9 +6,10 @@ import { USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGIN_FAIL, USER_LOGOUT,
             USER_DELETE_SUCCESS, USER_DELETE_FAIL, USER_DELETE_REQUEST, 
             USER_UPDATE_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_REQUEST, USER_UPDATE_RESET, 
 
-
-
 } from '../constants/userConstants'
+import { FORGET_PASSWORD_REQUEST, FORGET_PASSWORD_SUCCESS, FORGET_PASSWORD_FAIL,
+    RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_FAIL
+} from '../constants/passwordConstants'
 
 import { CART_CLEAR_ITEMS , CART_CLEAR_PAYMENT_METHOD, CART_CLEAR_SHIPPING_ADDRESS } from '../constants/cartConstants'
 import axios from 'axios'
@@ -335,5 +336,81 @@ export const updateUser= (user) => async(dispatch, getState) => {
         })
         
     }
+
+}
+
+
+export const forgetPassword = (email) => async(dispatch) =>{
+    try{
+        dispatch(
+            {type: FORGET_PASSWORD_REQUEST, 
+            
+            })
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }
+
+        const {data} = await axios.post(
+            `/api/users/forget-password/    `,
+            {'email' : email},
+            config
+        )
+
+        dispatch({
+            type :FORGET_PASSWORD_SUCCESS,
+            payload : data
+        })
+
+    }catch (error){
+        dispatch(
+            {type : FORGET_PASSWORD_FAIL,
+            payload: error.response && error.response.data.detail
+                    ? error.response.data.detail
+                    : error.message,
+        })
+    }
+
+
+}
+
+export const resetPassword= ( email,otp, password) => async(dispatch, getState) => {
+    try{
+        console.log(email)
+        dispatch(
+            {type: RESET_PASSWORD_REQUEST, 
+            
+            })
+
+        const config = {
+            headers: {
+                'Content-type': 'application/json'
+            }
+        }
+
+        const {data} = await axios.put(
+            `/api/users/reset-password/    `,
+            {'email' : email, 'otp': otp, 'password': password}, 
+            config
+        )
+
+        dispatch({
+            type :RESET_PASSWORD_SUCCESS,
+            payload : data
+        })
+
+        localStorage.setItem('userInfo', JSON.stringify(data))
+
+    }catch (error){
+        dispatch(
+            {type : RESET_PASSWORD_FAIL,
+            payload: error.response && error.response.data.detail
+                    ? error.response.data.detail
+                    : error.message,
+        })
+    }
+
 
 }

@@ -2,81 +2,121 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import Loader from '../components/Loader'
 import Message from '../components/Message'
-import FormContainer from '../components/FormContainer'
-import { login } from '../actions/userActions'
+import { resetPassword } from '../actions/userActions'
 import '../css/Registration.css'
+import { FORGET_PASSWORD_RESET } from '../constants/passwordConstants'
 
 
 
 function ResetPasswordScreen({ location, history }) {
     const [otp, setOTP] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [message, setMessage] = useState('')
 
 
     const dispatch = useDispatch()
 
-  
+    const passwordReset = useSelector(state => state.passwordReset )
+    const {error, loading, userInfo } = passwordReset
+
         
+
+    let email_obj = JSON.parse(localStorage.getItem("email")); 
+    let email = email_obj['email']
+
+    useEffect(() => {
+        dispatch({type : FORGET_PASSWORD_RESET})
+        
+        if (userInfo){
+            console.log(userInfo)
+
+            history.push('/')
+        }
+    }, [ dispatch, history, userInfo])
            
  
     const submitHandler = (e) => {
         e.preventDefault()
 
-        var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
-        if  (!(email.match(validRegex))) {
-            setMessage("Email not valid")
+        if (password !== confirmPassword){
+        setMessage("Password does not match")
 
-
-        // } else if (password.length < 8 ) {
-        //     setMessage("please enter atleast 8 characters  password")
+        } else if (password.length < 8 ) {
+           setMessage("please enter atleast 8 characters  password")
 
         }else{
-            dispatch(login(email))
+           dispatch( resetPassword (email, otp, password) )
         }
 
-        history.push('/reset-password')
+        
         
     }
+
 
     return (
         <div className="registration_div">
 
             <Col className="registration_form_col" sm={10} md={6} lg={4} >
-            <p className="form_title">Reset Password</p>
+            <p className="form_title">Set  Password</p>
       
             {message && <Message variant='info'>{message}</Message>}
+            {error && <Message variant='danger'>{error}</Message>}
         
             <Form onSubmit={submitHandler}>
 
-                <Form.Group className="form_group"  controlId='email'>
-                    <Form.Label className="form_label">Email Address</Form.Label>
+            <Form.Group className="form_group"  controlId='email'>
+            <Form.Label className="form_label">Email</Form.Label>
+            <Form.Control
+                required
+                type='text'
+                placeholder='Enter  OTP'
+                value={email}
+               
+            >
+            </Form.Control>
+        </Form.Group>
+
+                <Form.Group className="form_group"  controlId='otp'>
+                    <Form.Label className="form_label">OTP</Form.Label>
                     <Form.Control
                         required
                         type='text'
                         placeholder='Enter  OTP'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={otp}
+                        onChange={(e) => setOTP(e.target.value)}
                         className="ordinary_p"
                     >
                     </Form.Control>
                 </Form.Group>
 
-                <Form.Group className="form_group"  controlId='email'>
-                    <Form.Label className="form_label">Email Address</Form.Label>
+                <Form.Group className="form_group"  controlId='password'>
+                    <Form.Label className="form_label">New Password</Form.Label>
                     <Form.Control
                         required
-                        type='email'
-                        placeholder='Enter Your Email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type='password'
+                        placeholder='Enter New Password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         className="ordinary_p"
                     >
                     </Form.Control>
                 </Form.Group>
+
+                <Form.Group className="form_group"  controlId='confirmPassword'>
+                <Form.Label className="form_label">Confirm Password </Form.Label>
+                <Form.Control
+                    required
+                    type='password'
+                    placeholder='Enter Your Email'
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="ordinary_p"
+                >
+                </Form.Control>
+            </Form.Group>
 
                 <Button type='submit' className="registration_button">
                     Submit
@@ -85,9 +125,9 @@ function ResetPasswordScreen({ location, history }) {
 
             <Row className='py-3'>
                 <Col  className="form_label">
-                    Received OTP? <Link  className="form_links"
-                        to={'/reset-password'}>
-                        Create new password
+                   Not Received OTP? <Link  className="form_links"
+                        to={'/forget-password'}>
+                        Send New Otp
                         </Link>
                 </Col>
             </Row>

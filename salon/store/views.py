@@ -431,7 +431,6 @@ class ListCategories(APIView):
     def get(self, request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        print(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ListRoomCategories(APIView):
@@ -474,14 +473,9 @@ class CategoryProducts(APIView):
         except:
             return Response ({"detail": "Error, category does not exist"},  status=status.HTTP_400_BAD_REQUEST)
 
-        print("category", category)
-
         products = Product.objects.filter(category=category)
-
-        print('categoryproduct', products)
         
         serializer = ProductSerializer(products, many=True)
-        print(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_200_OK )
 

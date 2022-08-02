@@ -4,9 +4,11 @@ import { BrowserRouter as Router ,Route, Switch } from 'react-router-dom'
 import Header from './components/Header'
 
 import HomeScreen from './screens/HomeScreen'
-import ProductScreen from './screens/ProductScreen'
+import ProductScreen from './screens/ProductScreen' 
 import CartScreen from './screens/CartScreen'
 import LoginScreen from './screens/LoginScreen'
+import ResetPasswordScreen from './screens/ResetPasswordScreen'
+
 import RegisterScreen from './screens/RegisterScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import ShippingScreen from './screens/ShippingScreen'
@@ -22,7 +24,7 @@ import ProductEditScreen from './screens/ProductEditScreen'
 import OrderListScreen from './screens/OrderListScreen' 
 import SubcategoryProductsScreen from './screens/SubcategoryProductsScreen'
 import CategoryProductsScreen from './screens/CategoryProductsScreen'
-import ForgetPasswordScreen from './screens/ForgetPasswordScreen'
+import ForgetPasswordScreen from './screens/ForgetPasswordScreen' 
 import PageNotFound from './screens/404' 
 
 
@@ -42,8 +44,8 @@ function App() {
             
             <Route path='/cart/:pk?' component={CartScreen} />
             <Route path='/login' component={LoginScreen} />
-            <Route path='/forget-password' component={ForgetPasswordScreen} />
-            
+            <Route path='/forget-password' component={ForgetPasswordScreen} /> 
+            <Route path='/reset-password' component={ResetPasswordScreen} />
             <Route path='/register' component={RegisterScreen} />
             <Route path='/profile' component={ProfileScreen} />
             <Route path='/delivery' component={ShippingScreen} />

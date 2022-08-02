@@ -10,7 +10,7 @@ import { productListReducers, ajaxProductListReducers, productDetailsReducers, p
         productEditReducer, productReviewCreateReducer, topProductListReducers} from './reducers/productReducers' 
 import { cartReducer} from './reducers/cartReducers'
 import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer, userListReducer, 
-    userDeleteReducer, userUpdateReducer } from './reducers/userReducers'
+    userDeleteReducer, userUpdateReducer, forgetPasswordReducer, resetPasswordReducer } from './reducers/userReducers'
 import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer, listOrdersReducer,
     orderDeliverReducer } from './reducers/OrderReducers' 
 
@@ -46,6 +46,9 @@ const reducer = combineReducers({
         myOrders : orderListMyReducer,
         listAllOrders : listOrdersReducer,
         orderDeliver : orderDeliverReducer,
+
+        passwordForget : forgetPasswordReducer,
+        passwordReset : resetPasswordReducer,
 
 })
 

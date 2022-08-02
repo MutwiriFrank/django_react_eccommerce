@@ -9,6 +9,11 @@ import { USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGIN_FAIL, USER_LOGOUT,
 
 } from '../constants/userConstants'
 
+import { FORGET_PASSWORD_REQUEST, FORGET_PASSWORD_SUCCESS, FORGET_PASSWORD_SUCCESS_CATCH_EMAIL, FORGET_PASSWORD_FAIL, FORGET_PASSWORD_RESET,
+    RESET_PASSWORD_REQUEST, RESET_PASSWORD_SUCCESS,RESET_PASSWORD_FAIL
+} from '../constants/passwordConstants'
+
+
 export const userLoginReducer = (state = {}, action) => {
     switch (action.type) {
         case USER_LOGIN_REQUEST:
@@ -144,4 +149,40 @@ export const userUpdateReducer = (state={user:{}}, action) =>{
     }
         
 
+}
+
+export const forgetPasswordReducer = (state= {}, action) => {
+    switch(action.type){
+        case FORGET_PASSWORD_REQUEST:
+            return { loading: true}
+        case FORGET_PASSWORD_SUCCESS :
+            return { loading: false, otpmessage: action.payload, }
+
+        case  FORGET_PASSWORD_FAIL:
+            return { loading: false, error: action.payload } 
+        
+        case FORGET_PASSWORD_RESET:
+            return {}
+
+        default:
+            return state
+    }
+}
+
+export const resetPasswordReducer = (state= {}, action) => {
+    switch(action.type){
+        case RESET_PASSWORD_REQUEST:
+            return { loading: true}
+        case RESET_PASSWORD_SUCCESS :
+            return { loading: false, userInfo: action.payload }
+
+        case  RESET_PASSWORD_FAIL:
+            return { loading: false, error: action.payload } 
+        
+        // case RESET_PASSWORD_RESET:
+        //     return {}
+
+        default:
+            return state
+    }
 }

@@ -1,3 +1,4 @@
+from django.urls import is_valid_path
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,6 +7,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated,  IsAdminUser, 
 from rest_framework_simplejwt.views import ( TokenObtainPairView, TokenRefreshView,)
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
+from django.http import JsonResponse
+
 
 
 
@@ -21,23 +24,19 @@ from .serializers import RegisterUserSerializer, RegisterStylistSerializer, User
   
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
-    print("am yet to  getting user data")
 
     def validate(self, attrs):
         
     
 
         try:
-            print("am getting user data")
             data = super().validate(attrs)
-            print("am getting user datayyyyyyyyyyyyy")
 
             serializer = UserSerializerWithToken(self.user).data
             
             for k, v in serializer.items():
                 data[k] = v
             
-            print("user data", data)
             return data
             
 
@@ -180,9 +179,14 @@ class ForgetPasswordSendOtp(APIView):
     def post(self, request):
         data = request.data
         email = data['email']
-        user = NewUser.objects.get(email=email)
+        # try:
+        #     user = NewUser.objects.get(email=email)
+        # except :
+        #     message = {
+        #         'detail': 'User with This Email does not exist'}
+        #     return Response(message, status=status.HTTP_400_BAD_REQUEST)
         if NewUser.objects.filter(email=email).exists():
-            user = user
+            user =  NewUser.objects.get(email=email)
             # send email with otp
             subject ="Nebula Password Reset"
 
@@ -202,12 +206,10 @@ class ForgetPasswordSendOtp(APIView):
                 return HttpResponse('Invalid header found.')
                 
         
-            message = {
-                'detail': 'Success Message'}
-            return Response(message, status=status.HTTP_200_OK)
+            return Response({'email': user.email, })
         else:
             message = {
-                'detail': 'Email or Phone Number not valid'}
+                'detail': 'Email not valid'}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -217,7 +219,12 @@ class ResetPassword(APIView):
     """
     def put(self, request):
         data = request.data
-        user = NewUser.objects.get(email=data['email'])
+        try: 
+            user = NewUser.objects.get(email=data['email'])
+        except :
+            message = {
+                'detail': 'User with This Email does not exist'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
         if user.is_active:
             # Check if otp is valid
             if data['otp'] == user.otp:
@@ -227,7 +234,12 @@ class ResetPassword(APIView):
                     # Change Password
                     user.set_password(data['password'])
                     user.save() # Here user otp will also be changed on save automatically 
-                    return Response('Your password has been reset ')
+                    # return Response('Your password has been reset ')
+                 
+                    serializer = UserSerializerWithToken(user)
+                    
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
                 else:
                     message = {
                         'detail': 'Password cant be empty'}
