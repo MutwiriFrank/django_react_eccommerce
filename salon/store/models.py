@@ -103,6 +103,7 @@ class Product(models.Model):
     numReviews = models.IntegerField(null=True, blank=True)
     color = models.CharField(max_length=255, null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
+    discount = models.IntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ('-date_added',)     
